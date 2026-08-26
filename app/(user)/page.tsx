@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
+import { useSession } from 'next-auth/react'
 import {
   Trophy,
   Megaphone,
@@ -17,6 +18,7 @@ import {
 } from 'lucide-react'
 import { GoldVIPCard } from '@/components/cards/GoldVIPCard'
 import { TournamentCard } from '@/components/cards/TournamentCard'
+import { LandingPage } from '@/components/landing/LandingPage'
 import { Badge } from '@/components/ui/badge'
 import type { Profile, Tournament, PointTransaction, NoticeEvent } from '@/types/database.types'
 import { formatPoints, formatDateTime, getPointReasonMeta } from '@/lib/utils/format'
@@ -27,41 +29,67 @@ import { getTournaments } from '@/lib/actions/tournaments'
 import { getNotices } from '@/lib/actions/notices'
 
 export default function UserHomePage() {
+  const { data: session, status } = useSession()
+
   const [profile, setProfile] = useState<Partial<Profile> | null>(null)
   const [pinnedNotice, setPinnedNotice] = useState<NoticeEvent | null>(null)
-  const [featuredTourney, setFeaturedTourney] = useState<Tournament | null>(null)
+  const [tournaments, setTournaments] = useState<Tournament[]>([])
   const [recentTx, setRecentTx] = useState<PointTransaction[]>([])
+  const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    getCurrentProfile()
-      .then((p) => setProfile(p))
-      .catch(() => {}) // 홈에서는 카드가 빈 상태로 표시
+    Promise.all([
+      getNotices().catch(() => []),
+      getTournaments().catch(() => []),
+    ]).then(([notices, tourneys]) => {
+      setPinnedNotice(notices.find((n) => n.is_pinned) ?? notices[0] ?? null)
+      setTournaments(tourneys)
+      setLoading(false)
+    })
 
-    getNotices()
-      .then((notices) => {
-        setPinnedNotice(notices.find((n) => n.is_pinned) ?? notices[0] ?? null)
-      })
-      .catch(() => {})
+    if (session?.user) {
+      getCurrentProfile()
+        .then((p) => {
+          setProfile(p)
+          if (p) {
+            getMyTransactions(3).then(setRecentTx).catch(() => {})
+          }
+        })
+        .catch(() => {})
+    }
+  }, [session])
 
-    getTournaments()
-      .then((tourneys) => {
-        setFeaturedTourney(
-          tourneys.find((t) => t.status === 'REGISTRATION') ??
-          tourneys.find((t) => t.status === 'LIVE') ??
-          tourneys[0] ??
-          null
-        )
-      })
-      .catch(() => {})
+  // 1. Loading State
+  if (status === 'loading' && loading) {
+    return (
+      <div className="flex min-h-[50vh] flex-col items-center justify-center space-y-4">
+        <div className="flex size-14 items-center justify-center rounded-2xl bg-gradient-to-br from-[#F5D061] to-[#C28B1E] text-black font-serif font-black text-2xl shadow-xl shadow-yellow-500/20 animate-pulse">
+          ♠
+        </div>
+        <p className="font-serif text-xs text-[#F3E5AB] tracking-wider animate-pulse">
+          VIP LOUNGE 로딩 중...
+        </p>
+      </div>
+    )
+  }
 
-    getMyTransactions(3).then(setRecentTx).catch(() => {})
-  }, [])
+  // 2. Unauthenticated (Guest / 비로그인 방문자) ➔ 고품격 랜딩 페이지
+  if (status === 'unauthenticated' || !session?.user) {
+    return <LandingPage tournaments={tournaments} pinnedNotice={pinnedNotice} />
+  }
 
+  const featuredTourney =
+    tournaments.find((t) => t.status === 'REGISTRATION') ??
+    tournaments.find((t) => t.status === 'LIVE') ??
+    tournaments[0] ??
+    null
+
+  // 3. Authenticated (로그인된 VIP 회원) ➔ 정회원 전용 라운지 대시보드
   return (
     <div className="space-y-6">
       {/* 1. Gold VIP Membership Card */}
       <section aria-label="멤버십 카드">
-        <GoldVIPCard profile={profile ?? {}} />
+        <GoldVIPCard profile={profile ?? { name: session.user.name ?? '회원', tier: 'NORMAL', total_points: 5000 }} />
       </section>
 
       {/* 2. Pinned Notice */}

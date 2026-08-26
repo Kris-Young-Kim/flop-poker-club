@@ -22,7 +22,12 @@
       "PowerShell(Stop-Process *)",
       "PowerShell(vercel *)",
       "PowerShell(cd D:\\\\developer\\\\flop-poker-club; $env:DATABASE_URL=\"postgresql://build:build@build.neon.tech/build?sslmode=require\"; npx next build 2>&1 | Select-Object -Last 22)",
-      "Bash(git fetch *)"
+      "Bash(git fetch *)",
+      "Bash(git add *)",
+      "Bash(git rm *)",
+      "mcp__claude-in-chrome__javascript_tool",
+      "mcp__claude-in-chrome__tabs_context_mcp",
+      "mcp__claude-in-chrome__browser_batch"
     ]
   }
 }
