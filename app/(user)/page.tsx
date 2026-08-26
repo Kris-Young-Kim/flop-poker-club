@@ -156,6 +156,7 @@ export default function UserHomePage() {
       <section aria-label="빠른 메뉴">
         <div className="grid grid-cols-4 gap-2.5">
           {[
+            { href: '/landing', icon: <Sparkles className="size-5 text-[#F5D061]" />, label: '클럽소개' },
             { href: '/ledger', icon: <ReceiptText className="size-5" />, label: '포인트원장' },
             { href: '/tournaments', icon: <Trophy className="size-5" />, label: '대회일정' },
             { href: '/notices?tab=RULE', icon: <HelpCircle className="size-5" />, label: '클럽룰북' },
@@ -171,15 +172,6 @@ export default function UserHomePage() {
               <span className="mt-2 text-[11px] font-semibold text-[#F3E5AB]">{item.label}</span>
             </Link>
           ))}
-          <div
-            className="flex flex-col items-center justify-center rounded-2xl border border-[#E6AF2E]/20 bg-[#13141C] p-3 hover:border-[#E6AF2E]/50 hover:bg-[#181A26] transition-all group cursor-pointer"
-            onClick={() => toast.info('강원도 원주시 FLOP POKER CLUB (원주점) · 영업시간: 18:00 ~ 익일 06:00')}
-          >
-            <div className="flex size-10 items-center justify-center rounded-xl bg-[#E6AF2E]/10 text-[#E6AF2E] group-hover:scale-110 transition-transform">
-              <MapPin className="size-5" />
-            </div>
-            <span className="mt-2 text-[11px] font-semibold text-[#F3E5AB]">매장위치</span>
-          </div>
         </div>
       </section>
 
