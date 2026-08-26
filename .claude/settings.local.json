@@ -27,7 +27,10 @@
       "Bash(git rm *)",
       "mcp__claude-in-chrome__javascript_tool",
       "mcp__claude-in-chrome__tabs_context_mcp",
-      "mcp__claude-in-chrome__browser_batch"
+      "mcp__claude-in-chrome__browser_batch",
+      "mcp__claude-in-chrome__computer",
+      "Bash(node *)",
+      "mcp__claude-in-chrome__switch_browser"
     ]
   }
 }

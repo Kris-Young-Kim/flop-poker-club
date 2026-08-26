@@ -1,6 +1,9 @@
 'use client'
 
+import { useState, useEffect } from 'react'
+import Image from 'next/image'
 import Link from 'next/link'
+import { motion, AnimatePresence } from 'framer-motion'
 import {
   Crown,
   ShieldCheck,
@@ -15,7 +18,16 @@ import {
   Gift,
   CheckCircle2,
   ArrowRight,
-  Flame
+  Flame,
+  Star,
+  Users,
+  Award,
+  HelpCircle,
+  PhoneCall,
+  ChevronDown,
+  Volume2,
+  BadgeCheck,
+  CreditCard
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
@@ -28,206 +40,555 @@ interface LandingPageProps {
 }
 
 export function LandingPage({ tournaments, pinnedNotice }: LandingPageProps) {
-  const featuredTourney =
-    tournaments.find((t) => t.status === 'REGISTRATION') ??
-    tournaments.find((t) => t.status === 'LIVE') ??
-    tournaments[0] ??
-    null
+  const [selectedTier, setSelectedTier] = useState<'NORMAL' | 'VIP' | 'VVIP' | 'ROYAL'>('VIP')
+  const [activeFaq, setActiveFaq] = useState<number | null>(null)
+
+  const featuredTourneys = tournaments.slice(0, 3)
+
+  const tierDetails = {
+    NORMAL: {
+      name: 'NORMAL',
+      desc: '신규 가입 즉시 발급되는 기본 멤버십',
+      bonus: '기본 포인트 적립',
+      discount: '음료 5% 상시 할인',
+      entry: '일반 토너먼트 참가',
+      badgeColor: 'from-[#A1A1AA] to-[#71717A]',
+      textColor: 'text-zinc-300',
+    },
+    VIP: {
+      name: 'GOLD VIP',
+      desc: '월 5회 이상 방문 우수 회원',
+      bonus: '핸드 보너스 +10% 추가 적립',
+      discount: '음료 & 사이드 10% 할인',
+      entry: 'VIP 전용 프리롤 토너먼트 참가권',
+      badgeColor: 'from-[#F5D061] via-[#E6AF2E] to-[#C28B1E]',
+      textColor: 'text-[#F5D061]',
+    },
+    VVIP: {
+      name: 'PLATINUM VVIP',
+      desc: '월 15회 이상 방문 VIP 하이롤러',
+      bonus: '핸드 보너스 +20% 추가 적립',
+      discount: '전 메뉴 15% 할인 + 전용 락커',
+      entry: '월간 챔피언십 시드권 우선 배정',
+      badgeColor: 'from-[#E0E7FF] via-[#818CF8] to-[#4338CA]',
+      textColor: 'text-indigo-300',
+    },
+    ROYAL: {
+      name: 'BLACK ROYAL',
+      desc: '클럽 최상위 명예 랭커 전용',
+      bonus: '핸드 보너스 +30% 최고 적립',
+      discount: '전 메뉴 무료 케이터링 & 발렛',
+      entry: '연간 파이널 마스터스 초청권',
+      badgeColor: 'from-[#FCD34D] via-[#B45309] to-[#78350F]',
+      textColor: 'text-amber-300',
+    },
+  }
+
+  const faqs = [
+    {
+      q: '홀덤을 처음 접하는 초보자도 방문할 수 있나요?',
+      a: '네, 물론입니다! FLOP POKER CLUB은 초보자를 위한 친절한 무료 룰 코칭 테이블을 운영하고 있습니다. 딜러와 스태프가 기초 족보부터 베팅 매너까지 1:1로 친절히 안내해 드립니다.',
+    },
+    {
+      q: '포인트는 어떻게 적립되고 어디에 사용하나요?',
+      a: '포인트는 투핸드 포카드, 스트레이트 플러시, 로열 플러시 등 핸드 달성 시 QR 스캔을 통해 즉시 지급되며, 매장 내 식음료 이용 및 정기 토너먼트 참가 신청 시 사용하실 수 있습니다.',
+    },
+    {
+      q: '토너먼트 참가 신청은 어떻게 하나요?',
+      a: '구글 간편 로그인 후 [대회안내] 탭에서 원하는 일시의 토너먼트를 선택하고 [참가 신청] 버튼을 누르면 보유 포인트로 즉시 등록됩니다.',
+    },
+    {
+      q: '매장 위치와 주차는 가능한가요?',
+      a: '강원특별자치도 원주 중심가에 위치하고 있으며, 건물 내 지하 전용 주차장에 무료 주차가 지원됩니다.',
+    },
+  ]
 
   return (
-    <div className="space-y-8 pb-12">
-      {/* 1. Hero Showcase Section */}
-      <section className="relative overflow-hidden rounded-3xl border border-[#E6AF2E]/40 bg-gradient-to-b from-[#24273C] via-[#151624] to-[#0A0B12] p-6 sm:p-8 text-center text-white shadow-2xl shadow-yellow-500/10">
-        {/* Background Ambient Glows */}
-        <div className="absolute -top-24 left-1/2 -translate-x-1/2 size-72 rounded-full bg-[#E6AF2E]/15 blur-3xl pointer-events-none" />
-        <div className="shimmer-light pointer-events-none" />
-
-        <div className="relative z-10 space-y-4">
-          {/* Top Pill */}
-          <div className="inline-flex items-center gap-1.5 rounded-full border border-[#E6AF2E]/40 bg-[#E6AF2E]/10 px-3.5 py-1 text-[11px] font-bold text-[#F5D061] shadow-sm">
-            <Sparkles className="size-3.5" />
-            <span>원주 No.1 프리미엄 홀덤 라운지</span>
-          </div>
-
-          {/* Headline */}
-          <div className="space-y-1">
-            <h1 className="font-serif text-3xl sm:text-4xl font-extrabold tracking-tight text-white leading-tight">
-              FLOP POKER CLUB
-            </h1>
-            <p className="font-sans text-sm sm:text-base text-[#F3E5AB] font-medium">
-              격이 다른 홀덤 스포츠 & VIP 멤버십 원장
-            </p>
-          </div>
-
-          {/* Subtitle */}
-          <p className="mx-auto max-w-sm text-xs text-[#9CA3AF] leading-relaxed">
-            투명한 포인트 원장 관리, 원터치 QR 출입 인증, 정기 토너먼트까지 스마트하게 즐기세요.
-          </p>
-
-          {/* Welcome Bonus Callout */}
-          <div className="mx-auto max-w-xs rounded-2xl border border-[#E6AF2E]/30 bg-gradient-to-r from-[#2A2312] via-[#1E1C1A] to-[#12131C] p-3 shadow-md flex items-center justify-between gap-2">
-            <div className="flex items-center gap-2.5">
-              <div className="flex size-9 items-center justify-center rounded-xl bg-gradient-to-br from-[#F5D061] to-[#C28B1E] text-black font-black text-sm">
-                <Gift className="size-4" />
-              </div>
-              <div className="text-left">
-                <div className="text-[11px] font-bold text-[#F3E5AB]">신규 회원 가입 이벤트</div>
-                <div className="text-xs font-black text-[#F5D061]">웰컴 5,000 P 즉시 지급</div>
-              </div>
-            </div>
-            <Badge className="bg-[#E6AF2E]/20 text-[#F5D061] border-[#E6AF2E]/40 text-[10px]">
-              무료
-            </Badge>
-          </div>
-
-          {/* Main Sign-up CTA Button */}
-          <div className="pt-2">
-            <Link href="/login">
-              <Button
-                size="lg"
-                className="h-13 w-full max-w-xs rounded-2xl bg-gradient-to-r from-[#F5D061] via-[#E6AF2E] to-[#C28B1E] text-black font-extrabold text-sm shadow-xl shadow-yellow-500/25 hover:scale-105 active:scale-95 transition-all"
-              >
-                <Crown className="size-4 mr-2" />
-                VIP 멤버십 카드 발급받기
-                <ArrowRight className="size-4 ml-2" />
-              </Button>
-            </Link>
-            <p className="mt-2 text-[10px] text-[#9CA3AF]">
-              구글 간편 로그인으로 3초 만에 시작 (가입비 무료)
-            </p>
-          </div>
+    <div className="space-y-16 pb-24 text-white overflow-hidden selection:bg-[#E6AF2E]/40">
+      
+      {/* 0. Top Live Ticker Bar */}
+      <div className="relative -mx-4 sm:-mx-6 -mt-4 overflow-hidden border-b border-[#E6AF2E]/30 bg-gradient-to-r from-[#211B0C] via-[#151724] to-[#211B0C] py-2 px-3 text-xs text-[#F3E5AB] shadow-lg">
+        <div className="flex items-center gap-2 overflow-x-auto whitespace-nowrap scrollbar-none animate-marquee text-[11px] font-medium">
+          <span className="flex items-center gap-1 font-bold text-[#F5D061] px-1.5 py-0.5 rounded bg-[#E6AF2E]/20">
+            <Flame className="size-3.5" /> LIVE
+          </span>
+          <span>♠ 웰컴 이벤트: 신규 가입 즉시 5,000P 무료 지급</span>
+          <span className="text-[#E6AF2E]/40">|</span>
+          <span>🏆 매일 저녁 7시 데일리 토너먼트 START</span>
+          <span className="text-[#E6AF2E]/40">|</span>
+          <span>⚡ 투핸드 포카드 +500P · 스티플 +1,000P · 로티플 +3,000P 즉시 적립</span>
+          <span className="text-[#E6AF2E]/40">|</span>
+          <span>👑 원주 최고급 VIP 라운지 18:00 ~ 익일 06:00 연중무휴</span>
         </div>
-      </section>
+      </div>
 
-      {/* 2. Key Value Props (4대 핵심 가치) */}
-      <section aria-label="클럽 특징" className="space-y-3">
-        <h2 className="text-xs font-mono font-bold uppercase tracking-wider text-[#9CA3AF] px-1">
-          CLUB BENEFITS
-        </h2>
-        <div className="grid grid-cols-2 gap-3">
-          <div className="rounded-2xl border border-[#E6AF2E]/20 bg-gradient-to-br from-[#181A28] to-[#0E1018] p-4 text-white space-y-2">
-            <div className="flex size-9 items-center justify-center rounded-xl bg-[#E6AF2E]/10 text-[#F5D061]">
-              <QrCode className="size-5" />
-            </div>
-            <h3 className="font-bold text-xs text-white">QR 원터치 체크인</h3>
-            <p className="text-[11px] text-[#9CA3AF] leading-snug">
-              출입과 동시에 포카드, 스티플 핸드 보너스 포인트 즉시 적립
-            </p>
-          </div>
+      {/* 1. Ultra Luxury Hero Section */}
+      <section className="relative -mx-4 sm:-mx-6 -mt-8 overflow-hidden rounded-b-[40px] border-b border-[#E6AF2E]/40 bg-[#08090D]">
+        {/* Cinematic Background Image */}
+        <div className="relative h-[480px] sm:h-[540px] w-full">
+          <Image
+            src="/images/hero-lounge.jpg"
+            alt="FLOP VIP Lounge Table"
+            fill
+            priority
+            className="object-cover object-center brightness-[0.45] scale-105 transform hover:scale-100 transition-transform duration-1000"
+          />
+          {/* Obsidian Gradient Mask */}
+          <div className="absolute inset-0 bg-gradient-to-t from-[#08090D] via-[#08090D]/75 to-transparent" />
+          <div className="absolute inset-0 bg-gradient-to-r from-[#08090D]/90 via-transparent to-[#08090D]/90" />
+          <div className="absolute top-1/4 left-1/2 -translate-x-1/2 size-96 rounded-full bg-[#E6AF2E]/15 blur-3xl pointer-events-none" />
 
-          <div className="rounded-2xl border border-[#E6AF2E]/20 bg-gradient-to-br from-[#181A28] to-[#0E1018] p-4 text-white space-y-2">
-            <div className="flex size-9 items-center justify-center rounded-xl bg-[#E6AF2E]/10 text-[#F5D061]">
-              <Trophy className="size-5" />
-            </div>
-            <h3 className="font-bold text-xs text-white">실시간 토너먼트</h3>
-            <p className="text-[11px] text-[#9CA3AF] leading-snug">
-              데일리 & 빅 매치 토너먼트 일정 확인 및 원터치 참가 신청
-            </p>
-          </div>
-
-          <div className="rounded-2xl border border-[#E6AF2E]/20 bg-gradient-to-br from-[#181A28] to-[#0E1018] p-4 text-white space-y-2">
-            <div className="flex size-9 items-center justify-center rounded-xl bg-[#E6AF2E]/10 text-[#F5D061]">
-              <ReceiptText className="size-5" />
-            </div>
-            <h3 className="font-bold text-xs text-white">투명한 불변 원장</h3>
-            <p className="text-[11px] text-[#9CA3AF] leading-snug">
-              모든 포인트 적립/차감 내역이 영구 보존되는 안전한 시스템
-            </p>
-          </div>
-
-          <div className="rounded-2xl border border-[#E6AF2E]/20 bg-gradient-to-br from-[#181A28] to-[#0E1018] p-4 text-white space-y-2">
-            <div className="flex size-9 items-center justify-center rounded-xl bg-[#E6AF2E]/10 text-[#F5D061]">
-              <ShieldCheck className="size-5" />
-            </div>
-            <h3 className="font-bold text-xs text-white">100% 클린 합법 룰</h3>
-            <p className="text-[11px] text-[#9CA3AF] leading-snug">
-              환전 0%, 스포츠맨십과 매너를 중시하는 프리미엄 라운지
-            </p>
-          </div>
-        </div>
-      </section>
-
-      {/* 3. Hand Bonus Table Preview */}
-      <section aria-label="핸드 보너스 안내">
-        <div className="rounded-2xl border border-[#E6AF2E]/30 bg-gradient-to-br from-[#241708] via-[#17130c] to-[#0d0c0a] p-4 text-white space-y-3">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-2">
-              <Flame className="size-4 text-[#F5D061]" />
-              <h3 className="font-serif text-sm font-bold text-[#F3E5AB]">
-                핸드 달성 시 즉시 포인트 적립
-              </h3>
-            </div>
-            <Badge className="bg-[#E6AF2E]/20 text-[#F5D061] border-[#E6AF2E]/30 text-[10px]">
-              EVENT
-            </Badge>
-          </div>
-
-          <div className="grid grid-cols-3 gap-2 text-center text-xs">
-            <div className="rounded-xl border border-[#E6AF2E]/20 bg-black/40 p-2.5 space-y-1">
-              <div className="text-[11px] text-[#9CA3AF] font-medium">투핸드 포카드</div>
-              <div className="font-mono text-sm font-extrabold text-[#F5D061]">+500 P</div>
-            </div>
-            <div className="rounded-xl border border-[#E6AF2E]/20 bg-black/40 p-2.5 space-y-1">
-              <div className="text-[11px] text-[#9CA3AF] font-medium">스트레이트 플러시</div>
-              <div className="font-mono text-sm font-extrabold text-[#F5D061]">+1,000 P</div>
-            </div>
-            <div className="rounded-xl border border-[#E6AF2E]/40 bg-[#E6AF2E]/10 p-2.5 space-y-1">
-              <div className="text-[11px] text-[#F3E5AB] font-bold">로얄 플러시</div>
-              <div className="font-mono text-sm font-black text-white">+3,000 P</div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* 4. Featured Tournament Preview */}
-      {featuredTourney && (
-        <section aria-label="진행 중인 토너먼트" className="space-y-3">
-          <div className="flex items-center justify-between px-1">
-            <div className="flex items-center gap-2">
-              <Trophy className="size-4 text-[#E6AF2E]" />
-              <h2 className="text-sm font-bold text-white">실시간 토너먼트 프리뷰</h2>
-            </div>
-            <Link
-              href="/tournaments"
-              className="text-xs text-[#F5D061] hover:underline flex items-center"
+          {/* Hero Content Overlay */}
+          <div className="absolute inset-0 flex flex-col justify-end p-6 sm:p-10 text-center items-center space-y-5">
+            {/* Crown Pill */}
+            <motion.div
+              initial={{ opacity: 0, y: -20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6 }}
+              className="inline-flex items-center gap-2 rounded-full border border-[#F5D061]/50 bg-gradient-to-r from-[#2A2312]/90 to-[#181A28]/90 px-4 py-1.5 text-xs font-bold text-[#F5D061] shadow-xl backdrop-blur-md"
             >
-              전체보기 <ChevronRight className="size-3.5 ml-0.5" />
-            </Link>
-          </div>
-          <TournamentCard tournament={featuredTourney} />
-        </section>
-      )}
+              <Crown className="size-4 text-[#F5D061]" />
+              <span>WONJU NO.1 HIGH ROLLER POKER CLUB</span>
+            </motion.div>
 
-      {/* 5. Location & Hours */}
-      <section aria-label="매장 정보">
-        <div className="rounded-2xl border border-[#E6AF2E]/20 bg-[#13141C] p-4 text-xs text-[#9CA3AF] space-y-2.5">
-          <div className="flex items-center gap-2 text-white font-bold text-sm">
-            <MapPin className="size-4 text-[#E6AF2E]" />
-            <span>FLOP POKER CLUB 원주점</span>
+            {/* Main Hero Headline */}
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.7, delay: 0.1 }}
+              className="space-y-2 max-w-lg"
+            >
+              <h1 className="font-serif text-3xl sm:text-5xl font-black tracking-tight text-white leading-tight">
+                FLOP POKER CLUB
+              </h1>
+              <p className="font-serif text-base sm:text-xl text-[#F3E5AB] font-bold tracking-wide">
+                격이 다른 품격, 가장 완벽한 홀덤 스포츠 라운지
+              </p>
+            </motion.div>
+
+            {/* Subtext */}
+            <motion.p
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.8, delay: 0.2 }}
+              className="max-w-md text-xs sm:text-sm text-[#9CA3AF] leading-relaxed"
+            >
+              투명한 포인트 불변 원장, 원터치 QR 출입 인증, 데일리 & 빅 토너먼트까지 스마트 모바일 멤버십으로 즐기세요.
+            </motion.p>
+
+            {/* Welcome Bonus Box */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 0.3 }}
+              className="w-full max-w-sm rounded-2xl border border-[#F5D061]/40 bg-gradient-to-r from-[#241E10]/90 via-[#181A28]/90 to-[#10121C]/90 p-3.5 shadow-2xl backdrop-blur-xl flex items-center justify-between gap-3"
+            >
+              <div className="flex items-center gap-3 text-left">
+                <div className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-[#F5D061] to-[#C28B1E] text-black font-black shadow-lg">
+                  <Gift className="size-5" />
+                </div>
+                <div>
+                  <div className="text-xs font-bold text-white">신규 회원 가입 프로모션</div>
+                  <div className="text-sm font-extrabold text-[#F5D061]">웰컴 5,000 P 즉시 지급</div>
+                </div>
+              </div>
+              <Badge className="bg-[#E6AF2E] text-black font-extrabold text-[10px] px-2 py-0.5 shadow">
+                FREE
+              </Badge>
+            </motion.div>
+
+            {/* Hero CTA Buttons */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 0.4 }}
+              className="w-full max-w-sm flex flex-col sm:flex-row gap-2.5 pt-1"
+            >
+              <Link href="/login" className="flex-1">
+                <Button
+                  size="lg"
+                  className="h-13 w-full rounded-2xl bg-gradient-to-r from-[#F5D061] via-[#E6AF2E] to-[#C28B1E] text-black font-black text-sm shadow-xl shadow-yellow-500/30 hover:scale-105 active:scale-95 transition-all"
+                >
+                  <Crown className="size-4 mr-2" />
+                  VIP 멤버십 카드 발급받기
+                </Button>
+              </Link>
+              <Link href="/tournaments">
+                <Button
+                  size="lg"
+                  variant="outline"
+                  className="h-13 px-5 rounded-2xl border-[#E6AF2E]/40 bg-[#141624]/80 text-[#F3E5AB] hover:border-[#E6AF2E] hover:bg-[#1C1F32] transition-all text-xs font-bold"
+                >
+                  대회일정 보기
+                </Button>
+              </Link>
+            </motion.div>
           </div>
-          <div className="flex items-center gap-2">
-            <Clock3 className="size-3.5 text-[#E6AF2E]" />
-            <span>영업 시간: 매일 18:00 ~ 익일 06:00 (연중무휴)</span>
-          </div>
-          <p className="text-[11px] leading-relaxed text-[#9CA3AF]">
-            강원특별자치도 원주시 프리미엄 홀덤 라운지 · 전 좌석 최고급 테이블 & 전문 딜러 상주
-          </p>
         </div>
       </section>
 
-      {/* 6. Bottom Sticky CTA Bar */}
-      <div className="sticky bottom-20 z-20 mx-auto max-w-lg">
-        <div className="rounded-2xl border border-[#E6AF2E]/50 bg-gradient-to-r from-[#1F2233]/95 via-[#161824]/95 to-[#0E1018]/95 p-3 shadow-2xl shadow-black backdrop-blur-xl flex items-center justify-between gap-3">
-          <div className="space-y-0.5 pl-1">
-            <div className="text-xs font-bold text-white">가입 즉시 5,000P 지급</div>
-            <div className="text-[10px] text-[#F3E5AB]">3초 간편 Google 로그인</div>
+      {/* 2. Live Key Stats Banner */}
+      <section className="grid grid-cols-3 gap-2.5 sm:gap-4 text-center">
+        <div className="rounded-2xl border border-[#E6AF2E]/20 bg-gradient-to-b from-[#181A28] to-[#0E1018] p-4 shadow-xl">
+          <p className="font-mono text-[10px] uppercase text-[#9CA3AF]">TOTAL PRIZE</p>
+          <p className="font-mono text-base sm:text-xl font-black text-[#F5D061] mt-1">120M+ P</p>
+          <p className="text-[10px] text-[#9CA3AF] mt-0.5">누적 상금 포인트</p>
+        </div>
+        <div className="rounded-2xl border border-[#E6AF2E]/20 bg-gradient-to-b from-[#181A28] to-[#0E1018] p-4 shadow-xl">
+          <p className="font-mono text-[10px] uppercase text-[#9CA3AF]">VIP MEMBERS</p>
+          <p className="font-mono text-base sm:text-xl font-black text-white mt-1">1,850+ 명</p>
+          <p className="text-[10px] text-[#9CA3AF] mt-0.5">원주 정회원 등록</p>
+        </div>
+        <div className="rounded-2xl border border-[#E6AF2E]/20 bg-gradient-to-b from-[#181A28] to-[#0E1018] p-4 shadow-xl">
+          <p className="font-mono text-[10px] uppercase text-[#9CA3AF]">DAILY MATCH</p>
+          <p className="font-mono text-base sm:text-xl font-black text-emerald-400 mt-1">매일 4회</p>
+          <p className="text-[10px] text-[#9CA3AF] mt-0.5">정기 토너먼트</p>
+        </div>
+      </section>
+
+      {/* 3. 3D Floating VIP Card Showcase */}
+      <section className="relative overflow-hidden rounded-3xl border border-[#E6AF2E]/30 bg-gradient-to-b from-[#1C1F32] via-[#12131F] to-[#08090D] p-6 sm:p-8 space-y-6">
+        <div className="flex flex-col sm:flex-row items-center justify-between gap-6">
+          <div className="space-y-3 text-center sm:text-left flex-1">
+            <Badge className="bg-[#E6AF2E]/20 text-[#F5D061] border-[#E6AF2E]/40 text-[10px]">
+              MEMBERSHIP PASS
+            </Badge>
+            <h2 className="font-serif text-2xl sm:text-3xl font-black text-white">
+              단 한 장의 카드로<br />
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#F5D061] to-[#C28B1E]">
+                원주 최고의 VIP 특권
+              </span>을 누리세요
+            </h2>
+            <p className="text-xs text-[#9CA3AF] leading-relaxed">
+              모바일 화면에 각인되는 고유 QR 코드로 간편 출입, 포인트 실시간 적립, 토너먼트 시드권 우선 배정 혜택을 제공합니다.
+            </p>
+          </div>
+
+          {/* 3D Card Visual */}
+          <div className="relative size-64 sm:size-72 shrink-0 overflow-hidden rounded-2xl border border-[#E6AF2E]/40 shadow-2xl shadow-yellow-500/20 group">
+            <Image
+              src="/images/vip-card-3d.jpg"
+              alt="FLOP VIP 3D Gold Card"
+              fill
+              className="object-cover group-hover:scale-110 transition-transform duration-700"
+            />
+            <div className="shimmer-light" />
+          </div>
+        </div>
+
+        {/* Interactive VIP Tier Switcher */}
+        <div className="space-y-4 pt-4 border-t border-[#E6AF2E]/20">
+          <div className="flex justify-between items-center">
+            <span className="text-xs font-bold text-[#F3E5AB]">등급별 멤버십 혜택</span>
+            <span className="text-[11px] text-[#9CA3AF]">탭을 눌러 혜택을 확인하세요</span>
+          </div>
+
+          <div className="grid grid-cols-4 gap-2">
+            {(['NORMAL', 'VIP', 'VVIP', 'ROYAL'] as const).map((tierKey) => (
+              <button
+                key={tierKey}
+                onClick={() => setSelectedTier(tierKey)}
+                className={`py-2 px-1 rounded-xl text-xs font-extrabold transition-all border ${
+                  selectedTier === tierKey
+                    ? 'border-[#F5D061] bg-[#F5D061]/20 text-[#F5D061] shadow-lg shadow-yellow-500/20 scale-105'
+                    : 'border-white/10 bg-[#12131F] text-[#9CA3AF] hover:border-white/20'
+                }`}
+              >
+                {tierKey}
+              </button>
+            ))}
+          </div>
+
+          {/* Selected Tier Perks Box */}
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={selectedTier}
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -10 }}
+              transition={{ duration: 0.2 }}
+              className="rounded-2xl border border-[#E6AF2E]/25 bg-[#0F101A] p-4 space-y-2.5 text-xs"
+            >
+              <div className="flex items-center justify-between">
+                <span className={`font-serif text-sm font-black ${tierDetails[selectedTier].textColor}`}>
+                  {tierDetails[selectedTier].name}
+                </span>
+                <span className="text-[11px] text-[#9CA3AF]">
+                  {tierDetails[selectedTier].desc}
+                </span>
+              </div>
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 pt-2 border-t border-white/5 text-[11.5px]">
+                <div className="flex items-center gap-1.5 text-zinc-300">
+                  <CheckCircle2 className="size-3.5 text-[#F5D061]" />
+                  <span>{tierDetails[selectedTier].bonus}</span>
+                </div>
+                <div className="flex items-center gap-1.5 text-zinc-300">
+                  <CheckCircle2 className="size-3.5 text-[#F5D061]" />
+                  <span>{tierDetails[selectedTier].discount}</span>
+                </div>
+                <div className="flex items-center gap-1.5 text-zinc-300">
+                  <CheckCircle2 className="size-3.5 text-[#F5D061]" />
+                  <span>{tierDetails[selectedTier].entry}</span>
+                </div>
+              </div>
+            </motion.div>
+          </AnimatePresence>
+        </div>
+      </section>
+
+      {/* 4. Instant Hand Bonus Payout Showcase */}
+      <section className="rounded-3xl border border-[#E6AF2E]/40 bg-gradient-to-br from-[#291A08] via-[#1A140F] to-[#0D0C10] p-6 sm:p-8 space-y-6">
+        <div className="flex items-center justify-between">
+          <div className="space-y-1">
+            <div className="flex items-center gap-2">
+              <Flame className="size-5 text-[#F5D061]" />
+              <h2 className="font-serif text-xl sm:text-2xl font-black text-[#F3E5AB]">
+                원터치 핸드 보너스
+              </h2>
+            </div>
+            <p className="text-xs text-[#9CA3AF]">
+              족보 달성 즉시 딜러가 QR을 스캔하여 포인트를 즉시 적립해 드립니다.
+            </p>
+          </div>
+          <Badge className="bg-[#E6AF2E] text-black font-extrabold text-xs px-2.5 py-1">
+            REALTIME
+          </Badge>
+        </div>
+
+        <div className="grid grid-cols-1 sm:grid-cols-4 gap-3">
+          <div className="rounded-2xl border border-emerald-500/30 bg-[#12141F] p-4 space-y-2 text-center">
+            <div className="text-xs text-zinc-400 font-bold">투핸드 포카드</div>
+            <div className="font-mono text-2xl font-black text-emerald-400">+500 P</div>
+            <p className="text-[10px] text-zinc-500">포켓 또는 보드 4장 달성</p>
+          </div>
+
+          <div className="rounded-2xl border border-purple-500/30 bg-[#12141F] p-4 space-y-2 text-center">
+            <div className="text-xs text-zinc-400 font-bold">스트레이트 플러시</div>
+            <div className="font-mono text-2xl font-black text-purple-400">+1,000 P</div>
+            <p className="text-[10px] text-zinc-500">동일 무늬 연속 5장</p>
+          </div>
+
+          <div className="rounded-2xl border border-amber-500/40 bg-[#1E1B10] p-4 space-y-2 text-center">
+            <div className="text-xs text-[#F3E5AB] font-bold">로얄 스트레이트 플러시</div>
+            <div className="font-mono text-2xl font-black text-[#F5D061]">+3,000 P</div>
+            <p className="text-[10px] text-[#F3E5AB]/60">최고의 명예 족보</p>
+          </div>
+
+          <div className="rounded-2xl border border-[#E6AF2E]/30 bg-[#181A28] p-4 space-y-2 text-center">
+            <div className="text-xs text-zinc-300 font-bold">10장 보너스 리워드</div>
+            <div className="font-mono text-2xl font-black text-amber-300">+5,000 P</div>
+            <p className="text-[10px] text-zinc-500">스페셜 핸드 달성자</p>
+          </div>
+        </div>
+      </section>
+
+      {/* 5. Tournament Grand Championship Showcase */}
+      <section className="space-y-6">
+        <div className="flex flex-col sm:flex-row items-center justify-between gap-6 rounded-3xl border border-[#E6AF2E]/30 bg-gradient-to-r from-[#171A2B] via-[#10121C] to-[#0A0B10] p-6 sm:p-8">
+          <div className="space-y-3 flex-1 text-center sm:text-left">
+            <Badge className="bg-[#E6AF2E]/20 text-[#F5D061] border-[#E6AF2E]/30 text-[10px]">
+              TOURNAMENT
+            </Badge>
+            <h2 className="font-serif text-2xl sm:text-3xl font-black text-white">
+              챔피언의 영예를 향한<br />
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#F5D061] to-[#C28B1E]">
+                정기 토너먼트 챔피언십
+              </span>
+            </h2>
+            <p className="text-xs text-[#9CA3AF] leading-relaxed">
+              매일 열리는 데일리 토너먼트부터 주말 빅 매치까지, 클럽 랭킹 포인트와 명예의 트로피를 획득하세요.
+            </p>
+            <div className="pt-2">
+              <Link href="/tournaments">
+                <Button className="h-11 rounded-xl bg-gradient-to-r from-[#F5D061] to-[#C28B1E] text-black font-bold text-xs shadow-lg">
+                  전체 토너먼트 일정 확인하기 <ChevronRight className="size-4 ml-1" />
+                </Button>
+              </Link>
+            </div>
+          </div>
+
+          <div className="relative size-60 sm:size-72 shrink-0 overflow-hidden rounded-2xl border border-[#E6AF2E]/30 shadow-2xl">
+            <Image
+              src="/images/trophy.jpg"
+              alt="Poker Championship Trophy"
+              fill
+              className="object-cover hover:scale-105 transition-transform duration-500"
+            />
+          </div>
+        </div>
+
+        {/* Tournament Cards List */}
+        {featuredTourneys.length > 0 && (
+          <div className="space-y-3">
+            <div className="flex items-center justify-between px-1">
+              <span className="text-xs font-mono font-bold text-[#9CA3AF] uppercase">
+                UPCOMING TOURNAMENTS
+              </span>
+              <Link href="/tournaments" className="text-xs text-[#F5D061] hover:underline">
+                더보기 ➔
+              </Link>
+            </div>
+            <div className="grid grid-cols-1 gap-3">
+              {featuredTourneys.map((t) => (
+                <TournamentCard key={t.id} tournament={t} />
+              ))}
+            </div>
+          </div>
+        )}
+      </section>
+
+      {/* 6. Club Trust & Legal Shield (합법 & 건전 클린 라운지) */}
+      <section className="rounded-3xl border border-emerald-500/30 bg-gradient-to-b from-[#0E1A16] to-[#080E0C] p-6 sm:p-8 space-y-4">
+        <div className="flex items-center gap-3">
+          <div className="flex size-11 items-center justify-center rounded-2xl bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">
+            <ShieldCheck className="size-6" />
+          </div>
+          <div>
+            <h3 className="font-serif text-lg font-bold text-white">
+              100% 합법 & 건전 마인드 스포츠 클럽
+            </h3>
+            <p className="text-xs text-emerald-400/80 font-medium">
+              FLOP POKER CLUB은 대한민국 법률을 철저히 준수합니다.
+            </p>
+          </div>
+        </div>
+
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-2 text-xs">
+          <div className="rounded-xl border border-emerald-500/20 bg-black/40 p-3.5 space-y-1">
+            <div className="font-bold text-emerald-300">❌ 현금 환전 절대 금지</div>
+            <p className="text-[11px] text-zinc-400">
+              칩과 포인트의 현금 환전, P2P 장외 거래를 일체 금지하며 위반 시 영구 퇴장 조치됩니다.
+            </p>
+          </div>
+          <div className="rounded-xl border border-emerald-500/20 bg-black/40 p-3.5 space-y-1">
+            <div className="font-bold text-emerald-300">⭕ 투명한 불변 전산 원장</div>
+            <p className="text-[11px] text-zinc-400">
+              모든 포인트의 적립과 사용 내역이 투명하게 전산 기록되어 안전하게 보존됩니다.
+            </p>
+          </div>
+          <div className="rounded-xl border border-emerald-500/20 bg-black/40 p-3.5 space-y-1">
+            <div className="font-bold text-emerald-300">🏆 스포츠맨십 & 매너</div>
+            <p className="text-[11px] text-zinc-400">
+              공정한 룰과 매너 있는 플레이로 원주 최고의 홀덤 스포츠 문화를 선도합니다.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      {/* 7. FAQ Accordion Section */}
+      <section className="space-y-4">
+        <div className="text-center space-y-1">
+          <h2 className="font-serif text-xl font-bold text-white">자주 묻는 질문 (FAQ)</h2>
+          <p className="text-xs text-[#9CA3AF]">클럽 이용에 대해 궁금하신 점을 확인하세요.</p>
+        </div>
+
+        <div className="space-y-2.5 max-w-xl mx-auto">
+          {faqs.map((faq, idx) => (
+            <div
+              key={idx}
+              className="overflow-hidden rounded-2xl border border-[#E6AF2E]/20 bg-[#12141F] transition-all"
+            >
+              <button
+                onClick={() => setActiveFaq(activeFaq === idx ? null : idx)}
+                className="flex w-full items-center justify-between p-4 text-left text-xs sm:text-sm font-bold text-white hover:text-[#F5D061] transition-colors"
+              >
+                <span>{faq.q}</span>
+                <ChevronDown
+                  className={`size-4 text-[#F5D061] transition-transform duration-300 ${
+                    activeFaq === idx ? 'rotate-180' : ''
+                  }`}
+                />
+              </button>
+              {activeFaq === idx && (
+                <div className="border-t border-white/5 bg-[#0C0D15] p-4 text-xs text-[#9CA3AF] leading-relaxed">
+                  {faq.a}
+                </div>
+              )}
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* 8. Location & Store Info */}
+      <section className="rounded-3xl border border-[#E6AF2E]/30 bg-gradient-to-br from-[#181A28] to-[#0E1018] p-6 sm:p-8 space-y-4">
+        <div className="flex items-center gap-3">
+          <div className="flex size-10 items-center justify-center rounded-xl bg-[#E6AF2E]/10 text-[#F5D061]">
+            <MapPin className="size-5" />
+          </div>
+          <div>
+            <h3 className="font-bold text-base text-white">FLOP POKER CLUB 오시는 길</h3>
+            <p className="text-xs text-[#9CA3AF]">강원특별자치도 원주시 프리미엄 홀덤 라운지</p>
+          </div>
+        </div>
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs pt-2">
+          <div className="rounded-2xl border border-white/10 bg-[#12141F] p-4 space-y-1.5">
+            <div className="flex items-center gap-2 text-[#F3E5AB] font-bold">
+              <Clock3 className="size-4 text-[#E6AF2E]" />
+              <span>영업 시간 및 예약</span>
+            </div>
+            <p className="text-[11.5px] text-zinc-300">
+              매일 18:00 ~ 익일 06:00 (연중무휴)
+            </p>
+            <p className="text-[10px] text-zinc-500">단체 및 VIP 테이블 사전 예약 가능</p>
+          </div>
+
+          <div className="rounded-2xl border border-white/10 bg-[#12141F] p-4 space-y-1.5">
+            <div className="flex items-center gap-2 text-[#F3E5AB] font-bold">
+              <ShieldCheck className="size-4 text-[#E6AF2E]" />
+              <span>편의 시설 & 주차</span>
+            </div>
+            <p className="text-[11.5px] text-zinc-300">
+              지하 무료 주차장 완비 · 무선 충전 테이블 · 프리미엄 음료 바
+            </p>
+            <p className="text-[10px] text-zinc-500">흡연실 및 공기청정 시스템 가동</p>
+          </div>
+        </div>
+      </section>
+
+      {/* 9. Rich Footer */}
+      <footer className="border-t border-[#E6AF2E]/20 pt-8 text-center text-xs text-[#9CA3AF] space-y-4">
+        <div className="flex items-center justify-center gap-2">
+          <div className="flex size-7 items-center justify-center rounded-lg bg-gradient-to-br from-[#F5D061] to-[#C28B1E] text-black font-serif font-black text-xs">
+            ♠
+          </div>
+          <span className="font-serif text-sm font-black text-white tracking-wider">
+            FLOP POKER CLUB
+          </span>
+        </div>
+        <p className="text-[11px] leading-relaxed max-w-sm mx-auto text-[#9CA3AF]">
+          FLOP POKER CLUB 원주점은 건전한 마인드 스포츠 홀덤 문화를 지향하며 불법 환전 및 사행 행위를 절대 용인하지 않습니다.
+        </p>
+        <div className="flex justify-center gap-4 text-[11px] text-[#F3E5AB]">
+          <Link href="/notices?tab=RULE" className="hover:underline">클럽 이용 룰북</Link>
+          <span>·</span>
+          <Link href="/notices" className="hover:underline">공지사항</Link>
+          <span>·</span>
+          <Link href="/tournaments" className="hover:underline">대회일정</Link>
+        </div>
+        <p className="font-mono text-[9.5px] text-zinc-600">
+          © 2026 FLOP POKER CLUB. ALL RIGHTS RESERVED.
+        </p>
+      </footer>
+
+      {/* 10. Floating Bottom Conversion Action Bar */}
+      <div className="fixed bottom-20 left-4 right-4 z-40 mx-auto max-w-md">
+        <div className="rounded-2xl border border-[#F5D061]/50 bg-gradient-to-r from-[#212435]/95 via-[#181A26]/95 to-[#10121C]/95 p-3 shadow-2xl shadow-black/80 backdrop-blur-xl flex items-center justify-between gap-3">
+          <div className="space-y-0.5 pl-1.5">
+            <div className="flex items-center gap-1.5">
+              <span className="text-xs font-black text-white">가입 즉시 5,000 P</span>
+              <Badge className="bg-[#E6AF2E]/20 text-[#F5D061] text-[9px] px-1 py-0 border-[#E6AF2E]/40">
+                무료
+              </Badge>
+            </div>
+            <div className="text-[10px] text-[#F3E5AB]">Google 3초 간편 VIP 등록</div>
           </div>
           <Link href="/login">
             <Button
               size="sm"
-              className="h-9 px-4 rounded-xl bg-gradient-to-r from-[#F5D061] to-[#C28B1E] text-black font-extrabold text-xs shadow-md shadow-yellow-500/20 hover:scale-105 transition-transform"
+              className="h-9 px-4 rounded-xl bg-gradient-to-r from-[#F5D061] via-[#E6AF2E] to-[#C28B1E] text-black font-extrabold text-xs shadow-lg shadow-yellow-500/25 hover:scale-105 active:scale-95 transition-all"
             >
-              시작하기 <ArrowRight className="size-3.5 ml-1" />
+              VIP 카드 발급 <ArrowRight className="size-3.5 ml-1" />
             </Button>
           </Link>
         </div>
