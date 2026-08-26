@@ -4,7 +4,6 @@ const STATIC_ASSETS = [
   '/',
   '/icon.svg',
   '/manifest.webmanifest',
-  '/globals.css'
 ]
 
 self.addEventListener('install', (event) => {
