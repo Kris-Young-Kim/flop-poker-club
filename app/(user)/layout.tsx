@@ -3,15 +3,16 @@
 import { ReactNode } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
+import { useSession } from 'next-auth/react'
 import {
   Home,
+  Crown,
   ReceiptText,
   Trophy,
   Megaphone,
-  Crown,
   Bell,
   User,
-  ShieldCheck
+  Sparkles,
 } from 'lucide-react'
 
 interface UserLayoutProps {
@@ -20,13 +21,20 @@ interface UserLayoutProps {
 
 export default function UserLayout({ children }: UserLayoutProps) {
   const pathname = usePathname()
+  const { data: session } = useSession()
 
   const navItems = [
     {
       href: '/',
-      label: '홈',
+      label: '클럽홈',
       icon: Home,
       isActive: pathname === '/' || pathname === '',
+    },
+    {
+      href: '/lounge',
+      label: 'VIP라운지',
+      icon: Crown,
+      isActive: pathname.startsWith('/lounge'),
     },
     {
       href: '/ledger',
@@ -75,6 +83,24 @@ export default function UserLayout({ children }: UserLayoutProps) {
 
           {/* Right Header Icons */}
           <div className="flex items-center gap-2">
+            {session?.user ? (
+              <Link
+                href="/lounge"
+                className="flex items-center gap-1.5 rounded-xl border border-[#F5D061]/40 bg-gradient-to-r from-[#282110] to-[#161824] px-2.5 py-1.5 text-xs text-[#F5D061] hover:border-[#F5D061] transition-all shadow-md"
+              >
+                <Crown className="size-3.5 text-[#F5D061]" />
+                <span className="font-bold max-w-[80px] truncate">{session.user.name ?? 'VIP회원'}</span>
+              </Link>
+            ) : (
+              <Link
+                href="/login"
+                className="flex items-center gap-1 rounded-xl border border-[#E6AF2E]/30 bg-[#161824] px-2.5 py-1.5 text-xs font-bold text-[#F3E5AB] hover:border-[#E6AF2E] transition-all"
+              >
+                <User className="size-3.5" />
+                <span>로그인</span>
+              </Link>
+            )}
+
             <Link
               href="/notices"
               className="relative flex size-9 items-center justify-center rounded-xl border border-[#E6AF2E]/20 bg-gradient-to-b from-[#1C1F2E] to-[#12131D] text-[#F3E5AB] hover:border-[#E6AF2E]/50 transition-all"
@@ -82,14 +108,6 @@ export default function UserLayout({ children }: UserLayoutProps) {
             >
               <Bell className="size-4" />
               <span className="absolute right-1.5 top-1.5 size-2 rounded-full bg-[#E6AF2E] ring-2 ring-[#08090D] animate-pulse" />
-            </Link>
-
-            <Link
-              href="/login"
-              className="flex size-9 items-center justify-center rounded-xl border border-[#E6AF2E]/20 bg-gradient-to-b from-[#1C1F2E] to-[#12131D] text-[#F3E5AB] hover:border-[#E6AF2E]/50 transition-all"
-              aria-label="마이페이지/로그인"
-            >
-              <User className="size-4" />
             </Link>
           </div>
         </div>
@@ -102,14 +120,14 @@ export default function UserLayout({ children }: UserLayoutProps) {
 
       {/* Fixed Bottom Tab Navigation Bar */}
       <nav className="fixed bottom-0 left-0 right-0 z-40 border-t border-[#E6AF2E]/20 bg-gradient-to-t from-[#08090D]/98 via-[#0F101A]/95 to-[#161826]/95 backdrop-blur-2xl pb-safe shadow-2xl">
-        <div className="mx-auto flex h-16 max-w-lg items-center justify-around px-2">
+        <div className="mx-auto flex h-16 max-w-lg items-center justify-around px-1">
           {navItems.map((item) => {
             const Icon = item.icon
             return (
               <Link
                 key={item.href}
                 href={item.href}
-                className={`relative flex flex-col items-center justify-center py-1.5 px-3 rounded-2xl transition-all duration-200 ${
+                className={`relative flex flex-col items-center justify-center py-1.5 px-2 rounded-2xl transition-all duration-200 ${
                   item.isActive
                     ? 'text-[#F5D061]'
                     : 'text-[#9CA3AF] hover:text-[#F3E5AB]'
@@ -131,7 +149,7 @@ export default function UserLayout({ children }: UserLayoutProps) {
                 </div>
 
                 <span
-                  className={`text-[10px] tracking-tight mt-0.5 font-medium ${
+                  className={`text-[9.5px] tracking-tight mt-0.5 font-medium ${
                     item.isActive ? 'font-bold text-[#F5D061]' : 'text-[#9CA3AF]'
                   }`}
                 >

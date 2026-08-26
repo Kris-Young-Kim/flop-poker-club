@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
+import { useSession } from 'next-auth/react'
 import { motion, AnimatePresence } from 'framer-motion'
 import {
   Crown,
@@ -40,6 +41,7 @@ interface LandingPageProps {
 }
 
 export function LandingPage({ tournaments, pinnedNotice }: LandingPageProps) {
+  const { data: session } = useSession()
   const [selectedTier, setSelectedTier] = useState<'NORMAL' | 'VIP' | 'VVIP' | 'ROYAL'>('VIP')
   const [activeFaq, setActiveFaq] = useState<number | null>(null)
 
@@ -204,15 +206,27 @@ export function LandingPage({ tournaments, pinnedNotice }: LandingPageProps) {
               transition={{ duration: 0.8, delay: 0.4 }}
               className="w-full max-w-sm flex flex-col sm:flex-row gap-2.5 pt-1"
             >
-              <Link href="/login" className="flex-1">
-                <Button
-                  size="lg"
-                  className="h-13 w-full rounded-2xl bg-gradient-to-r from-[#F5D061] via-[#E6AF2E] to-[#C28B1E] text-black font-black text-sm shadow-xl shadow-yellow-500/30 hover:scale-105 active:scale-95 transition-all"
-                >
-                  <Crown className="size-4 mr-2" />
-                  VIP 멤버십 카드 발급받기
-                </Button>
-              </Link>
+              {session?.user ? (
+                <Link href="/lounge" className="flex-1">
+                  <Button
+                    size="lg"
+                    className="h-13 w-full rounded-2xl bg-gradient-to-r from-[#F5D061] via-[#E6AF2E] to-[#C28B1E] text-black font-black text-sm shadow-xl shadow-yellow-500/30 hover:scale-105 active:scale-95 transition-all"
+                  >
+                    <Crown className="size-4 mr-2" />
+                    내 VIP 라운지 입장하기
+                  </Button>
+                </Link>
+              ) : (
+                <Link href="/login" className="flex-1">
+                  <Button
+                    size="lg"
+                    className="h-13 w-full rounded-2xl bg-gradient-to-r from-[#F5D061] via-[#E6AF2E] to-[#C28B1E] text-black font-black text-sm shadow-xl shadow-yellow-500/30 hover:scale-105 active:scale-95 transition-all"
+                  >
+                    <Crown className="size-4 mr-2" />
+                    VIP 멤버십 카드 발급받기
+                  </Button>
+                </Link>
+              )}
               <Link href="/tournaments">
                 <Button
                   size="lg"
@@ -574,23 +588,47 @@ export function LandingPage({ tournaments, pinnedNotice }: LandingPageProps) {
       {/* 10. Floating Bottom Conversion Action Bar */}
       <div className="fixed bottom-20 left-4 right-4 z-40 mx-auto max-w-md">
         <div className="rounded-2xl border border-[#F5D061]/50 bg-gradient-to-r from-[#212435]/95 via-[#181A26]/95 to-[#10121C]/95 p-3 shadow-2xl shadow-black/80 backdrop-blur-xl flex items-center justify-between gap-3">
-          <div className="space-y-0.5 pl-1.5">
-            <div className="flex items-center gap-1.5">
-              <span className="text-xs font-black text-white">가입 즉시 5,000 P</span>
-              <Badge className="bg-[#E6AF2E]/20 text-[#F5D061] text-[9px] px-1 py-0 border-[#E6AF2E]/40">
-                무료
-              </Badge>
-            </div>
-            <div className="text-[10px] text-[#F3E5AB]">Google 3초 간편 VIP 등록</div>
-          </div>
-          <Link href="/login">
-            <Button
-              size="sm"
-              className="h-9 px-4 rounded-xl bg-gradient-to-r from-[#F5D061] via-[#E6AF2E] to-[#C28B1E] text-black font-extrabold text-xs shadow-lg shadow-yellow-500/25 hover:scale-105 active:scale-95 transition-all"
-            >
-              VIP 카드 발급 <ArrowRight className="size-3.5 ml-1" />
-            </Button>
-          </Link>
+          {session?.user ? (
+            <>
+              <div className="space-y-0.5 pl-1.5">
+                <div className="flex items-center gap-1.5">
+                  <span className="text-xs font-black text-white">{session.user.name ?? 'VIP 회원'}님</span>
+                  <Badge className="bg-[#E6AF2E]/20 text-[#F5D061] text-[9px] px-1 py-0 border-[#E6AF2E]/40">
+                    VIP 정회원
+                  </Badge>
+                </div>
+                <div className="text-[10px] text-[#F3E5AB]">내 VIP 카드 & QR 코드 확인</div>
+              </div>
+              <Link href="/lounge">
+                <Button
+                  size="sm"
+                  className="h-9 px-4 rounded-xl bg-gradient-to-r from-[#F5D061] via-[#E6AF2E] to-[#C28B1E] text-black font-extrabold text-xs shadow-lg shadow-yellow-500/25 hover:scale-105 active:scale-95 transition-all"
+                >
+                  라운지 입장 <ArrowRight className="size-3.5 ml-1" />
+                </Button>
+              </Link>
+            </>
+          ) : (
+            <>
+              <div className="space-y-0.5 pl-1.5">
+                <div className="flex items-center gap-1.5">
+                  <span className="text-xs font-black text-white">가입 즉시 5,000 P</span>
+                  <Badge className="bg-[#E6AF2E]/20 text-[#F5D061] text-[9px] px-1 py-0 border-[#E6AF2E]/40">
+                    무료
+                  </Badge>
+                </div>
+                <div className="text-[10px] text-[#F3E5AB]">Google 3초 간편 VIP 등록</div>
+              </div>
+              <Link href="/login">
+                <Button
+                  size="sm"
+                  className="h-9 px-4 rounded-xl bg-gradient-to-r from-[#F5D061] via-[#E6AF2E] to-[#C28B1E] text-black font-extrabold text-xs shadow-lg shadow-yellow-500/25 hover:scale-105 active:scale-95 transition-all"
+                >
+                  VIP 카드 발급 <ArrowRight className="size-3.5 ml-1" />
+                </Button>
+              </Link>
+            </>
+          )}
         </div>
       </div>
     </div>
