@@ -33,23 +33,28 @@ export default function UserHomePage() {
   const [recentTx, setRecentTx] = useState<PointTransaction[]>([])
 
   useEffect(() => {
-    getCurrentProfile().then((p) => setProfile(p))
+    getCurrentProfile()
+      .then((p) => setProfile(p))
+      .catch(() => {}) // 홈에서는 카드가 빈 상태로 표시
 
-    getNotices().then((notices) => {
-      const pinned = notices.find((n) => n.is_pinned) ?? notices[0] ?? null
-      setPinnedNotice(pinned)
-    })
+    getNotices()
+      .then((notices) => {
+        setPinnedNotice(notices.find((n) => n.is_pinned) ?? notices[0] ?? null)
+      })
+      .catch(() => {})
 
-    getTournaments().then((tourneys) => {
-      const featured =
-        tourneys.find((t) => t.status === 'REGISTRATION') ??
-        tourneys.find((t) => t.status === 'LIVE') ??
-        tourneys[0] ??
-        null
-      setFeaturedTourney(featured)
-    })
+    getTournaments()
+      .then((tourneys) => {
+        setFeaturedTourney(
+          tourneys.find((t) => t.status === 'REGISTRATION') ??
+          tourneys.find((t) => t.status === 'LIVE') ??
+          tourneys[0] ??
+          null
+        )
+      })
+      .catch(() => {})
 
-    getMyTransactions(3).then(setRecentTx)
+    getMyTransactions(3).then(setRecentTx).catch(() => {})
   }, [])
 
   return (

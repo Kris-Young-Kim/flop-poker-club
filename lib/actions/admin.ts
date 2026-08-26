@@ -152,6 +152,8 @@ export async function getAdminDashboardStats(): Promise<AdminStats> {
 
 export async function searchMemberByQr(query: string): Promise<Profile | null> {
   try {
+    await requireStaffSession()
+
     const cleanQuery = query.trim()
     if (!cleanQuery) return null
 

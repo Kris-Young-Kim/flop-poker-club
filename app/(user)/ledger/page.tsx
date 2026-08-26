@@ -16,6 +16,7 @@ import { PointTransaction } from '@/types/database.types'
 import { formatPoints, formatDateTime, getPointReasonMeta } from '@/lib/utils/format'
 import { getMyTransactions } from '@/lib/actions/ledger'
 import { getCurrentProfile } from '@/lib/actions/user'
+import { toast } from 'sonner'
 
 export default function PointLedgerPage() {
   const [transactions, setTransactions] = useState<PointTransaction[]>([])
@@ -26,11 +27,13 @@ export default function PointLedgerPage() {
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    Promise.all([getMyTransactions(), getCurrentProfile()]).then(([txs, profile]) => {
-      setTransactions(txs)
-      setTotalPoints(profile?.total_points ?? 0)
-      setLoading(false)
-    })
+    Promise.all([getMyTransactions(), getCurrentProfile()])
+      .then(([txs, profile]) => {
+        setTransactions(txs)
+        setTotalPoints(profile?.total_points ?? 0)
+      })
+      .catch(() => toast.error('데이터를 불러오지 못했습니다. 다시 시도해 주세요.'))
+      .finally(() => setLoading(false))
   }, [])
 
   const totalEarned = transactions.filter((tx) => tx.amount > 0).reduce((a, c) => a + c.amount, 0)

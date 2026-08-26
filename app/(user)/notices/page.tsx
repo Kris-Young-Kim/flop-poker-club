@@ -8,6 +8,7 @@ import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Input } from '@/components/ui/input'
 import { NoticeEvent } from '@/types/database.types'
 import { getNotices } from '@/lib/actions/notices'
+import { toast } from 'sonner'
 
 function NoticesContent() {
   const searchParams = useSearchParams()
@@ -21,10 +22,10 @@ function NoticesContent() {
   const [searchQuery, setSearchQuery] = useState('')
 
   useEffect(() => {
-    getNotices().then((data) => {
-      setNotices(data)
-      setLoading(false)
-    })
+    getNotices()
+      .then(setNotices)
+      .catch(() => toast.error('공지를 불러오지 못했습니다. 다시 시도해 주세요.'))
+      .finally(() => setLoading(false))
   }, [])
 
   useEffect(() => {

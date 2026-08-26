@@ -16,11 +16,13 @@ export default function TournamentsPage() {
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    Promise.all([getTournaments(), getMyRegistrations()]).then(([ts, regs]) => {
-      setTournaments(ts)
-      setRegisteredIds(new Set(regs.map((r) => r.tournament_id)))
-      setLoading(false)
-    })
+    Promise.all([getTournaments(), getMyRegistrations()])
+      .then(([ts, regs]) => {
+        setTournaments(ts)
+        setRegisteredIds(new Set(regs.map((r) => r.tournament_id)))
+      })
+      .catch(() => toast.error('대회 정보를 불러오지 못했습니다. 다시 시도해 주세요.'))
+      .finally(() => setLoading(false))
   }, [])
 
   const handleRegister = async (id: string) => {
