@@ -21,7 +21,8 @@
       "PowerShell(cd D:\\\\developer\\\\flop-poker-club; $env:DATABASE_URL=\"postgresql://build:build@build.neon.tech/build?sslmode=require\"; npx next build 2>&1 | Select-Object -Last 25)",
       "PowerShell(Stop-Process *)",
       "PowerShell(vercel *)",
-      "PowerShell(cd D:\\\\developer\\\\flop-poker-club; $env:DATABASE_URL=\"postgresql://build:build@build.neon.tech/build?sslmode=require\"; npx next build 2>&1 | Select-Object -Last 22)"
+      "PowerShell(cd D:\\\\developer\\\\flop-poker-club; $env:DATABASE_URL=\"postgresql://build:build@build.neon.tech/build?sslmode=require\"; npx next build 2>&1 | Select-Object -Last 22)",
+      "Bash(git fetch *)"
     ]
   }
 }
