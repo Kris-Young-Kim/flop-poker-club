@@ -1,0 +1,18 @@
+{
+  "permissions": {
+    "allow": [
+      "WebFetch(domain:kyungseo.github.io)",
+      "PowerShell(Get-ChildItem \"D:\\\\developer\\\\flop-poker-club\\\\app\" -Force | ForEach-Object { $_.FullName })",
+      "PowerShell(Get-ChildItem \"D:\\\\developer\\\\flop-poker-club\\\\app\" -Recurse -Force | Where-Object { !$_.PSIsContainer } | ForEach-Object { $_.FullName })",
+      "PowerShell(Get-ChildItem \"D:\\\\developer\\\\flop-poker-club\\\\components\" -Recurse -Force | ForEach-Object { $_.FullName })",
+      "PowerShell(Copy-Item *)",
+      "PowerShell($bytes = New-Object byte[] 32; [System.Security.Cryptography.RandomNumberGenerator]::Fill\\($bytes\\); [Convert]::ToBase64String\\($bytes\\))",
+      "PowerShell($rng = [System.Security.Cryptography.RNGCryptoServiceProvider]::new\\(\\); $bytes = New-Object byte[] 32; $rng.GetBytes\\($bytes\\); [Convert]::ToBase64String\\($bytes\\))",
+      "PowerShell(pnpm db:migrate *)",
+      "PowerShell(Set-Location \"D:\\\\developer\\\\flop-poker-club\"; $env:DATABASE_URL = \"postgresql://neondb_owner:npg_IQsv5AiEqZw4@ep-winter-queen-az33grwg-pooler.c-3.ap-southeast-1.aws.neon.tech/neondb?sslmode=require&channel_binding=require\"; node --experimental-vm-modules lib/db/run-procedures.mjs 2>&1)",
+      "PowerShell(Set-Location \"D:\\\\developer\\\\flop-poker-club\"; $env:DATABASE_URL = \"postgresql://neondb_owner:npg_IQsv5AiEqZw4@ep-winter-queen-az33grwg-pooler.c-3.ap-southeast-1.aws.neon.tech/neondb?sslmode=require&channel_binding=require\"; node lib/db/run-procedures.mjs 2>&1)",
+      "PowerShell(Set-Location \"D:\\\\developer\\\\flop-poker-club\"; $env:DATABASE_URL = \"postgresql://neondb_owner:npg_IQsv5AiEqZw4@ep-winter-queen-az33grwg-pooler.c-3.ap-southeast-1.aws.neon.tech/neondb?sslmode=require&channel_binding=require\"; node lib/db/verify.mjs 2>&1)",
+      "Skill(claude-in-chrome)"
+    ]
+  }
+}
