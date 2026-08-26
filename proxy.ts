@@ -6,37 +6,34 @@ export default auth((req) => {
   const isLoggedIn = !!session?.user
 
   const isAdminRoute = nextUrl.pathname.startsWith('/admin')
-  const isAuthRoute =
-    nextUrl.pathname.startsWith('/login') || nextUrl.pathname.startsWith('/onboarding')
+  const isOnboardingRoute = nextUrl.pathname.startsWith('/onboarding')
   const isApiAuthRoute = nextUrl.pathname.startsWith('/api/auth')
 
+  // 1. API Auth 경로는 항상 허용
   if (isApiAuthRoute) return NextResponse.next()
 
-  // 비인증 사용자 → /login
-  if (!isLoggedIn && !isAuthRoute) {
-    return NextResponse.redirect(new URL('/login', nextUrl))
-  }
-
-  // 이미 로그인된 사용자가 /login 접근 → 홈 또는 온보딩
-  if (isLoggedIn && nextUrl.pathname === '/login') {
-    return NextResponse.redirect(
-      new URL(session.user.onboardingComplete ? '/' : '/onboarding', nextUrl)
-    )
-  }
-
-  // 온보딩 미완료 → /onboarding 강제
-  if (isLoggedIn && !session.user.onboardingComplete && !isAuthRoute) {
-    return NextResponse.redirect(new URL('/onboarding', nextUrl))
-  }
-
-  // /admin — staff/super_admin 이외 차단
+  // 2. /admin 접근 — 비로그인 시 /login 리다이렉트, staff/super_admin 이외 홈으로 차단
   if (isAdminRoute) {
+    if (!isLoggedIn) {
+      return NextResponse.redirect(new URL('/login', nextUrl))
+    }
     const role = session?.user?.role
     if (role !== 'staff' && role !== 'super_admin') {
       return NextResponse.redirect(new URL('/', nextUrl))
     }
   }
 
+  // 3. 이미 온보딩까지 완료된 회원이 /login 또는 /onboarding 진입 시 ➔ 홈(/)으로 리다이렉트
+  if (isLoggedIn && session.user.onboardingComplete && (nextUrl.pathname === '/login' || isOnboardingRoute)) {
+    return NextResponse.redirect(new URL('/', nextUrl))
+  }
+
+  // 4. 구글 로그인 후 온보딩(닉네임/전화번호) 미완료 신규 사용자 ➔ 온보딩 강제 이동
+  if (isLoggedIn && !session.user.onboardingComplete && !isOnboardingRoute && !nextUrl.pathname.startsWith('/login')) {
+    return NextResponse.redirect(new URL('/onboarding', nextUrl))
+  }
+
+  // 5. 비로그인 방문자는 랜딩페이지(/), 대회(/tournaments), 공지(/notices), 원장(/ledger) 모두 자유롭게 열람 가능!
   return NextResponse.next()
 })
 
