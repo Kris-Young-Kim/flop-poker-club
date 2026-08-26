@@ -31,11 +31,12 @@ self.addEventListener('activate', (event) => {
 })
 
 self.addEventListener('fetch', (event) => {
-  // Pass through non-GET and API/Auth requests to network
+  // Pass through: non-GET, API/Auth, Next.js internal, and page navigations
   if (
     event.request.method !== 'GET' ||
     event.request.url.includes('/api/') ||
-    event.request.url.includes('/_next/')
+    event.request.url.includes('/_next/') ||
+    event.request.mode === 'navigate'
   ) {
     return
   }

@@ -227,6 +227,19 @@ export default function OnboardingPage() {
           </div>
 
           {/* Submit */}
+          {!isFormValid && !isSubmitting && (
+            <p className="text-[11px] text-amber-400 text-center -mb-1">
+              {!nicknameChecked
+                ? '닉네임 중복 확인을 완료해 주세요.'
+                : !nicknameAvailable
+                ? '사용 가능한 닉네임을 입력해 주세요.'
+                : name.trim().length < 2
+                ? '이름을 2자 이상 입력해 주세요.'
+                : phone.length < 12
+                ? '휴대폰 번호를 입력해 주세요.'
+                : '모든 항목을 입력해 주세요.'}
+            </p>
+          )}
           <Button
             type="submit"
             disabled={!isFormValid || isSubmitting}
