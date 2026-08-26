@@ -171,6 +171,16 @@ export async function cancelRegistration(
 
   try {
     await db.transaction(async (tx) => {
+      // 1) 프로필 락 선취득 — 이후 모든 잔액 계산의 기준
+      const [profile] = await tx
+        .select({ totalPoints: profiles.totalPoints })
+        .from(profiles)
+        .where(eq(profiles.id, userId))
+        .for('update')
+
+      if (!profile) throw new Error('PROFILE_NOT_FOUND')
+
+      // 2) 토너먼트 상태 확인
       const [tourney] = await tx
         .select({ entryPointCost: tournaments.entryPointCost, status: tournaments.status })
         .from(tournaments)
@@ -181,6 +191,7 @@ export async function cancelRegistration(
         throw new Error('CANNOT_CANCEL')
       }
 
+      // 3) 참가 기록 삭제
       const deleted = await tx
         .delete(tournamentParticipants)
         .where(
@@ -193,14 +204,8 @@ export async function cancelRegistration(
 
       if (deleted.length === 0) throw new Error('NOT_REGISTERED')
 
-      // Refund points
-      const [profile] = await tx
-        .select({ totalPoints: profiles.totalPoints })
-        .from(profiles)
-        .where(eq(profiles.id, userId))
-        .for('update')
-
-      const newBalance = (profile?.totalPoints ?? 0) + tourney.entryPointCost
+      // 4) 환불
+      const newBalance = profile.totalPoints + tourney.entryPointCost
 
       await tx
         .update(profiles)
@@ -221,6 +226,7 @@ export async function cancelRegistration(
   } catch (e: unknown) {
     const msg = e instanceof Error ? e.message : String(e)
     const errorMap: Record<string, string> = {
+      PROFILE_NOT_FOUND: '회원 정보를 찾을 수 없습니다.',
       TOURNAMENT_NOT_FOUND: '대회를 찾을 수 없습니다.',
       CANNOT_CANCEL: '진행 중이거나 완료된 대회는 취소할 수 없습니다.',
       NOT_REGISTERED: '신청 내역을 찾을 수 없습니다.',

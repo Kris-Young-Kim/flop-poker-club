@@ -66,6 +66,8 @@ export interface AdminStats {
 
 export async function getAdminDashboardStats(): Promise<AdminStats> {
   try {
+    await requireStaffSession()
+
     const todayStart = new Date()
     todayStart.setHours(0, 0, 0, 0)
 
@@ -226,18 +228,19 @@ export async function processStaffPointAction(
     if (!targetUserId) return { success: false, error: '대상 회원 정보가 없습니다.' }
     if (amount === 0) return { success: false, error: '포인트 금액이 0일 수 없습니다.' }
 
-    // 동일 idempotencyKey 트랜잭션이 이미 존재하면 중복 처리 방지
-    if (idempotencyKey) {
-      const existing = await db.query.pointTransactions.findFirst({
-        where: eq(pointTransactions.description, `[KEY:${idempotencyKey}]`),
-        columns: { id: true },
-      })
-      if (existing) return { success: false, error: '이미 처리된 요청입니다. (중복 방지)' }
-    }
-
     let updatedBalance = 0
 
     await db.transaction(async (tx) => {
+      // 0) idempotency 체크 — 트랜잭션 내부에서 수행해 TOCTOU 방지
+      if (idempotencyKey) {
+        const existing = await tx
+          .select({ id: pointTransactions.id })
+          .from(pointTransactions)
+          .where(eq(pointTransactions.description, `[KEY:${idempotencyKey}]`))
+          .limit(1)
+        if (existing.length > 0) throw new Error('DUPLICATE_REQUEST')
+      }
+
       // 1) 비관적 락으로 대상 회원 잔액 조회
       const [targetProfile] = await tx
         .select({
@@ -307,6 +310,7 @@ export async function processStaffPointAction(
   } catch (error: unknown) {
     console.error('processStaffPointAction error:', error)
     const msg = error instanceof Error ? error.message : String(error)
+    if (msg === 'DUPLICATE_REQUEST') return { success: false, error: '이미 처리된 요청입니다. (중복 방지)' }
     if (msg === 'TARGET_NOT_FOUND') return { success: false, error: '회원 정보를 찾을 수 없습니다.' }
     if (msg === 'INSUFFICIENT_POINTS') return { success: false, error: '차감할 포인트가 부족합니다. (잔액 부족)' }
     return { success: false, error: msg || '포인트 처리에 실패했습니다.' }
