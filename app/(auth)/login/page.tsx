@@ -2,7 +2,6 @@
 
 import { useState } from 'react'
 import Link from 'next/link'
-import { useRouter } from 'next/navigation'
 import { signIn } from 'next-auth/react'
 import {
   Crown,
@@ -10,24 +9,17 @@ import {
   Sparkles,
   Zap,
   CheckCircle2,
-  ArrowRight,
-  HelpCircle
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 
 export default function LoginPage() {
-  const router = useRouter()
   const [isLoading, setIsLoading] = useState(false)
 
   const handleGoogleLogin = async () => {
     setIsLoading(true)
     await signIn('google', { callbackUrl: '/' })
-  }
-
-  const handleDemoAccess = () => {
-    router.push('/onboarding')
   }
 
   return (
@@ -119,17 +111,7 @@ export default function LoginPage() {
             </ul>
           </div>
 
-          {/* Guest Demo Preview Button */}
-          <div className="pt-2 border-t border-[#E6AF2E]/15 text-center">
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={handleDemoAccess}
-              className="text-xs text-[#9CA3AF] hover:text-[#F3E5AB] hover:bg-transparent"
-            >
-              로그인 없이 클럽 둘러보기 <ArrowRight className="size-3.5 ml-1" />
-            </Button>
-          </div>
+
         </div>
 
         {/* Terms & Legal Compliance Notice */}
