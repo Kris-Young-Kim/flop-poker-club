@@ -5,6 +5,7 @@ import { db } from '@/lib/db'
 import { profiles, accounts, verificationTokens } from '@/lib/db/schema'
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
+  secret: process.env.AUTH_SECRET || process.env.NEXTAUTH_SECRET,
   adapter: DrizzleAdapter(db, {
     usersTable: profiles,
     accountsTable: accounts,
@@ -12,8 +13,8 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
   }),
   providers: [
     Google({
-      clientId: process.env.GOOGLE_CLIENT_ID!,
-      clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
+      clientId: process.env.GOOGLE_CLIENT_ID ?? '',
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET ?? '',
     }),
   ],
   session: { strategy: 'jwt' },
