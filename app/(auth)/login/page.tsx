@@ -31,7 +31,7 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="relative min-h-screen flex flex-col justify-center items-center px-4 py-12 bg-[#0B0B0F] text-white selection:bg-[#E6AF2E]/30 overflow-hidden">
+    <div className="relative min-h-screen flex flex-col justify-center items-center px-4 py-12 bg-transparent text-white selection:bg-[#E6AF2E]/30 overflow-hidden">
       {/* Background Ambience & Casino Glow */}
       <div className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 size-96 rounded-full bg-[#E6AF2E]/10 blur-3xl pointer-events-none" />
       <div className="absolute bottom-10 right-10 size-72 rounded-full bg-[#9C6B14]/10 blur-3xl pointer-events-none" />

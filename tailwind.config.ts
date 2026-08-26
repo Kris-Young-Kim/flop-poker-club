@@ -9,6 +9,14 @@ const config: Config = {
   ],
   theme: {
     extend: {
+      fontFamily: {
+        sans: ["Pretendard", "-apple-system", "BlinkMacSystemFont", "Segoe UI", "Roboto", "sans-serif"],
+        display: ["GmarketSans", "Pretendard", "sans-serif"],
+        chosun: ["ChosunNm", "Playfair Display", "serif"],
+        cinzel: ["Cinzel", "Playfair Display", "serif"],
+        serif: ["Cinzel", "Playfair Display", "ChosunNm", "serif"],
+        mono: ["JetBrains Mono", "Fira Code", "monospace"],
+      },
       colors: {
         background: {
           DEFAULT: "#0B0B0F", // Matte Black

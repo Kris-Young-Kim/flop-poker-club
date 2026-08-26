@@ -12,7 +12,11 @@
       "PowerShell(Set-Location \"D:\\\\developer\\\\flop-poker-club\"; $env:DATABASE_URL = \"postgresql://neondb_owner:npg_IQsv5AiEqZw4@ep-winter-queen-az33grwg-pooler.c-3.ap-southeast-1.aws.neon.tech/neondb?sslmode=require&channel_binding=require\"; node --experimental-vm-modules lib/db/run-procedures.mjs 2>&1)",
       "PowerShell(Set-Location \"D:\\\\developer\\\\flop-poker-club\"; $env:DATABASE_URL = \"postgresql://neondb_owner:npg_IQsv5AiEqZw4@ep-winter-queen-az33grwg-pooler.c-3.ap-southeast-1.aws.neon.tech/neondb?sslmode=require&channel_binding=require\"; node lib/db/run-procedures.mjs 2>&1)",
       "PowerShell(Set-Location \"D:\\\\developer\\\\flop-poker-club\"; $env:DATABASE_URL = \"postgresql://neondb_owner:npg_IQsv5AiEqZw4@ep-winter-queen-az33grwg-pooler.c-3.ap-southeast-1.aws.neon.tech/neondb?sslmode=require&channel_binding=require\"; node lib/db/verify.mjs 2>&1)",
-      "Skill(claude-in-chrome)"
+      "Skill(claude-in-chrome)",
+      "PowerShell(Get-ChildItem \"D:\\\\developer\\\\flop-poker-club\\\\components\" -Recurse -Force | Where-Object { !$_.PSIsContainer } | ForEach-Object { $_.FullName })",
+      "PowerShell(New-Item *)",
+      "PowerShell(cd D:\\\\developer\\\\flop-poker-club; $env:DATABASE_URL=\"postgresql://build:build@build.neon.tech/build?sslmode=require\"; npx next build 2>&1 | Select-Object -Last 30)",
+      "PowerShell(cd D:\\\\developer\\\\flop-poker-club; $env:DATABASE_URL=\"postgresql://build:build@build.neon.tech/build?sslmode=require\"; npx next build 2>&1 | Select-Object -Last 35)"
     ]
   }
 }

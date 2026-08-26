@@ -38,12 +38,12 @@ export function GoldVIPCard({ profile, onOpenQR }: GoldVIPCardProps) {
         <div className="shimmer-light" />
 
         {/* Card Body */}
-        <div className="relative flex flex-col justify-between overflow-hidden rounded-[23px] bg-gradient-to-br from-[#1C1811] via-[#141419] to-[#0D0E14] p-6 sm:p-7 min-h-[225px] border border-[#F5D061]/25">
+        <div className="relative flex flex-col justify-between overflow-hidden rounded-[23px] bg-gradient-to-br from-[#242738] via-[#161722] to-[#0A0B10] p-6 sm:p-7 min-h-[225px] border border-[#F5D061]/30 border-t-white/20 shadow-2xl">
           
           {/* Subtle Ambient Background Watermark Pattern */}
-          <div className="absolute right-0 top-0 size-64 -translate-y-16 translate-x-16 rounded-full border border-[#F5D061]/10 pointer-events-none" />
-          <div className="absolute right-12 top-6 size-44 rounded-full border border-[#F5D061]/15 pointer-events-none" />
-          <div className="absolute -left-12 -bottom-12 size-48 rounded-full bg-[#E6AF2E]/5 blur-2xl pointer-events-none" />
+          <div className="absolute right-0 top-0 size-64 -translate-y-16 translate-x-16 rounded-full border border-[#F5D061]/15 pointer-events-none" />
+          <div className="absolute right-12 top-6 size-44 rounded-full border border-[#F5D061]/20 pointer-events-none" />
+          <div className="absolute -left-12 -bottom-12 size-48 rounded-full bg-[#E6AF2E]/10 blur-2xl pointer-events-none" />
 
           {/* Card Header: Club Brand & Tier Badge */}
           <div className="relative z-10 flex items-start justify-between">

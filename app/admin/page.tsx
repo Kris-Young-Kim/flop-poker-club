@@ -33,7 +33,7 @@ const mockTodayTx: PointTransaction[] = [
     reason: 'FOUR_OF_A_KIND',
     description: '김민준 회원 포카드 적립',
     processed_by: 'Staff 민혁',
-    created_at: new Date(Date.now() - 1000 * 60 * 15).toISOString(),
+    created_at: '2024-03-01T21:45:00.000Z',
   },
   {
     id: 'tx-202',
@@ -43,7 +43,7 @@ const mockTodayTx: PointTransaction[] = [
     reason: 'STRAIGHT_FLUSH',
     description: '이서윤 회원 스티플 적립',
     processed_by: 'Staff 민혁',
-    created_at: new Date(Date.now() - 1000 * 60 * 45).toISOString(),
+    created_at: '2024-03-01T21:15:00.000Z',
   },
   {
     id: 'tx-203',
@@ -53,7 +53,7 @@ const mockTodayTx: PointTransaction[] = [
     reason: 'TOURNAMENT_BUYIN',
     description: '박준혁 회원 Friday High Roller 접수',
     processed_by: 'System',
-    created_at: new Date(Date.now() - 1000 * 60 * 80).toISOString(),
+    created_at: '2024-03-01T20:40:00.000Z',
   },
   {
     id: 'tx-204',
@@ -63,7 +63,7 @@ const mockTodayTx: PointTransaction[] = [
     reason: 'EVENT_BONUS',
     description: '최태양 회원 10장 현금 보너스',
     processed_by: 'Staff 수빈',
-    created_at: new Date(Date.now() - 1000 * 60 * 120).toISOString(),
+    created_at: '2024-03-01T20:00:00.000Z',
   },
 ]
 

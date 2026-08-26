@@ -49,9 +49,9 @@ export default function UserLayout({ children }: UserLayoutProps) {
   ]
 
   return (
-    <div className="flex min-h-screen flex-col bg-[#0B0B0F] text-white selection:bg-[#E6AF2E]/30">
+    <div className="flex min-h-screen flex-col bg-transparent text-white selection:bg-[#E6AF2E]/30">
       {/* Top Mobile & Desktop Navigation Header */}
-      <header className="sticky top-0 z-30 border-b border-[#E6AF2E]/20 bg-[#0B0B0F]/90 backdrop-blur-xl">
+      <header className="sticky top-0 z-30 border-b border-[#E6AF2E]/20 border-t border-t-white/10 bg-gradient-to-b from-[#181A28]/95 via-[#0F1018]/95 to-[#08090D]/95 backdrop-blur-2xl shadow-xl">
         <div className="mx-auto flex h-16 max-w-lg items-center justify-between px-4 sm:px-6">
           {/* Logo & Store Location */}
           <Link href="/" className="flex items-center gap-2.5 group">
@@ -77,16 +77,16 @@ export default function UserLayout({ children }: UserLayoutProps) {
           <div className="flex items-center gap-2">
             <Link
               href="/notices"
-              className="relative flex size-9 items-center justify-center rounded-xl border border-[#E6AF2E]/20 bg-[#13141C] text-[#F3E5AB] hover:border-[#E6AF2E]/50 hover:bg-[#181A26] transition-all"
+              className="relative flex size-9 items-center justify-center rounded-xl border border-[#E6AF2E]/20 bg-gradient-to-b from-[#1C1F2E] to-[#12131D] text-[#F3E5AB] hover:border-[#E6AF2E]/50 transition-all"
               aria-label="공지사항"
             >
               <Bell className="size-4" />
-              <span className="absolute right-1.5 top-1.5 size-2 rounded-full bg-[#E6AF2E] ring-2 ring-[#0B0B0F] animate-pulse" />
+              <span className="absolute right-1.5 top-1.5 size-2 rounded-full bg-[#E6AF2E] ring-2 ring-[#08090D] animate-pulse" />
             </Link>
 
             <Link
               href="/login"
-              className="flex size-9 items-center justify-center rounded-xl border border-[#E6AF2E]/20 bg-[#13141C] text-[#F3E5AB] hover:border-[#E6AF2E]/50 hover:bg-[#181A26] transition-all"
+              className="flex size-9 items-center justify-center rounded-xl border border-[#E6AF2E]/20 bg-gradient-to-b from-[#1C1F2E] to-[#12131D] text-[#F3E5AB] hover:border-[#E6AF2E]/50 transition-all"
               aria-label="마이페이지/로그인"
             >
               <User className="size-4" />
@@ -101,7 +101,7 @@ export default function UserLayout({ children }: UserLayoutProps) {
       </main>
 
       {/* Fixed Bottom Tab Navigation Bar */}
-      <nav className="fixed bottom-0 left-0 right-0 z-40 border-t border-[#E6AF2E]/20 bg-[#0B0B0F]/95 backdrop-blur-2xl pb-safe">
+      <nav className="fixed bottom-0 left-0 right-0 z-40 border-t border-[#E6AF2E]/20 bg-gradient-to-t from-[#08090D]/98 via-[#0F101A]/95 to-[#161826]/95 backdrop-blur-2xl pb-safe shadow-2xl">
         <div className="mx-auto flex h-16 max-w-lg items-center justify-around px-2">
           {navItems.map((item) => {
             const Icon = item.icon

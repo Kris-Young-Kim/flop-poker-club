@@ -29,7 +29,7 @@ const mockAdminNotices: NoticeEvent[] = [
     content: 'FLOP POKER CLUB 원주점에 오신 회원 여러분을 환영합니다. 투핸드 포카드(+500P), 스티플(+1,000P), 로티플(+3,000P) 원터치 포인트 즉시 지급 혜택이 적용 중입니다.',
     is_pinned: true,
     author_id: 'admin-1',
-    created_at: new Date(Date.now() - 1000 * 60 * 60 * 12).toISOString(),
+    created_at: '2024-03-01T12:00:00.000Z',
   },
   {
     id: 'not-102',
@@ -38,7 +38,7 @@ const mockAdminNotices: NoticeEvent[] = [
     content: 'FLOP 클럽 앱 온보딩을 완료하신 모든 신규 회원님께 즉시 사용 가능한 웰컴 5,000 포인트를 증정합니다.',
     is_pinned: false,
     author_id: 'admin-1',
-    created_at: new Date(Date.now() - 1000 * 60 * 60 * 36).toISOString(),
+    created_at: '2024-02-28T10:00:00.000Z',
   },
   {
     id: 'not-103',
@@ -47,7 +47,7 @@ const mockAdminNotices: NoticeEvent[] = [
     content: 'TDA 국제 토너먼트 공식 룰을 엄격히 준수합니다. 원 플레이어 투 핸드 및 스트링 베팅 금지 규정을 숙지해 주세요.',
     is_pinned: true,
     author_id: 'admin-1',
-    created_at: new Date(Date.now() - 1000 * 60 * 60 * 72).toISOString(),
+    created_at: '2024-02-25T15:00:00.000Z',
   },
 ]
 

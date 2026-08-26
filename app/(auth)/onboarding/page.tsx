@@ -1,32 +1,39 @@
 'use client'
 
+export const dynamic = 'force-dynamic'
+
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
+import { useSession } from 'next-auth/react'
 import Link from 'next/link'
 import {
   Crown,
   User,
   Phone,
-  Sparkles,
   Check,
-  ShieldCheck,
   ArrowRight,
-  Gift
+  Gift,
+  AlertCircle,
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Badge } from '@/components/ui/badge'
 import { formatPhone } from '@/lib/utils/format'
+import { checkNicknameAvailable, saveProfile } from '@/lib/actions/onboarding'
 
 export default function OnboardingPage() {
   const router = useRouter()
+  const { update } = useSession()
 
   const [name, setName] = useState('')
   const [nickname, setNickname] = useState('')
   const [phone, setPhone] = useState('')
   const [nicknameChecked, setNicknameChecked] = useState(false)
+  const [nicknameAvailable, setNicknameAvailable] = useState(false)
+  const [isCheckingNickname, setIsCheckingNickname] = useState(false)
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [agreed, setAgreed] = useState(true)
+  const [error, setError] = useState<string | null>(null)
 
   const handlePhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const raw = e.target.value.replace(/[^0-9]/g, '')
@@ -35,27 +42,56 @@ export default function OnboardingPage() {
     }
   }
 
-  const handleCheckNickname = () => {
+  const handleCheckNickname = async () => {
     if (!nickname.trim()) return
-    // Simulating nickname validation
-    setNicknameChecked(true)
+    setIsCheckingNickname(true)
+    setNicknameChecked(false)
+    try {
+      const available = await checkNicknameAvailable(nickname.trim())
+      setNicknameAvailable(available)
+      setNicknameChecked(true)
+    } finally {
+      setIsCheckingNickname(false)
+    }
   }
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    if (!name || !nickname || !phone) return
+    if (!name || !nickname || !phone || !nicknameChecked || !nicknameAvailable) return
 
     setIsSubmitting(true)
-    setTimeout(() => {
+    setError(null)
+    try {
+      const result = await saveProfile({
+        name: name.trim(),
+        nickname: nickname.trim(),
+        phone: phone.replace(/-/g, ''),
+      })
+
+      if (!result.success) {
+        setError(result.error ?? '저장에 실패했습니다.')
+        return
+      }
+
+      // JWT 토큰 갱신 후 홈으로 이동
+      await update()
       router.push('/')
-    }, 600)
+      router.refresh()
+    } finally {
+      setIsSubmitting(false)
+    }
   }
 
-  const isFormValid = name.trim().length >= 2 && nickname.trim().length >= 2 && phone.length >= 12 && agreed
+  const isFormValid =
+    name.trim().length >= 2 &&
+    nickname.trim().length >= 2 &&
+    phone.length >= 12 &&
+    nicknameChecked &&
+    nicknameAvailable &&
+    agreed
 
   return (
-    <div className="relative min-h-screen flex flex-col justify-center items-center px-4 py-12 bg-[#0B0B0F] text-white selection:bg-[#E6AF2E]/30 overflow-hidden">
-      {/* Background Ambience */}
+    <div className="relative min-h-screen flex flex-col justify-center items-center px-4 py-12 bg-transparent text-white selection:bg-[#E6AF2E]/30 overflow-hidden">
       <div className="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 size-96 rounded-full bg-[#E6AF2E]/10 blur-3xl pointer-events-none" />
 
       <div className="relative z-10 w-full max-w-sm space-y-6">
@@ -79,9 +115,7 @@ export default function OnboardingPage() {
           </div>
           <div>
             <div className="flex items-center gap-1.5">
-              <span className="text-xs font-bold text-[#F3E5AB]">
-                신규 가입 웰컴 보너스
-              </span>
+              <span className="text-xs font-bold text-[#F3E5AB]">신규 가입 웰컴 보너스</span>
               <Badge className="bg-emerald-500/20 text-emerald-300 border-emerald-500/30 text-[9px] px-1.5 py-0">
                 +5,000 P
               </Badge>
@@ -92,12 +126,20 @@ export default function OnboardingPage() {
           </div>
         </div>
 
-        {/* Form Container */}
+        {/* Error Banner */}
+        {error && (
+          <div className="flex items-center gap-2 rounded-xl border border-rose-500/30 bg-rose-500/10 px-3.5 py-2.5 text-xs text-rose-400">
+            <AlertCircle className="size-4 shrink-0" />
+            {error}
+          </div>
+        )}
+
+        {/* Form */}
         <form
           onSubmit={handleSubmit}
           className="rounded-3xl border border-[#E6AF2E]/30 bg-gradient-to-br from-[#181A26] via-[#14151E] to-[#0E0F16] p-6 shadow-2xl space-y-4"
         >
-          {/* 1. Real Name */}
+          {/* 이름 */}
           <div className="space-y-1.5">
             <label className="text-xs font-semibold text-[#F3E5AB] flex items-center gap-1.5">
               <User className="size-3.5 text-[#E6AF2E]" /> 이름 (실명)
@@ -111,7 +153,7 @@ export default function OnboardingPage() {
             />
           </div>
 
-          {/* 2. Club Nickname */}
+          {/* 닉네임 */}
           <div className="space-y-1.5">
             <label className="text-xs font-semibold text-[#F3E5AB] flex items-center gap-1.5">
               <Crown className="size-3.5 text-[#E6AF2E]" /> 클럽 닉네임
@@ -122,6 +164,7 @@ export default function OnboardingPage() {
                 onChange={(e) => {
                   setNickname(e.target.value)
                   setNicknameChecked(false)
+                  setNicknameAvailable(false)
                 }}
                 placeholder="예: AceKing"
                 className="border-[#E6AF2E]/25 bg-[#13141C] text-sm h-11 text-white placeholder:text-[#9CA3AF] rounded-xl focus-visible:border-[#E6AF2E] flex-1"
@@ -131,13 +174,19 @@ export default function OnboardingPage() {
                 type="button"
                 variant="outline"
                 onClick={handleCheckNickname}
-                disabled={!nickname.trim()}
-                className="h-11 border-[#E6AF2E]/30 bg-[#1A1C28] text-xs text-[#F3E5AB] hover:bg-[#E6AF2E]/10"
+                disabled={!nickname.trim() || isCheckingNickname}
+                className="h-11 border-[#E6AF2E]/30 bg-[#1A1C28] text-xs text-[#F3E5AB] hover:bg-[#E6AF2E]/10 shrink-0"
               >
-                {nicknameChecked ? (
-                  <span className="text-emerald-400 flex items-center gap-1">
-                    <Check className="size-3.5" /> 사용 가능
-                  </span>
+                {isCheckingNickname ? (
+                  '확인 중...'
+                ) : nicknameChecked ? (
+                  nicknameAvailable ? (
+                    <span className="text-emerald-400 flex items-center gap-1">
+                      <Check className="size-3.5" /> 사용 가능
+                    </span>
+                  ) : (
+                    <span className="text-rose-400">사용 불가</span>
+                  )
                 ) : (
                   '중복 확인'
                 )}
@@ -148,7 +197,7 @@ export default function OnboardingPage() {
             </p>
           </div>
 
-          {/* 3. Phone Number */}
+          {/* 전화번호 */}
           <div className="space-y-1.5">
             <label className="text-xs font-semibold text-[#F3E5AB] flex items-center gap-1.5">
               <Phone className="size-3.5 text-[#E6AF2E]" /> 휴대폰 번호
@@ -160,12 +209,9 @@ export default function OnboardingPage() {
               className="border-[#E6AF2E]/25 bg-[#13141C] text-sm h-11 text-white placeholder:text-[#9CA3AF] rounded-xl focus-visible:border-[#E6AF2E] font-mono"
               required
             />
-            <p className="text-[10px] text-[#9CA3AF]">
-              토너먼트 참가 안내 및 포인트 알림에 사용됩니다.
-            </p>
           </div>
 
-          {/* Agreement Checkbox */}
+          {/* 동의 */}
           <div className="pt-2">
             <label className="flex items-start gap-2.5 text-xs text-[#9CA3AF] cursor-pointer">
               <input
@@ -180,7 +226,7 @@ export default function OnboardingPage() {
             </label>
           </div>
 
-          {/* Submit Button */}
+          {/* Submit */}
           <Button
             type="submit"
             disabled={!isFormValid || isSubmitting}

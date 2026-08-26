@@ -2,6 +2,38 @@
 @import 'tw-animate-css';
 @import 'shadcn/tailwind.css';
 
+/* 1. Noonnu (눈누) & Webfont Imports */
+/* [눈누 #1 본문/UI] Pretendard */
+@import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css');
+
+/* [눈누 #1 럭셔리 명조] 조선명조 (ChosunNm) */
+@font-face {
+  font-family: 'ChosunNm';
+  src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/noonfonts_one@1.0/ChosunNm.woff') format('woff');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* [눈누 #1 모던 볼드/숫자] Gmarket Sans (GmarketSans) */
+@font-face {
+  font-family: 'GmarketSans';
+  src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/noonfonts_2001@1.1/GmarketSansMedium.woff') format('woff');
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'GmarketSans';
+  src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/noonfonts_2001@1.1/GmarketSansBold.woff') format('woff');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* [카지노 영문 럭셔리] Cinzel & Playfair Display */
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;900&family=Playfair+Display:ital,wght@0,600;0,800;0,900;1,700&display=swap');
+
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {
@@ -27,32 +59,33 @@
   --color-gold-champagne: #F3E5AB;
   --color-gold-light: #F5D061;
   --color-gold-dark: #C28B1E;
-  --color-bg-matte: #0B0B0F;
-  --color-bg-surface: #13141C;
-  --color-bg-card: #181A26;
-  --font-sans: 'Pretendard', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Noto Sans KR', sans-serif;
-  --font-serif: 'Playfair Display', 'Times New Roman', serif;
+  --color-bg-matte: #07080B;
+  --color-bg-surface: #12131D;
+  --color-bg-card: #181A28;
+  --font-sans: 'Pretendard', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-serif: 'Cinzel', 'Playfair Display', 'ChosunNm', serif;
+  --font-display: 'GmarketSans', 'Pretendard', sans-serif;
   --font-mono: 'JetBrains Mono', 'Fira Code', monospace;
 }
 
 :root {
   color-scheme: dark;
-  --background: #0B0B0F;
+  --background: #08090D;
   --foreground: #FFFFFF;
-  --card: #13141C;
+  --card: #141622;
   --card-foreground: #FFFFFF;
-  --popover: #13141C;
+  --popover: #141622;
   --popover-foreground: #FFFFFF;
   --primary: #E6AF2E;
-  --primary-foreground: #0B0B0F;
-  --secondary: #1A1C28;
+  --primary-foreground: #08090D;
+  --secondary: #1C1E2D;
   --secondary-foreground: #F3E5AB;
-  --muted: #1A1C28;
+  --muted: #1A1C2A;
   --muted-foreground: #9CA3AF;
-  --accent: #222538;
+  --accent: #24273A;
   --accent-foreground: #FFFFFF;
   --destructive: #EF4444;
-  --border: rgba(230, 175, 46, 0.2);
+  --border: rgba(230, 175, 46, 0.22);
   --input: rgba(230, 175, 46, 0.25);
   --ring: #E6AF2E;
   --gold: #E6AF2E;
@@ -65,24 +98,49 @@
 }
 
 html {
-  background: #0B0B0F;
+  background: #08090D;
   color: #FFFFFF;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
 body {
-  background-color: #0B0B0F;
+  background-color: #08090D;
   color: #FFFFFF;
   font-family: var(--font-sans);
+  /* 럭셔리 다크 옵시디언 / 딥 차콜 그레이 입체 그라디언트 배경 */
   background-image: 
-    radial-gradient(circle at 50% 0%, rgba(230, 175, 46, 0.08) 0%, transparent 45%),
-    radial-gradient(circle at 100% 100%, rgba(194, 139, 30, 0.05) 0%, transparent 40%);
+    radial-gradient(ellipse at 50% -10%, #202436 0%, #11131E 45%, #07080C 100%),
+    radial-gradient(circle at 85% 15%, rgba(230, 175, 46, 0.08) 0%, transparent 40%),
+    radial-gradient(circle at 15% 85%, rgba(194, 139, 30, 0.06) 0%, transparent 45%);
   background-attachment: fixed;
   min-height: 100vh;
 }
 
-/* Custom Casino Luxury Utilities */
+/* Custom Typography Utilities */
+.font-display {
+  font-family: 'GmarketSans', 'Pretendard', sans-serif;
+}
+
+.font-chosun {
+  font-family: 'ChosunNm', 'Playfair Display', serif;
+}
+
+.font-cinzel {
+  font-family: 'Cinzel', 'Playfair Display', serif;
+}
+
+/* Custom Casino Luxury Obsidian & Gold Utilities */
+.bg-obsidian-gradient {
+  background: linear-gradient(160deg, #222538 0%, #151724 50%, #0A0B10 100%);
+}
+
+.bg-charcoal-card {
+  background: linear-gradient(145deg, #1D2030 0%, #13141F 60%, #0C0D14 100%);
+  border: 1px solid rgba(230, 175, 46, 0.22);
+  border-top: 1px solid rgba(255, 255, 255, 0.12);
+}
+
 .bg-gold-gradient {
   background: linear-gradient(135deg, #F5D061 0%, #E6AF2E 50%, #C28B1E 100%);
 }
@@ -115,20 +173,22 @@ body {
 }
 
 .casino-glass {
-  background: rgba(19, 20, 28, 0.85);
+  background: linear-gradient(135deg, rgba(28, 31, 46, 0.85) 0%, rgba(13, 14, 22, 0.92) 100%);
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
-  border: 1px solid rgba(230, 175, 46, 0.2);
+  border: 1px solid rgba(230, 175, 46, 0.22);
+  border-top: 1px solid rgba(255, 255, 255, 0.14);
 }
 
 .casino-card {
-  background: linear-gradient(145deg, #181A26 0%, #13141C 100%);
+  background: linear-gradient(155deg, #1F2233 0%, #141521 55%, #0B0C13 100%);
   border: 1px solid rgba(230, 175, 46, 0.22);
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: 1.25rem;
 }
 
 .vip-card-shadow {
-  box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.8), 0 0 30px -5px rgba(230, 175, 46, 0.25);
+  box-shadow: 0 20px 45px -12px rgba(0, 0, 0, 0.9), 0 0 35px -5px rgba(230, 175, 46, 0.25);
 }
 
 /* Shimmer Light Reflection Animation for VIP Cards */
@@ -144,7 +204,7 @@ body {
   left: 0;
   width: 60%;
   height: 100%;
-  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.18), transparent);
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.22), transparent);
   animation: shimmerReflection 6s cubic-bezier(0.4, 0, 0.2, 1) infinite;
   pointer-events: none;
 }
@@ -155,12 +215,12 @@ body {
   height: 6px;
 }
 ::-webkit-scrollbar-track {
-  background: #0B0B0F;
+  background: #08090D;
 }
 ::-webkit-scrollbar-thumb {
-  background: rgba(230, 175, 46, 0.25);
+  background: rgba(230, 175, 46, 0.28);
   border-radius: 9999px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: rgba(230, 175, 46, 0.5);
+  background: rgba(230, 175, 46, 0.55);
 }

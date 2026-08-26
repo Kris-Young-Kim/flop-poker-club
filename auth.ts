@@ -18,16 +18,18 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
   ],
   session: { strategy: 'jwt' },
   callbacks: {
-    async jwt({ token, user }) {
-      if (user) {
-        token.id = user.id
-        // DB에서 최신 role 조회
-        const profile = await db.query.profiles.findFirst({
-          where: (p, { eq }) => eq(p.id, user.id!),
-          columns: { role: true, nickname: true, phone: true },
-        })
-        token.role = profile?.role ?? 'user'
-        token.onboardingComplete = !!(profile?.nickname && profile?.phone)
+    async jwt({ token, user, trigger }) {
+      if (user || trigger === 'update') {
+        const userId = user?.id ?? (token.id as string | undefined)
+        if (userId) {
+          token.id = userId
+          const profile = await db.query.profiles.findFirst({
+            where: (p, { eq }) => eq(p.id, userId),
+            columns: { role: true, nickname: true, phone: true },
+          })
+          token.role = profile?.role ?? 'user'
+          token.onboardingComplete = !!(profile?.nickname && profile?.phone)
+        }
       }
       return token
     },

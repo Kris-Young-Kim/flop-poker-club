@@ -59,9 +59,9 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
   ]
 
   return (
-    <div className="flex min-h-screen flex-col bg-[#0B0B0F] text-white selection:bg-[#E6AF2E]/30">
+    <div className="flex min-h-screen flex-col bg-transparent text-white selection:bg-[#E6AF2E]/30">
       {/* Top Admin Header */}
-      <header className="sticky top-0 z-30 border-b border-[#E6AF2E]/25 bg-[#0B0B0F]/95 backdrop-blur-xl">
+      <header className="sticky top-0 z-30 border-b border-[#E6AF2E]/25 border-t border-t-white/10 bg-gradient-to-b from-[#1A1D2C]/95 via-[#11121C]/95 to-[#08090D]/95 backdrop-blur-2xl shadow-xl">
         <div className="mx-auto flex h-16 max-w-5xl items-center justify-between px-4 sm:px-6">
           {/* Logo & Role Badge */}
           <div className="flex items-center gap-3">
@@ -91,7 +91,7 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
               <Button
                 variant="outline"
                 size="sm"
-                className="h-8 rounded-xl border-[#E6AF2E]/30 bg-[#13141C] text-xs text-[#F3E5AB] hover:bg-[#E6AF2E]/10"
+                className="h-8 rounded-xl border-[#E6AF2E]/30 bg-gradient-to-b from-[#1C1F2E] to-[#12131D] text-xs text-[#F3E5AB] hover:border-[#E6AF2E]/60 transition-all"
               >
                 <ArrowLeft className="size-3.5 mr-1" /> 회원 화면
               </Button>
@@ -100,7 +100,7 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
         </div>
 
         {/* Sub-Navigation Tabs Bar */}
-        <div className="border-t border-[#E6AF2E]/15 bg-[#13141C]/80 overflow-x-auto no-scrollbar">
+        <div className="border-t border-[#E6AF2E]/15 bg-gradient-to-r from-[#141624]/90 via-[#0F101A]/90 to-[#141624]/90 overflow-x-auto no-scrollbar">
           <div className="mx-auto flex h-12 max-w-5xl items-center gap-1 px-4 sm:px-6">
             {adminNavItems.map((item) => {
               const Icon = item.icon
