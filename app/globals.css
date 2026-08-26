@@ -4,15 +4,6 @@
 @import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css');
 @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;900&family=Playfair+Display:ital,wght@0,600;0,800;0,900;1,700&display=swap');
 
-/* [눈누 #1 럭셔리 명조] 조선명조 (ChosunNm) */
-@font-face {
-  font-family: 'ChosunNm';
-  src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/noonfonts_one@1.0/ChosunNm.woff') format('woff');
-  font-weight: normal;
-  font-style: normal;
-  font-display: swap;
-}
-
 /* [눈누 #1 모던 볼드/숫자] Gmarket Sans (GmarketSans) */
 @font-face {
   font-family: 'GmarketSans';
@@ -58,7 +49,7 @@
   --color-bg-surface: #12131D;
   --color-bg-card: #181A28;
   --font-sans: 'Pretendard', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-  --font-serif: 'Cinzel', 'Playfair Display', 'ChosunNm', serif;
+  --font-serif: 'Cinzel', 'Playfair Display', serif;
   --font-display: 'GmarketSans', 'Pretendard', sans-serif;
   --font-mono: 'JetBrains Mono', 'Fira Code', monospace;
 }
@@ -118,7 +109,7 @@ body {
 }
 
 .font-chosun {
-  font-family: 'ChosunNm', 'Playfair Display', serif;
+  font-family: 'Playfair Display', serif;
 }
 
 .font-cinzel {
