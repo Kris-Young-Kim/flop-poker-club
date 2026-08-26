@@ -451,40 +451,100 @@ export function LandingPage({ tournaments, pinnedNotice }: LandingPageProps) {
         )}
       </section>
 
-      {/* 6. Club Trust & Legal Shield (합법 & 건전 클린 라운지) */}
-      <section className="rounded-3xl border border-emerald-500/30 bg-gradient-to-b from-[#0E1A16] to-[#080E0C] p-6 sm:p-8 space-y-4">
-        <div className="flex items-center gap-3">
-          <div className="flex size-11 items-center justify-center rounded-2xl bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">
-            <ShieldCheck className="size-6" />
+      {/* 6. Royal Fair-Play Compliance (하이엔드 신뢰 & 컴플라이언스) */}
+      <section className="relative overflow-hidden rounded-3xl border border-[#E6AF2E]/30 bg-gradient-to-b from-[#181A2A] via-[#10121D] to-[#0A0B12] p-6 sm:p-8 space-y-6 shadow-2xl">
+        {/* Background Subtle Luxury Glow */}
+        <div className="absolute -right-16 -top-16 size-64 rounded-full bg-[#E6AF2E]/10 blur-3xl pointer-events-none" />
+
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border-b border-white/5 pb-5">
+          <div className="flex items-center gap-3.5">
+            <div className="flex size-12 items-center justify-center rounded-2xl bg-gradient-to-br from-[#F5D061] to-[#C28B1E] text-black font-black shadow-lg shadow-yellow-500/20">
+              <ShieldCheck className="size-6 text-black" />
+            </div>
+            <div>
+              <div className="flex items-center gap-2">
+                <Badge className="bg-[#E6AF2E]/20 text-[#F5D061] border-[#E6AF2E]/30 text-[9.5px] uppercase tracking-widest font-mono">
+                  COMPLIANCE & INTEGRITY
+                </Badge>
+              </div>
+              <h3 className="font-serif text-lg sm:text-xl font-black text-white mt-0.5">
+                로열 페어플레이 & 100% 클린 스탠다드
+              </h3>
+            </div>
           </div>
-          <div>
-            <h3 className="font-serif text-lg font-bold text-white">
-              100% 합법 & 건전 마인드 스포츠 클럽
-            </h3>
-            <p className="text-xs text-emerald-400/80 font-medium">
-              FLOP POKER CLUB은 대한민국 법률을 철저히 준수합니다.
-            </p>
-          </div>
+          <span className="font-mono text-[10px] text-[#9CA3AF] tracking-wider uppercase px-2.5 py-1 rounded-full border border-white/10 bg-white/5">
+            LEGAL MIND SPORTS
+          </span>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-2 text-xs">
-          <div className="rounded-xl border border-emerald-500/20 bg-black/40 p-3.5 space-y-1">
-            <div className="font-bold text-emerald-300">❌ 현금 환전 절대 금지</div>
-            <p className="text-[11px] text-zinc-400">
-              칩과 포인트의 현금 환전, P2P 장외 거래를 일체 금지하며 위반 시 영구 퇴장 조치됩니다.
-            </p>
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3.5">
+          {/* Card 1 */}
+          <div className="relative overflow-hidden rounded-2xl border border-white/10 bg-gradient-to-b from-[#141624] to-[#0D0E18] p-4 space-y-2 hover:border-[#E6AF2E]/50 transition-all group">
+            <div className="flex items-center justify-between">
+              <span className="font-mono text-[10px] font-extrabold tracking-widest text-[#F5D061]">
+                01 / NON-CASH ETHICS
+              </span>
+              <span className="size-1.5 rounded-full bg-emerald-400 animate-pulse" />
+            </div>
+            <div className="space-y-1">
+              <h4 className="font-bold text-sm text-white group-hover:text-[#F3E5AB] transition-colors">
+                100% 비환전 스포츠 원칙
+              </h4>
+              <p className="text-[11px] text-[#9CA3AF] leading-relaxed">
+                칩과 포인트의 현금 환전 및 P2P 장외 거래를 엄격히 차단하며, 정통 마인드 스포츠의 순수한 품격과 법적 안전성을 보장합니다.
+              </p>
+            </div>
+            <div className="pt-2 border-t border-white/5">
+              <span className="font-mono text-[9px] uppercase tracking-wider text-emerald-400/90 font-bold">
+                ZERO TOLERANCE POLICY
+              </span>
+            </div>
           </div>
-          <div className="rounded-xl border border-emerald-500/20 bg-black/40 p-3.5 space-y-1">
-            <div className="font-bold text-emerald-300">⭕ 투명한 불변 전산 원장</div>
-            <p className="text-[11px] text-zinc-400">
-              모든 포인트의 적립과 사용 내역이 투명하게 전산 기록되어 안전하게 보존됩니다.
-            </p>
+
+          {/* Card 2 */}
+          <div className="relative overflow-hidden rounded-2xl border border-white/10 bg-gradient-to-b from-[#141624] to-[#0D0E18] p-4 space-y-2 hover:border-[#E6AF2E]/50 transition-all group">
+            <div className="flex items-center justify-between">
+              <span className="font-mono text-[10px] font-extrabold tracking-widest text-[#F5D061]">
+                02 / IMMUTABLE LEDGER
+              </span>
+              <span className="size-1.5 rounded-full bg-[#F5D061] animate-pulse" />
+            </div>
+            <div className="space-y-1">
+              <h4 className="font-bold text-sm text-white group-hover:text-[#F3E5AB] transition-colors">
+                불변 전산 원장 시스템
+              </h4>
+              <p className="text-[11px] text-[#9CA3AF] leading-relaxed">
+                모든 포인트의 적립과 승인, 사용 내역이 투명한 전산 원장에 실시간 동기화되어 회원의 자산을 완벽히 보호합니다.
+              </p>
+            </div>
+            <div className="pt-2 border-t border-white/5">
+              <span className="font-mono text-[9px] uppercase tracking-wider text-[#F5D061]/90 font-bold">
+                CRYPTOGRAPHIC INTEGRITY
+              </span>
+            </div>
           </div>
-          <div className="rounded-xl border border-emerald-500/20 bg-black/40 p-3.5 space-y-1">
-            <div className="font-bold text-emerald-300">🏆 스포츠맨십 & 매너</div>
-            <p className="text-[11px] text-zinc-400">
-              공정한 룰과 매너 있는 플레이로 원주 최고의 홀덤 스포츠 문화를 선도합니다.
-            </p>
+
+          {/* Card 3 */}
+          <div className="relative overflow-hidden rounded-2xl border border-white/10 bg-gradient-to-b from-[#141624] to-[#0D0E18] p-4 space-y-2 hover:border-[#E6AF2E]/50 transition-all group">
+            <div className="flex items-center justify-between">
+              <span className="font-mono text-[10px] font-extrabold tracking-widest text-[#F5D061]">
+                03 / TOURNAMENT INTEGRITY
+              </span>
+              <span className="size-1.5 rounded-full bg-indigo-400 animate-pulse" />
+            </div>
+            <div className="space-y-1">
+              <h4 className="font-bold text-sm text-white group-hover:text-[#F3E5AB] transition-colors">
+                국제 표준 룰 & 페어플레이
+              </h4>
+              <p className="text-[11px] text-[#9CA3AF] leading-relaxed">
+                국제 포커 토너먼트 협회(TDA) 공인 룰과 전문 딜러진의 엄정한 진행으로 가장 신뢰할 수 있는 경기 환경을 제공합니다.
+              </p>
+            </div>
+            <div className="pt-2 border-t border-white/5">
+              <span className="font-mono text-[9px] uppercase tracking-wider text-indigo-300 font-bold">
+                OFFICIAL TDA STANDARD
+              </span>
+            </div>
           </div>
         </div>
       </section>
