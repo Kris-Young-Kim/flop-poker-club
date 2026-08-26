@@ -6,7 +6,6 @@ export default auth((req) => {
   const isLoggedIn = !!session?.user
 
   const isAdminRoute = nextUrl.pathname.startsWith('/admin')
-  const isOnboardingRoute = nextUrl.pathname.startsWith('/onboarding')
   const isApiAuthRoute = nextUrl.pathname.startsWith('/api/auth')
 
   // 1. API Auth 경로는 항상 허용
@@ -23,17 +22,12 @@ export default auth((req) => {
     }
   }
 
-  // 3. 이미 온보딩까지 완료된 회원이 /login 또는 /onboarding 진입 시 ➔ 홈(/)으로 리다이렉트
-  if (isLoggedIn && session.user.onboardingComplete && (nextUrl.pathname === '/login' || isOnboardingRoute)) {
+  // 3. 이미 온보딩까지 완료된 회원이 /login 진입 시 ➔ 홈(/)으로 리다이렉트
+  if (isLoggedIn && session.user.onboardingComplete && nextUrl.pathname === '/login') {
     return NextResponse.redirect(new URL('/', nextUrl))
   }
 
-  // 4. 구글 로그인 후 온보딩(닉네임/전화번호) 미완료 신규 사용자 ➔ 온보딩 강제 이동
-  if (isLoggedIn && !session.user.onboardingComplete && !isOnboardingRoute && !nextUrl.pathname.startsWith('/login')) {
-    return NextResponse.redirect(new URL('/onboarding', nextUrl))
-  }
-
-  // 5. 비로그인 방문자는 랜딩페이지(/), 대회(/tournaments), 공지(/notices), 원장(/ledger) 모두 자유롭게 열람 가능!
+  // 4. 모든 사용자는 홈(/) 및 공개 페이지로 자유롭게 진입 가능 (강제 리다이렉트 없음)
   return NextResponse.next()
 })
 

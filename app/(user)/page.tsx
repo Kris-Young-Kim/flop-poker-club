@@ -84,12 +84,43 @@ export default function UserHomePage() {
     tournaments[0] ??
     null
 
+  const isOnboardingIncomplete = session?.user && (!profile?.nickname || !profile?.phone)
+
   // 3. Authenticated (로그인된 VIP 회원) ➔ 정회원 전용 라운지 대시보드
   return (
     <div className="space-y-6">
+      {/* 0. Onboarding Incomplete Banner */}
+      {isOnboardingIncomplete && (
+        <section aria-label="온보딩 안내">
+          <Link href="/onboarding">
+            <div className="relative overflow-hidden rounded-2xl border border-[#F5D061] bg-gradient-to-r from-[#2B2310] via-[#1D1914] to-[#12131C] p-4 text-white shadow-xl shadow-yellow-500/10 hover:border-[#FFF0A5] transition-all flex items-center justify-between gap-3 group">
+              <div className="flex items-center gap-3">
+                <div className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-[#F5D061] to-[#C28B1E] text-black font-black text-sm shadow">
+                  <Sparkles className="size-5" />
+                </div>
+                <div>
+                  <div className="flex items-center gap-2">
+                    <span className="text-xs font-bold text-[#F3E5AB]">
+                      웰컴 5,000 P 보너스 받기
+                    </span>
+                    <Badge className="bg-[#E6AF2E]/20 text-[#F5D061] text-[9px] px-1.5 py-0">
+                      필수
+                    </Badge>
+                  </div>
+                  <p className="text-[11px] text-[#9CA3AF] mt-0.5">
+                    닉네임과 전화번호를 등록하고 VIP 카드를 활성화하세요.
+                  </p>
+                </div>
+              </div>
+              <ChevronRight className="size-5 text-[#F5D061] shrink-0 group-hover:translate-x-1 transition-transform" />
+            </div>
+          </Link>
+        </section>
+      )}
+
       {/* 1. Gold VIP Membership Card */}
       <section aria-label="멤버십 카드">
-        <GoldVIPCard profile={profile ?? { name: session.user.name ?? '회원', tier: 'NORMAL', total_points: 5000 }} />
+        <GoldVIPCard profile={profile ?? { name: session.user.name ?? '회원', tier: 'NORMAL', total_points: 0 }} />
       </section>
 
       {/* 2. Pinned Notice */}
