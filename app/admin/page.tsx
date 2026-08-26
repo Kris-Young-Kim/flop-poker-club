@@ -8,13 +8,7 @@ import {
   Users,
   Trophy,
   ReceiptText,
-  TrendingUp,
-  Clock3,
-  Sparkles,
-  ArrowRight,
-  ShieldCheck,
   ChevronRight,
-  Zap,
   ArrowUpRight,
   ArrowDownLeft,
   RefreshCw
@@ -26,67 +20,24 @@ import { formatPoints, formatDateTime, getPointReasonMeta } from '@/lib/utils/fo
 import { PointTransaction } from '@/types/database.types'
 import { getAdminDashboardStats, AdminStats } from '@/lib/actions/admin'
 
-const fallbackTodayTx: PointTransaction[] = [
-  {
-    id: 'tx-201',
-    user_id: 'usr-1',
-    amount: 500,
-    balance_after: 24500,
-    reason: 'FOUR_OF_A_KIND',
-    description: '김민준 회원 포카드 적립',
-    processed_by: 'Staff 민혁',
-    created_at: '2024-03-01T21:45:00.000Z',
-  },
-  {
-    id: 'tx-202',
-    user_id: 'usr-2',
-    amount: 1000,
-    balance_after: 128400,
-    reason: 'STRAIGHT_FLUSH',
-    description: '이서윤 회원 스티플 적립',
-    processed_by: 'Staff 민혁',
-    created_at: '2024-03-01T21:15:00.000Z',
-  },
-  {
-    id: 'tx-203',
-    user_id: 'usr-3',
-    amount: -10000,
-    balance_after: 8500,
-    reason: 'TOURNAMENT_BUYIN',
-    description: '박준혁 회원 Friday High Roller 접수',
-    processed_by: 'System',
-    created_at: '2024-03-01T20:40:00.000Z',
-  },
-  {
-    id: 'tx-204',
-    user_id: 'usr-4',
-    amount: 5000,
-    balance_after: 55000,
-    reason: 'EVENT_BONUS',
-    description: '최태양 회원 10장 현금 보너스',
-    processed_by: 'Staff 수빈',
-    created_at: '2024-03-01T20:00:00.000Z',
-  },
-]
+const emptyStats: AdminStats = {
+  todayVisits: 0,
+  todayPointsIssued: 0,
+  todayPointsDeducted: 0,
+  activeTournaments: 0,
+  totalMembers: 0,
+  recentTransactions: [],
+}
 
 export default function AdminDashboardPage() {
-  const [stats, setStats] = useState<AdminStats>({
-    todayVisits: 42,
-    todayPointsIssued: 38500,
-    todayPointsDeducted: 10000,
-    activeTournaments: 2,
-    totalMembers: 84,
-    recentTransactions: fallbackTodayTx,
-  })
-  const [isLoading, setIsLoading] = useState(false)
+  const [stats, setStats] = useState<AdminStats>(emptyStats)
+  const [isLoading, setIsLoading] = useState(true)
 
   const loadStats = async () => {
     setIsLoading(true)
     try {
       const data = await getAdminDashboardStats()
-      if (data && data.recentTransactions.length > 0) {
-        setStats(data)
-      }
+      setStats(data)
     } catch (e) {
       console.error('Failed to load admin stats:', e)
     } finally {
