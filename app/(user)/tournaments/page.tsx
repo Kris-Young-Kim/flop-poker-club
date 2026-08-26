@@ -7,6 +7,7 @@ import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs'
 import { Button } from '@/components/ui/button'
 import { Tournament } from '@/types/database.types'
 import { getTournaments, getMyRegistrations, registerForTournament, cancelRegistration } from '@/lib/actions/tournaments'
+import { toast } from 'sonner'
 
 export default function TournamentsPage() {
   const [activeTab, setActiveTab] = useState<'ALL' | 'MY_REG' | 'LIVE'>('ALL')
@@ -25,17 +26,18 @@ export default function TournamentsPage() {
   const handleRegister = async (id: string) => {
     const result = await registerForTournament(id)
     if (result.success) {
+      toast.success('토너먼트 신청이 완료되었습니다.')
       setRegisteredIds((prev) => new Set([...prev, id]))
-      // Refresh tournament list for updated current_players count
       getTournaments().then(setTournaments)
     } else {
-      alert(result.error ?? '신청에 실패했습니다.')
+      toast.error(result.error ?? '신청에 실패했습니다.')
     }
   }
 
   const handleCancelRegister = async (id: string) => {
     const result = await cancelRegistration(id)
     if (result.success) {
+      toast.success('신청이 취소되었습니다. 포인트가 환불됩니다.')
       setRegisteredIds((prev) => {
         const next = new Set(prev)
         next.delete(id)
@@ -43,7 +45,7 @@ export default function TournamentsPage() {
       })
       getTournaments().then(setTournaments)
     } else {
-      alert(result.error ?? '취소에 실패했습니다.')
+      toast.error(result.error ?? '취소에 실패했습니다.')
     }
   }
 

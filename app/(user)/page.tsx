@@ -21,6 +21,7 @@ import { Badge } from '@/components/ui/badge'
 import type { Profile, Tournament, PointTransaction, NoticeEvent } from '@/types/database.types'
 import { formatPoints, formatDateTime, getPointReasonMeta } from '@/lib/utils/format'
 import { getCurrentProfile } from '@/lib/actions/user'
+import { toast } from 'sonner'
 import { getMyTransactions } from '@/lib/actions/ledger'
 import { getTournaments } from '@/lib/actions/tournaments'
 import { getNotices } from '@/lib/actions/notices'
@@ -108,7 +109,7 @@ export default function UserHomePage() {
           ))}
           <div
             className="flex flex-col items-center justify-center rounded-2xl border border-[#E6AF2E]/20 bg-[#13141C] p-3 hover:border-[#E6AF2E]/50 hover:bg-[#181A26] transition-all group cursor-pointer"
-            onClick={() => alert('강원도 원주시 FLOP POKER CLUB (원주점)\n영업시간: 18:00 ~ 익일 06:00\n문의: 매장 카운터')}
+            onClick={() => toast.info('강원도 원주시 FLOP POKER CLUB (원주점) · 영업시간: 18:00 ~ 익일 06:00')}
           >
             <div className="flex size-10 items-center justify-center rounded-xl bg-[#E6AF2E]/10 text-[#E6AF2E] group-hover:scale-110 transition-transform">
               <MapPin className="size-5" />

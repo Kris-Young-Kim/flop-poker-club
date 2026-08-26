@@ -16,7 +16,11 @@
       "PowerShell(Get-ChildItem \"D:\\\\developer\\\\flop-poker-club\\\\components\" -Recurse -Force | Where-Object { !$_.PSIsContainer } | ForEach-Object { $_.FullName })",
       "PowerShell(New-Item *)",
       "PowerShell(cd D:\\\\developer\\\\flop-poker-club; $env:DATABASE_URL=\"postgresql://build:build@build.neon.tech/build?sslmode=require\"; npx next build 2>&1 | Select-Object -Last 30)",
-      "PowerShell(cd D:\\\\developer\\\\flop-poker-club; $env:DATABASE_URL=\"postgresql://build:build@build.neon.tech/build?sslmode=require\"; npx next build 2>&1 | Select-Object -Last 35)"
+      "PowerShell(cd D:\\\\developer\\\\flop-poker-club; $env:DATABASE_URL=\"postgresql://build:build@build.neon.tech/build?sslmode=require\"; npx next build 2>&1 | Select-Object -Last 35)",
+      "PowerShell(Get-Content *)",
+      "PowerShell(cd D:\\\\developer\\\\flop-poker-club; $env:DATABASE_URL=\"postgresql://build:build@build.neon.tech/build?sslmode=require\"; npx next build 2>&1 | Select-Object -Last 25)",
+      "PowerShell(Stop-Process *)",
+      "PowerShell(vercel *)"
     ]
   }
 }

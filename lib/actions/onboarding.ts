@@ -31,25 +31,37 @@ export async function saveProfile(data: {
 
   try {
     await db.transaction(async (tx) => {
+      // 기존 닉네임 확인 — 이미 온보딩 완료한 회원은 보너스 중복 지급 방지
+      const [current] = await tx
+        .select({ nickname: profiles.nickname, totalPoints: profiles.totalPoints })
+        .from(profiles)
+        .where(eq(profiles.id, userId))
+
+      const isFirstOnboarding = !current?.nickname
+
       await tx
         .update(profiles)
         .set({
           name: data.name,
           nickname: data.nickname,
           phone: data.phone,
-          totalPoints: 5000,
+          // 최초 온보딩이면 5000P 설정, 재시도면 기존 잔액 유지
+          ...(isFirstOnboarding ? { totalPoints: 5000 } : {}),
           updatedAt: new Date(),
         })
         .where(eq(profiles.id, userId))
 
-      await tx.insert(pointTransactions).values({
-        userId,
-        amount: 5000,
-        balanceAfter: 5000,
-        reason: 'EVENT_BONUS',
-        description: '신규 멤버십 웰컴 보너스',
-        processedBy: userId,
-      })
+      // 웰컴 보너스 원장 기록은 최초 1회만
+      if (isFirstOnboarding) {
+        await tx.insert(pointTransactions).values({
+          userId,
+          amount: 5000,
+          balanceAfter: 5000,
+          reason: 'EVENT_BONUS',
+          description: '신규 멤버십 웰컴 보너스',
+          processedBy: userId,
+        })
+      }
     })
 
     return { success: true }

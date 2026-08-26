@@ -1,10 +1,8 @@
 @import 'tailwindcss';
 @import 'tw-animate-css';
 @import 'shadcn/tailwind.css';
-
-/* 1. Noonnu (눈누) & Webfont Imports */
-/* [눈누 #1 본문/UI] Pretendard */
 @import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css');
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;900&family=Playfair+Display:ital,wght@0,600;0,800;0,900;1,700&display=swap');
 
 /* [눈누 #1 럭셔리 명조] 조선명조 (ChosunNm) */
 @font-face {
@@ -30,9 +28,6 @@
   font-style: normal;
   font-display: swap;
 }
-
-/* [카지노 영문 럭셔리] Cinzel & Playfair Display */
-@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;900&family=Playfair+Display:ital,wght@0,600;0,800;0,900;1,700&display=swap');
 
 @custom-variant dark (&:is(.dark *));
 

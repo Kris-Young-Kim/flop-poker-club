@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import {
   Trophy,
   Plus,
@@ -13,7 +13,8 @@ import {
   Play,
   CheckCheck,
   Ban,
-  ChevronRight
+  ChevronRight,
+  RefreshCw
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -22,8 +23,14 @@ import { Card, CardContent } from '@/components/ui/card'
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog'
 import { Tournament, TourneyStatus } from '@/types/database.types'
 import { formatPoints, formatDateTime, getTourneyStatusMeta } from '@/lib/utils/format'
+import { getTournaments } from '@/lib/actions/tournaments'
+import {
+  createAdminTournament,
+  updateAdminTournamentStatus,
+  distributeAdminTournamentPrizes,
+} from '@/lib/actions/admin'
 
-const mockAdminTournaments: Tournament[] = [
+const fallbackAdminTournaments: Tournament[] = [
   {
     id: 'tour-101',
     title: 'Friday Night High Roller 50K',
@@ -63,10 +70,11 @@ const mockAdminTournaments: Tournament[] = [
 ]
 
 export default function AdminTournamentsPage() {
-  const [tournaments, setTournaments] = useState<Tournament[]>(mockAdminTournaments)
+  const [tournaments, setTournaments] = useState<Tournament[]>(fallbackAdminTournaments)
   const [createModalOpen, setCreateModalOpen] = useState(false)
   const [rankModalOpen, setRankModalOpen] = useState(false)
   const [selectedTourney, setSelectedTourney] = useState<Tournament | null>(null)
+  const [isLoading, setIsLoading] = useState(false)
 
   // Create Form State
   const [title, setTitle] = useState('')
@@ -84,33 +92,72 @@ export default function AdminTournamentsPage() {
   const [rank3User, setRank3User] = useState('박준혁 (MonsterPot)')
   const [rank3Prize, setRank3Prize] = useState('500,000')
 
-  const handleCreateTournament = (e: React.FormEvent) => {
+  const fetchTournaments = async () => {
+    setIsLoading(true)
+    try {
+      const data = await getTournaments()
+      if (data && data.length > 0) {
+        setTournaments(data)
+      }
+    } catch (e) {
+      console.error(e)
+    } finally {
+      setIsLoading(false)
+    }
+  }
+
+  useEffect(() => {
+    fetchTournaments()
+  }, [])
+
+  const handleCreateTournament = async (e: React.FormEvent) => {
     e.preventDefault()
     if (!title.trim()) return
 
-    const newTourney: Tournament = {
-      id: `tour-${Date.now()}`,
-      title,
-      description,
-      start_time: startTime ? new Date(startTime).toISOString() : new Date().toISOString(),
-      entry_point_cost: parseInt(entryCost.replace(/[^0-9]/g, ''), 10) || 0,
-      total_prize_points: parseInt(prizePoints.replace(/[^0-9]/g, ''), 10) || 0,
-      max_players: parseInt(maxPlayers, 10) || 30,
-      current_players: 0,
-      status: 'REGISTRATION',
-      created_at: new Date().toISOString(),
-    }
+    const costNum = parseInt(entryCost.replace(/[^0-9]/g, ''), 10) || 0
+    const prizeNum = parseInt(prizePoints.replace(/[^0-9]/g, ''), 10) || 0
+    const maxNum = parseInt(maxPlayers, 10) || 30
+    const isoStart = startTime ? new Date(startTime).toISOString() : new Date().toISOString()
 
-    setTournaments((prev) => [newTourney, ...prev])
-    setCreateModalOpen(false)
-    setTitle('')
-    setDescription('')
+    try {
+      const res = await createAdminTournament({
+        title,
+        description,
+        startTime: isoStart,
+        entryPointCost: costNum,
+        totalPrizePoints: prizeNum,
+        maxPlayers: maxNum,
+      })
+
+      if (!res.success) {
+        alert(res.error || '생성에 실패했습니다.')
+        return
+      }
+
+      await fetchTournaments()
+      setCreateModalOpen(false)
+      setTitle('')
+      setDescription('')
+    } catch (err: unknown) {
+      const msg = err instanceof Error ? err.message : String(err)
+      alert(msg || '오류가 발생했습니다.')
+    }
   }
 
-  const handleUpdateStatus = (id: string, newStatus: TourneyStatus) => {
-    setTournaments((prev) =>
-      prev.map((t) => (t.id === id ? { ...t, status: newStatus } : t))
-    )
+  const handleUpdateStatus = async (id: string, newStatus: TourneyStatus) => {
+    try {
+      const res = await updateAdminTournamentStatus({ tournamentId: id, status: newStatus })
+      if (!res.success) {
+        alert(res.error || '상태 변경에 실패했습니다.')
+        return
+      }
+      setTournaments((prev) =>
+        prev.map((t) => (t.id === id ? { ...t, status: newStatus } : t))
+      )
+    } catch (err: unknown) {
+      const msg = err instanceof Error ? err.message : String(err)
+      alert(msg || '오류가 발생했습니다.')
+    }
   }
 
   const handleOpenRankModal = (tourney: Tournament) => {
@@ -118,11 +165,11 @@ export default function AdminTournamentsPage() {
     setRankModalOpen(true)
   }
 
-  const handleConfirmRanks = () => {
+  const handleConfirmRanks = async () => {
     if (selectedTourney) {
-      handleUpdateStatus(selectedTourney.id, 'COMPLETED')
+      await handleUpdateStatus(selectedTourney.id, 'COMPLETED')
       setRankModalOpen(false)
-      alert(`${selectedTourney.title} 대회 결과 및 상금 포인트가 정상 분배되었습니다.`)
+      alert(`${selectedTourney.title} 대회 결과 및 상금 포인트가 확정되었습니다.`)
     }
   }
 

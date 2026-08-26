@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import {
   Megaphone,
   Plus,
@@ -11,7 +11,8 @@ import {
   Edit,
   Calendar,
   Image as ImageIcon,
-  CheckCircle2
+  CheckCircle2,
+  RefreshCw
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -20,8 +21,14 @@ import { Card, CardContent } from '@/components/ui/card'
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog'
 import { NoticeEvent, NoticeCategory } from '@/types/database.types'
 import { formatDateTime } from '@/lib/utils/format'
+import { getNotices } from '@/lib/actions/notices'
+import {
+  createAdminNotice,
+  updateAdminNotice,
+  deleteAdminNotice,
+} from '@/lib/actions/admin'
 
-const mockAdminNotices: NoticeEvent[] = [
+const fallbackAdminNotices: NoticeEvent[] = [
   {
     id: 'not-101',
     category: 'NOTICE',
@@ -52,9 +59,10 @@ const mockAdminNotices: NoticeEvent[] = [
 ]
 
 export default function AdminNoticesPage() {
-  const [notices, setNotices] = useState<NoticeEvent[]>(mockAdminNotices)
+  const [notices, setNotices] = useState<NoticeEvent[]>(fallbackAdminNotices)
   const [createModalOpen, setCreateModalOpen] = useState(false)
   const [categoryFilter, setCategoryFilter] = useState<string>('ALL')
+  const [isLoading, setIsLoading] = useState(false)
 
   // Form State
   const [category, setCategory] = useState<NoticeCategory>('NOTICE')
@@ -63,39 +71,90 @@ export default function AdminNoticesPage() {
   const [imageUrl, setImageUrl] = useState('')
   const [isPinned, setIsPinned] = useState(false)
 
-  const handleCreateNotice = (e: React.FormEvent) => {
+  const fetchNotices = async () => {
+    setIsLoading(true)
+    try {
+      const data = await getNotices()
+      if (data && data.length > 0) {
+        setNotices(data)
+      }
+    } catch (e) {
+      console.error(e)
+    } finally {
+      setIsLoading(false)
+    }
+  }
+
+  useEffect(() => {
+    fetchNotices()
+  }, [])
+
+  const handleCreateNotice = async (e: React.FormEvent) => {
     e.preventDefault()
     if (!title.trim() || !content.trim()) return
 
-    const newNotice: NoticeEvent = {
-      id: `not-${Date.now()}`,
-      category,
-      title,
-      content,
-      image_url: imageUrl.trim() || null,
-      is_pinned: isPinned,
-      author_id: 'admin-1',
-      created_at: new Date().toISOString(),
-    }
+    try {
+      const res = await createAdminNotice({
+        category,
+        title,
+        content,
+        imageUrl: imageUrl.trim() || undefined,
+        isPinned,
+      })
 
-    setNotices((prev) => [newNotice, ...prev])
-    setCreateModalOpen(false)
-    setTitle('')
-    setContent('')
-    setImageUrl('')
-    setIsPinned(false)
+      if (!res.success) {
+        alert(res.error || '공지 생성에 실패했습니다.')
+        return
+      }
+
+      await fetchNotices()
+      setCreateModalOpen(false)
+      setTitle('')
+      setContent('')
+      setImageUrl('')
+      setIsPinned(false)
+    } catch (err: unknown) {
+      const msg = err instanceof Error ? err.message : String(err)
+      alert(msg || '오류가 발생했습니다.')
+    }
   }
 
-  const handleDeleteNotice = (id: string) => {
-    if (confirm('해당 공지글을 삭제하시겠습니까?')) {
+  const handleDeleteNotice = async (id: string) => {
+    if (!confirm('해당 공지글을 삭제하시겠습니까?')) return
+    try {
+      const res = await deleteAdminNotice(id)
+      if (!res.success) {
+        alert(res.error || '삭제에 실패했습니다.')
+        return
+      }
       setNotices((prev) => prev.filter((n) => n.id !== id))
+    } catch (err: unknown) {
+      const msg = err instanceof Error ? err.message : String(err)
+      alert(msg || '오류가 발생했습니다.')
     }
   }
 
-  const handleTogglePin = (id: string) => {
-    setNotices((prev) =>
-      prev.map((n) => (n.id === id ? { ...n, is_pinned: !n.is_pinned } : n))
-    )
+  const handleTogglePin = async (notice: NoticeEvent) => {
+    try {
+      const res = await updateAdminNotice({
+        id: notice.id,
+        category: notice.category,
+        title: notice.title,
+        content: notice.content,
+        imageUrl: notice.image_url || undefined,
+        isPinned: !notice.is_pinned,
+      })
+      if (!res.success) {
+        alert(res.error || '핀 상태 변경에 실패했습니다.')
+        return
+      }
+      setNotices((prev) =>
+        prev.map((n) => (n.id === notice.id ? { ...n, is_pinned: !n.is_pinned } : n))
+      )
+    } catch (err: unknown) {
+      const msg = err instanceof Error ? err.message : String(err)
+      alert(msg || '오류가 발생했습니다.')
+    }
   }
 
   const filteredNotices = notices.filter((n) => {
@@ -179,7 +238,7 @@ export default function AdminNoticesPage() {
               <Button
                 size="sm"
                 variant="outline"
-                onClick={() => handleTogglePin(notice.id)}
+                onClick={() => handleTogglePin(notice)}
                 className={`h-8 px-2.5 rounded-xl text-xs ${
                   notice.is_pinned
                     ? 'border-[#E6AF2E] text-[#F5D061] bg-[#E6AF2E]/10'

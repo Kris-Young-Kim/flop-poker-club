@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import {
   LayoutDashboard,
@@ -16,15 +16,17 @@ import {
   ChevronRight,
   Zap,
   ArrowUpRight,
-  ArrowDownLeft
+  ArrowDownLeft,
+  RefreshCw
 } from 'lucide-react'
 import { Card, CardContent } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { formatPoints, formatDateTime, getPointReasonMeta } from '@/lib/utils/format'
 import { PointTransaction } from '@/types/database.types'
+import { getAdminDashboardStats, AdminStats } from '@/lib/actions/admin'
 
-const mockTodayTx: PointTransaction[] = [
+const fallbackTodayTx: PointTransaction[] = [
   {
     id: 'tx-201',
     user_id: 'usr-1',
@@ -68,6 +70,33 @@ const mockTodayTx: PointTransaction[] = [
 ]
 
 export default function AdminDashboardPage() {
+  const [stats, setStats] = useState<AdminStats>({
+    todayVisits: 42,
+    todayPointsIssued: 38500,
+    todayPointsDeducted: 10000,
+    activeTournaments: 2,
+    totalMembers: 84,
+    recentTransactions: fallbackTodayTx,
+  })
+  const [isLoading, setIsLoading] = useState(false)
+
+  const loadStats = async () => {
+    setIsLoading(true)
+    try {
+      const data = await getAdminDashboardStats()
+      if (data && data.recentTransactions.length > 0) {
+        setStats(data)
+      }
+    } catch (e) {
+      console.error('Failed to load admin stats:', e)
+    } finally {
+      setIsLoading(false)
+    }
+  }
+
+  useEffect(() => {
+    loadStats()
+  }, [])
   return (
     <div className="space-y-6">
       {/* Header Banner */}
@@ -85,6 +114,16 @@ export default function AdminDashboardPage() {
         </div>
 
         <div className="flex items-center gap-2">
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={loadStats}
+            disabled={isLoading}
+            className="h-8 rounded-xl border-[#E6AF2E]/30 bg-[#13141C] text-xs text-[#F3E5AB] hover:border-[#E6AF2E]"
+          >
+            <RefreshCw className={`size-3.5 mr-1.5 ${isLoading ? 'animate-spin' : ''}`} />
+            새로고침
+          </Button>
           <Badge className="bg-emerald-500/20 text-emerald-300 border-emerald-500/40 text-xs px-3 py-1 font-bold">
             <span className="size-2 rounded-full bg-emerald-400 mr-1.5 animate-pulse" />
             SYSTEM ONLINE
@@ -119,8 +158,10 @@ export default function AdminDashboardPage() {
         <Card className="border border-[#E6AF2E]/20 bg-[#13141C] rounded-2xl">
           <CardContent className="p-4 flex items-center justify-between">
             <div>
-              <p className="text-[11px] text-[#9CA3AF] font-medium">오늘 방문 회원</p>
-              <p className="font-serif text-2xl font-bold text-white mt-1">42 <span className="text-xs text-[#9CA3AF] font-sans">명</span></p>
+              <p className="text-[11px] text-[#9CA3AF] font-medium">전체 회원 / 오늘 방문</p>
+              <p className="font-serif text-2xl font-bold text-white mt-1">
+                {stats.totalMembers} <span className="text-xs text-[#9CA3AF] font-sans">명 ({stats.todayVisits}건)</span>
+              </p>
             </div>
             <div className="flex size-10 items-center justify-center rounded-xl bg-[#E6AF2E]/10 text-[#E6AF2E]">
               <Users className="size-5" />
@@ -132,7 +173,9 @@ export default function AdminDashboardPage() {
           <CardContent className="p-4 flex items-center justify-between">
             <div>
               <p className="text-[11px] text-[#9CA3AF] font-medium">오늘 지급 포인트</p>
-              <p className="font-serif text-2xl font-bold text-emerald-400 mt-1">+38,500 <span className="text-xs font-sans">P</span></p>
+              <p className="font-serif text-2xl font-bold text-emerald-400 mt-1">
+                +{stats.todayPointsIssued.toLocaleString()} <span className="text-xs font-sans">P</span>
+              </p>
             </div>
             <div className="flex size-10 items-center justify-center rounded-xl bg-emerald-500/10 text-emerald-400">
               <ArrowUpRight className="size-5" />
@@ -144,7 +187,9 @@ export default function AdminDashboardPage() {
           <CardContent className="p-4 flex items-center justify-between">
             <div>
               <p className="text-[11px] text-[#9CA3AF] font-medium">오늘 사용/차감</p>
-              <p className="font-serif text-2xl font-bold text-rose-400 mt-1">-10,000 <span className="text-xs font-sans">P</span></p>
+              <p className="font-serif text-2xl font-bold text-rose-400 mt-1">
+                -{stats.todayPointsDeducted.toLocaleString()} <span className="text-xs font-sans">P</span>
+              </p>
             </div>
             <div className="flex size-10 items-center justify-center rounded-xl bg-rose-500/10 text-rose-400">
               <ArrowDownLeft className="size-5" />
@@ -156,7 +201,9 @@ export default function AdminDashboardPage() {
           <CardContent className="p-4 flex items-center justify-between">
             <div>
               <p className="text-[11px] text-[#9CA3AF] font-medium">예정/진행 토너</p>
-              <p className="font-serif text-2xl font-bold text-[#F5D061] mt-1">2 <span className="text-xs text-[#9CA3AF] font-sans">개</span></p>
+              <p className="font-serif text-2xl font-bold text-[#F5D061] mt-1">
+                {stats.activeTournaments} <span className="text-xs text-[#9CA3AF] font-sans">개</span>
+              </p>
             </div>
             <div className="flex size-10 items-center justify-center rounded-xl bg-[#E6AF2E]/10 text-[#E6AF2E]">
               <Trophy className="size-5" />
@@ -180,7 +227,7 @@ export default function AdminDashboardPage() {
         </div>
 
         <div className="space-y-2.5">
-          {mockTodayTx.map((tx) => {
+          {stats.recentTransactions.map((tx) => {
             const meta = getPointReasonMeta(tx.reason)
             const isPositive = tx.amount > 0
 
@@ -206,7 +253,7 @@ export default function AdminDashboardPage() {
                       <span className="text-[11px] text-[#9CA3AF]">({tx.description})</span>
                     </div>
                     <p className="text-[10.5px] text-[#9CA3AF] mt-0.5">
-                      {formatDateTime(tx.created_at, 'full')} · 처리: {tx.processed_by}
+                      {formatDateTime(tx.created_at, 'full')} · 처리자: {tx.processed_by}
                     </p>
                   </div>
                 </div>

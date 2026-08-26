@@ -28,6 +28,7 @@ import {
 } from 'lucide-react'
 import { Profile, PointReason } from '@/types/database.types'
 import { formatPoints, getTierMeta, getPointReasonMeta } from '@/lib/utils/format'
+import { processStaffPointAction } from '@/lib/actions/admin'
 
 interface PointActionDrawerProps {
   isOpen: boolean
@@ -143,15 +144,28 @@ export function PointActionDrawer({
     setConfirmModalOpen(true)
   }
 
-  // Execute Transaction (Safe RPC simulation with debounce)
-  const handleExecuteTransaction = () => {
-    if (!selectedAction || isProcessing) return
+  // Execute Transaction
+  const handleExecuteTransaction = async () => {
+    if (!selectedAction || isProcessing || !member.id) return
 
     setIsProcessing(true)
 
-    setTimeout(() => {
-      const newBal = Math.max(0, currentPoints + selectedAction.amount)
-      const res = {
+    try {
+      const res = await processStaffPointAction({
+        targetUserId: member.id,
+        amount: selectedAction.amount,
+        reason: selectedAction.reason,
+        description: selectedAction.subtitle,
+      })
+
+      if (!res.success) {
+        alert(res.error || '포인트 처리에 실패했습니다.')
+        setIsProcessing(false)
+        return
+      }
+
+      const newBal = res.newBalance ?? (currentPoints + selectedAction.amount)
+      const successData = {
         amount: selectedAction.amount,
         reason: selectedAction.reason,
         newBalance: newBal,
@@ -159,15 +173,19 @@ export function PointActionDrawer({
 
       setIsProcessing(false)
       setConfirmModalOpen(false)
-      setSuccessResult(res)
-      onSuccess?.(res)
+      setSuccessResult(successData)
+      onSuccess?.(successData)
 
-      // Auto dismiss success after 2.5 seconds
+      // Auto dismiss success after 2 seconds
       setTimeout(() => {
         setSuccessResult(null)
         onClose()
-      }, 2200)
-    }, 600)
+      }, 2000)
+    } catch (err: unknown) {
+      const msg = err instanceof Error ? err.message : String(err)
+      alert(msg || '오류가 발생했습니다.')
+      setIsProcessing(false)
+    }
   }
 
   const calculatedBalanceAfter = selectedAction ? currentPoints + selectedAction.amount : currentPoints

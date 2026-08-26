@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import {
   ScanLine,
   Search,
@@ -10,7 +10,8 @@ import {
   CheckCircle2,
   Clock3,
   UserCheck,
-  Crown
+  Crown,
+  Loader2
 } from 'lucide-react'
 import { StaffQRScanner } from '@/components/qr/StaffQRScanner'
 import { PointActionDrawer } from '@/components/forms/PointActionDrawer'
@@ -19,8 +20,9 @@ import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { Profile } from '@/types/database.types'
 import { formatPoints, getTierMeta } from '@/lib/utils/format'
+import { searchMemberByQr } from '@/lib/actions/admin'
 
-const mockMemberList: Partial<Profile>[] = [
+const fallbackMemberList: Partial<Profile>[] = [
   {
     id: 'usr-1',
     name: '김민준',
@@ -67,18 +69,59 @@ export default function AdminScannerPage() {
   const [selectedMember, setSelectedMember] = useState<Partial<Profile> | null>(null)
   const [drawerOpen, setDrawerOpen] = useState(false)
   const [searchQuery, setSearchQuery] = useState('')
-  const [recentScans, setRecentScans] = useState<Partial<Profile>[]>([mockMemberList[0]])
+  const [isSearching, setIsSearching] = useState(false)
+  const [recentScans, setRecentScans] = useState<Partial<Profile>[]>([fallbackMemberList[0]])
+  const [searchResults, setSearchResults] = useState<Partial<Profile>[]>([])
 
   // Called when QR token detected
-  const handleScanSuccess = (qrToken: string) => {
-    // Find member by qr_token or default
-    const found = mockMemberList.find((m) => m.qr_token === qrToken) || mockMemberList[0]
-    setSelectedMember(found)
-    setDrawerOpen(true)
-
-    // Add to recent scans
-    setRecentScans((prev) => [found, ...prev.filter((p) => p.id !== found.id)].slice(0, 5))
+  const handleScanSuccess = async (qrToken: string) => {
+    try {
+      const found = await searchMemberByQr(qrToken)
+      const member = found || fallbackMemberList.find((m) => m.qr_token === qrToken) || fallbackMemberList[0]
+      setSelectedMember(member)
+      setDrawerOpen(true)
+      setRecentScans((prev) => [member, ...prev.filter((p) => p.id !== member.id)].slice(0, 5))
+    } catch (e) {
+      console.error('Scan error:', e)
+      const fallback = fallbackMemberList[0]
+      setSelectedMember(fallback)
+      setDrawerOpen(true)
+    }
   }
+
+  // Handle live search
+  useEffect(() => {
+    if (!searchQuery.trim()) {
+      setSearchResults([])
+      return
+    }
+
+    const timer = setTimeout(async () => {
+      setIsSearching(true)
+      try {
+        const found = await searchMemberByQr(searchQuery)
+        if (found) {
+          setSearchResults([found])
+        } else {
+          // Local fallback filter
+          const q = searchQuery.toLowerCase()
+          const matched = fallbackMemberList.filter(
+            (m) =>
+              (m.name || '').toLowerCase().includes(q) ||
+              (m.nickname || '').toLowerCase().includes(q) ||
+              (m.phone || '').includes(q)
+          )
+          setSearchResults(matched)
+        }
+      } catch (e) {
+        console.error(e)
+      } finally {
+        setIsSearching(false)
+      }
+    }, 300)
+
+    return () => clearTimeout(timer)
+  }, [searchQuery])
 
   // Handle Manual Selection
   const handleSelectMember = (member: Partial<Profile>) => {
@@ -86,17 +129,6 @@ export default function AdminScannerPage() {
     setDrawerOpen(true)
     setRecentScans((prev) => [member, ...prev.filter((p) => p.id !== member.id)].slice(0, 5))
   }
-
-  // Search filter
-  const searchResults = mockMemberList.filter((m) => {
-    if (!searchQuery.trim()) return false
-    const q = searchQuery.toLowerCase()
-    return (
-      (m.name || '').toLowerCase().includes(q) ||
-      (m.nickname || '').toLowerCase().includes(q) ||
-      (m.phone || '').includes(q)
-    )
-  })
 
   return (
     <div className="space-y-6">

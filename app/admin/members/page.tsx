@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import {
   Users,
   Search,
@@ -13,7 +13,8 @@ import {
   Phone,
   Calendar,
   CheckCircle2,
-  Lock
+  Lock,
+  RefreshCw
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -23,8 +24,9 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } f
 import { PointActionDrawer } from '@/components/forms/PointActionDrawer'
 import { Profile, UserTier } from '@/types/database.types'
 import { formatPoints, formatDateTime, getTierMeta } from '@/lib/utils/format'
+import { getAdminMembers, updateMemberTier } from '@/lib/actions/admin'
 
-const mockMembers: Profile[] = [
+const fallbackMembers: Profile[] = [
   {
     id: 'usr-1',
     email: 'minjun.kim@gmail.com',
@@ -93,9 +95,10 @@ const mockMembers: Profile[] = [
 ]
 
 export default function AdminMembersPage() {
-  const [members, setMembers] = useState<Profile[]>(mockMembers)
+  const [members, setMembers] = useState<Profile[]>(fallbackMembers)
   const [searchQuery, setSearchQuery] = useState('')
   const [tierFilter, setTierFilter] = useState<string>('ALL')
+  const [isLoading, setIsLoading] = useState(false)
 
   // Selected member for Point Drawer or Tier Edit Modal
   const [selectedMember, setSelectedMember] = useState<Profile | null>(null)
@@ -103,16 +106,34 @@ export default function AdminMembersPage() {
   const [tierModalOpen, setTierModalOpen] = useState(false)
   const [selectedTier, setSelectedTier] = useState<UserTier>('NORMAL')
 
-  // Filtered members list
+  const fetchMembers = async () => {
+    setIsLoading(true)
+    try {
+      const data = await getAdminMembers({ search: searchQuery, tier: tierFilter })
+      if (data && data.length > 0) {
+        setMembers(data)
+      }
+    } catch (e) {
+      console.error(e)
+    } finally {
+      setIsLoading(false)
+    }
+  }
+
+  useEffect(() => {
+    fetchMembers()
+  }, [tierFilter])
+
+  // Filtered members list fallback
   const filteredMembers = members.filter((m) => {
     if (tierFilter !== 'ALL' && m.tier !== tierFilter) return false
     if (searchQuery.trim()) {
       const q = searchQuery.toLowerCase()
       return (
-        m.name.toLowerCase().includes(q) ||
-        m.nickname.toLowerCase().includes(q) ||
-        m.phone.includes(q) ||
-        m.email.toLowerCase().includes(q)
+        (m.name || '').toLowerCase().includes(q) ||
+        (m.nickname || '').toLowerCase().includes(q) ||
+        (m.phone || '').includes(q) ||
+        (m.email || '').toLowerCase().includes(q)
       )
     }
     return true
@@ -129,12 +150,22 @@ export default function AdminMembersPage() {
     setTierModalOpen(true)
   }
 
-  const handleSaveTier = () => {
+  const handleSaveTier = async () => {
     if (!selectedMember) return
-    setMembers((prev) =>
-      prev.map((m) => (m.id === selectedMember.id ? { ...m, tier: selectedTier } : m))
-    )
-    setTierModalOpen(false)
+    try {
+      const res = await updateMemberTier({ targetUserId: selectedMember.id, newTier: selectedTier })
+      if (!res.success) {
+        alert(res.error || '등급 변경에 실패했습니다.')
+        return
+      }
+      setMembers((prev) =>
+        prev.map((m) => (m.id === selectedMember.id ? { ...m, tier: selectedTier } : m))
+      )
+      setTierModalOpen(false)
+    } catch (e: unknown) {
+      const msg = e instanceof Error ? e.message : String(e)
+      alert(msg || '오류가 발생했습니다.')
+    }
   }
 
   return (
