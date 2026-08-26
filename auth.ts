@@ -43,6 +43,15 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       }
       return session
     },
+    authorized({ auth, request: { nextUrl } }) {
+      const isLoggedIn = !!auth?.user
+      const isOnAdmin = nextUrl.pathname.startsWith('/admin')
+      if (isOnAdmin) {
+        if (isLoggedIn) return auth?.user?.role === 'staff' || auth?.user?.role === 'super_admin'
+        return false // Redirect to /login for admin
+      }
+      return true // All public pages (/, /ledger, /tournaments, /notices) allow guest access
+    },
   },
   pages: {
     signIn: '/login',
