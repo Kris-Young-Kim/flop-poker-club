@@ -210,3 +210,25 @@ body {
 ::-webkit-scrollbar-thumb:hover {
   background: rgba(230, 175, 46, 0.55);
 }
+
+/* Seamless Continuous Marquee Ticker Animation */
+@keyframes marquee {
+  0% {
+    transform: translateX(0%);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+.animate-marquee {
+  display: flex;
+  width: max-content;
+  animation: marquee 28s linear infinite;
+  will-change: transform;
+}
+
+.animate-marquee:hover {
+  animation-play-state: paused;
+}
+

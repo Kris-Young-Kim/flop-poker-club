@@ -17,6 +17,7 @@ node_modules
 
 # Claude & AI Tools
 .claude/
+claude-seo/
 *.local.json
 
 docs/
