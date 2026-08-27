@@ -38,20 +38,11 @@ export const metadata: Metadata = {
     title: 'FLOP POKER CLUB | 원주 No.1 홀덤 포커 VIP 멤버십',
     description:
       '강원 원주 최고급 홀덤 포커 클럽. 투명한 포인트 원장, QR 출입 인증, 데일리 & 빅 토너먼트. 신규 가입 즉시 5,000P 웰컴 보너스.',
-    images: [
-      {
-        url: '/og-image.png',
-        width: 1200,
-        height: 630,
-        alt: 'FLOP POKER CLUB 원주 VIP 멤버십 라운지',
-      },
-    ],
   },
   twitter: {
     card: 'summary_large_image',
     title: 'FLOP POKER CLUB | 원주 홀덤 포커 VIP 멤버십',
     description: '강원 원주 최고급 홀덤 포커 클럽. 신규 가입 즉시 5,000P 웰컴 보너스.',
-    images: ['/og-image.png'],
   },
   robots: {
     index: true,
