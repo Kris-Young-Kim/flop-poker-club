@@ -102,7 +102,7 @@ export function LandingPage({ tournaments, pinnedNotice }: LandingPageProps) {
     },
     {
       q: '매장 위치와 주차는 가능한가요?',
-      a: `${BUSINESS_INFO.address}에 위치하고 있으며, 건물 내 지하 전용 주차장에 무료 주차가 지원됩니다.`,
+      a: `${BUSINESS_INFO.address}에 위치하고 있으며, 매장 인근 주변 주차가 가능합니다.`,
     },
   ]
 
@@ -667,7 +667,7 @@ export function LandingPage({ tournaments, pinnedNotice }: LandingPageProps) {
               <span>편의 시설 & 주차</span>
             </div>
             <p className="text-[12px] text-zinc-200 break-keep">
-              지하 무료 주차장 완비 · 무선 충전 테이블 · 프리미엄 음료 바
+              매장 인근 주변 주차 가능 · 무선 충전 테이블 · 프리미엄 음료 바
             </p>
             <p className="text-[10.5px] text-zinc-400 break-keep">흡연실 및 공기청정 시스템 가동</p>
           </div>
