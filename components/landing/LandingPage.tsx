@@ -33,6 +33,7 @@ import {
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { TournamentCard } from '@/components/cards/TournamentCard'
+import { BUSINESS_INFO } from '@/lib/constants/business'
 import type { Tournament, NoticeEvent } from '@/types/database.types'
 
 interface LandingPageProps {
@@ -101,7 +102,7 @@ export function LandingPage({ tournaments, pinnedNotice }: LandingPageProps) {
     },
     {
       q: '매장 위치와 주차는 가능한가요?',
-      a: '강원특별자치도 원주 중심가에 위치하고 있으며, 건물 내 지하 전용 주차장에 무료 주차가 지원됩니다.',
+      a: `${BUSINESS_INFO.address}에 위치하고 있으며, 건물 내 지하 전용 주차장에 무료 주차가 지원됩니다.`,
     },
   ]
 
@@ -591,7 +592,7 @@ export function LandingPage({ tournaments, pinnedNotice }: LandingPageProps) {
           </div>
           <div>
             <h3 className="font-bold text-base text-white">FLOP POKER CLUB 오시는 길</h3>
-            <p className="text-xs text-[#9CA3AF]">강원특별자치도 원주시 프리미엄 홀덤 라운지</p>
+            <p className="text-xs text-[#9CA3AF]">{BUSINESS_INFO.address}</p>
           </div>
         </div>
 
@@ -602,9 +603,9 @@ export function LandingPage({ tournaments, pinnedNotice }: LandingPageProps) {
               <span>영업 시간 및 예약</span>
             </div>
             <p className="text-[11.5px] text-zinc-300">
-              매일 18:00 ~ 익일 06:00 (연중무휴)
+              {BUSINESS_INFO.operatingHours}
             </p>
-            <p className="text-[10px] text-zinc-500">단체 및 VIP 테이블 사전 예약 가능</p>
+            <p className="text-[10px] text-zinc-500">{BUSINESS_INFO.contactNotice}</p>
           </div>
 
           <div className="rounded-2xl border border-white/10 bg-[#12141F] p-4 space-y-1.5">
@@ -620,28 +621,53 @@ export function LandingPage({ tournaments, pinnedNotice }: LandingPageProps) {
         </div>
       </section>
 
-      {/* 9. Rich Footer */}
+      {/* 9. Rich Footer & Business Information */}
       <footer className="border-t border-[#E6AF2E]/20 pt-8 text-center text-xs text-[#9CA3AF] space-y-4">
         <div className="flex items-center justify-center gap-2">
           <div className="flex size-7 items-center justify-center rounded-lg bg-gradient-to-br from-[#F5D061] to-[#C28B1E] text-black font-serif font-black text-xs">
             ♠
           </div>
           <span className="font-serif text-sm font-black text-white tracking-wider">
-            FLOP POKER CLUB
+            {BUSINESS_INFO.brandName}
           </span>
         </div>
         <p className="text-[11px] leading-relaxed max-w-sm mx-auto text-[#9CA3AF]">
           FLOP POKER CLUB 원주점은 건전한 마인드 스포츠 홀덤 문화를 지향하며 불법 환전 및 사행 행위를 절대 용인하지 않습니다.
         </p>
-        <div className="flex justify-center gap-4 text-[11px] text-[#F3E5AB]">
+        <div className="flex flex-wrap justify-center gap-x-4 gap-y-1 text-[11px] text-[#F3E5AB]">
           <Link href="/notices?tab=RULE" className="hover:underline">클럽 이용 룰북</Link>
-          <span>·</span>
+          <span className="text-zinc-600">·</span>
           <Link href="/notices" className="hover:underline">공지사항</Link>
-          <span>·</span>
+          <span className="text-zinc-600">·</span>
           <Link href="/tournaments" className="hover:underline">대회일정</Link>
+          <span className="text-zinc-600">·</span>
+          <Link href="/terms" className="hover:underline">이용약관</Link>
+          <span className="text-zinc-600">·</span>
+          <Link href="/privacy" className="font-semibold underline text-[#F5D061]">개인정보처리방침</Link>
         </div>
+
+        {/* Business Registration Details */}
+        <div className="rounded-2xl border border-white/5 bg-[#0C0E14]/80 p-4 max-w-md mx-auto text-[10.5px] leading-relaxed text-zinc-500 space-y-1 text-left">
+          <div className="flex flex-wrap items-center gap-x-3 gap-y-0.5 text-zinc-400">
+            <span><strong>상호:</strong> {BUSINESS_INFO.companyName}</span>
+            <span><strong>대표자:</strong> {BUSINESS_INFO.representative}</span>
+            <span><strong>사업자등록번호:</strong> {BUSINESS_INFO.businessNumber}</span>
+          </div>
+          <div>
+            <span><strong>사업장 소재지:</strong> {BUSINESS_INFO.address}</span>
+          </div>
+          <div className="flex flex-wrap items-center gap-x-3 gap-y-0.5 text-zinc-400">
+            <span><strong>업태:</strong> {BUSINESS_INFO.businessType}</span>
+            <span><strong>종목:</strong> {BUSINESS_INFO.businessItem}</span>
+            <span><strong>주류판매신고:</strong> {BUSINESS_INFO.liquorLicenseNumber}</span>
+          </div>
+          <div className="text-[9.5px] text-zinc-600 pt-0.5">
+            <span>관할 세무서: {BUSINESS_INFO.taxOffice} · 개업연월일: {BUSINESS_INFO.openingDate}</span>
+          </div>
+        </div>
+
         <p className="font-mono text-[9.5px] text-zinc-600">
-          © 2026 FLOP POKER CLUB. ALL RIGHTS RESERVED.
+          © 2026 {BUSINESS_INFO.brandName}. ALL RIGHTS RESERVED.
         </p>
       </footer>
 

@@ -51,6 +51,8 @@ export const profiles = pgTable('profiles', {
   tier: userTierEnum('tier').default('NORMAL').notNull(),
   qrToken: uuid('qr_token').defaultRandom().unique().notNull(),
   totalPoints: bigint('total_points', { mode: 'number' }).default(0).notNull(),
+  termsAgreedAt: timestamp('terms_agreed_at', { withTimezone: true }),
+  termsVersion: text('terms_version'),
   createdAt: timestamp('created_at', { withTimezone: true }).defaultNow().notNull(),
   updatedAt: timestamp('updated_at', { withTimezone: true }).defaultNow().notNull(),
 })

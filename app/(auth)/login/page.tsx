@@ -13,6 +13,7 @@ import {
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
+import { BUSINESS_INFO } from '@/lib/constants/business'
 
 export default function LoginPage() {
   const [isLoading, setIsLoading] = useState(false)
@@ -115,17 +116,28 @@ export default function LoginPage() {
         </div>
 
         {/* Terms & Legal Compliance Notice */}
-        <p className="text-center text-[10.5px] text-[#9CA3AF]/70 leading-relaxed px-2">
-          로그인 시 FLOP POKER CLUB의{' '}
-          <Link href="/notices?tab=RULE" className="underline text-[#F3E5AB]/80 hover:text-white">
-            이용약관
-          </Link>{' '}
-          및{' '}
-          <Link href="/notices?tab=RULE" className="underline text-[#F3E5AB]/80 hover:text-white">
-            개인정보처리방침
-          </Link>
-          에 동의하게 됩니다. 본 서비스는 만 19세 이상 성인 전용입니다.
-        </p>
+        <div className="space-y-4 pt-2">
+          <p className="text-center text-[10.5px] text-[#9CA3AF]/70 leading-relaxed px-2">
+            로그인 시 FLOP POKER CLUB의{' '}
+            <Link href="/terms" className="underline text-[#F3E5AB]/80 hover:text-white">
+              이용약관
+            </Link>{' '}
+            및{' '}
+            <Link href="/privacy" className="underline text-[#F3E5AB]/80 hover:text-white">
+              개인정보처리방침
+            </Link>
+            에 동의하게 됩니다. 본 서비스는 만 19세 이상 성인 전용입니다.
+          </p>
+
+          <div className="rounded-2xl border border-white/5 bg-[#0C0E14]/60 p-3 text-[10px] text-zinc-500 text-center space-y-0.5 leading-relaxed">
+            <p className="font-semibold text-zinc-400">
+              {BUSINESS_INFO.companyName} · 대표자: {BUSINESS_INFO.representative} · 사업자등록번호: {BUSINESS_INFO.businessNumber}
+            </p>
+            <p className="text-zinc-500">
+              {BUSINESS_INFO.address}
+            </p>
+          </div>
+        </div>
       </div>
     </div>
   )

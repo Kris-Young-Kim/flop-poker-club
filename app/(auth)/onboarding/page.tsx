@@ -32,7 +32,7 @@ export default function OnboardingPage() {
   const [nicknameAvailable, setNicknameAvailable] = useState(false)
   const [isCheckingNickname, setIsCheckingNickname] = useState(false)
   const [isSubmitting, setIsSubmitting] = useState(false)
-  const [agreed, setAgreed] = useState(true)
+  const [agreed, setAgreed] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
   const handlePhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -66,6 +66,7 @@ export default function OnboardingPage() {
         name: name.trim(),
         nickname: nickname.trim(),
         phone: phone.replace(/-/g, ''),
+        termsVersion: 'v1.0',
       })
 
       if (!result.success) {
@@ -115,13 +116,13 @@ export default function OnboardingPage() {
           </div>
           <div>
             <div className="flex items-center gap-1.5">
-              <span className="text-xs font-bold text-[#F3E5AB]">신규 가입 웰컴 보너스</span>
+              <span className="text-xs font-bold text-[#F3E5AB]">신규 가입 보너스</span>
               <Badge className="bg-emerald-500/20 text-emerald-300 border-emerald-500/30 text-[9px] px-1.5 py-0">
-                +5,000 P
+                +1p
               </Badge>
             </div>
             <p className="text-[10.5px] text-[#9CA3AF]">
-              온보딩 완료 즉시 회원 원장 계좌로 지급됩니다.
+              온보딩 완료 즉시 포인트 원장에 적립됩니다.
             </p>
           </div>
         </div>
@@ -218,10 +219,18 @@ export default function OnboardingPage() {
                 type="checkbox"
                 checked={agreed}
                 onChange={(e) => setAgreed(e.target.checked)}
-                className="mt-0.5 size-4 rounded accent-[#E6AF2E]"
+                className="mt-0.5 size-4 shrink-0 rounded accent-[#E6AF2E]"
               />
               <span>
-                (필수) FLOP POKER CLUB 멤버십 이용약관 및 개인정보 수집·이용에 동의합니다.
+                (필수){' '}
+                <Link href="/terms" target="_blank" className="underline text-[#F3E5AB] hover:text-white">
+                  이용약관
+                </Link>{' '}
+                및{' '}
+                <Link href="/privacy" target="_blank" className="underline text-[#F3E5AB] hover:text-white">
+                  개인정보처리방침
+                </Link>
+                에 동의합니다. (만 19세 이상)
               </span>
             </label>
           </div>
@@ -249,7 +258,7 @@ export default function OnboardingPage() {
               '등록 처리 중...'
             ) : (
               <span className="flex items-center justify-center gap-1.5">
-                멤버십 시작하기 (+5,000P 받기) <ArrowRight className="size-4" />
+                멤버십 시작하기 (+1p 받기) <ArrowRight className="size-4" />
               </span>
             )}
           </Button>

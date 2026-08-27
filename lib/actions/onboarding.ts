@@ -23,6 +23,7 @@ export async function saveProfile(data: {
   name: string
   nickname: string
   phone: string
+  termsVersion?: string
 }): Promise<{ success: boolean; error?: string }> {
   const session = await auth()
   if (!session?.user?.id) return { success: false, error: '인증이 필요합니다.' }
@@ -39,15 +40,18 @@ export async function saveProfile(data: {
 
       const isFirstOnboarding = !current?.nickname
 
+      const now = new Date()
       await tx
         .update(profiles)
         .set({
           name: data.name,
           nickname: data.nickname,
           phone: data.phone,
+          termsAgreedAt: now,
+          termsVersion: data.termsVersion ?? 'v1.0',
           // 최초 온보딩이면 5000P 설정, 재시도면 기존 잔액 유지
           ...(isFirstOnboarding ? { totalPoints: 5000 } : {}),
-          updatedAt: new Date(),
+          updatedAt: now,
         })
         .where(eq(profiles.id, userId))
 
