@@ -368,82 +368,118 @@ export function LandingPage({ tournaments, pinnedNotice }: LandingPageProps) {
       </section>
 
       {/* 4. Instant Hand Bonus Payout Showcase */}
-      <section className="rounded-3xl border border-[#E6AF2E]/40 bg-gradient-to-br from-[#291A08] via-[#1A140F] to-[#0D0C10] p-6 sm:p-8 space-y-6">
-        <div className="flex items-center justify-between">
+      <section className="rounded-3xl border border-[#E6AF2E]/30 bg-gradient-to-b from-[#1A1D2E] via-[#121420] to-[#0A0B10] p-5 sm:p-7 space-y-5 shadow-2xl">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-white/5 pb-4">
           <div className="space-y-1">
             <div className="flex items-center gap-2">
-              <Flame className="size-5 text-[#F5D061]" />
-              <h2 className="font-serif text-xl sm:text-2xl font-black text-[#F3E5AB]">
+              <div className="flex size-7 items-center justify-center rounded-lg bg-[#E6AF2E]/15 text-[#F5D061]">
+                <Flame className="size-4 text-[#F5D061]" />
+              </div>
+              <h2 className="text-lg sm:text-2xl font-extrabold text-white tracking-tight">
                 원터치 핸드 보너스
               </h2>
             </div>
-            <p className="text-xs text-[#9CA3AF]">
-              족보 달성 즉시 딜러가 QR을 스캔하여 포인트를 즉시 적립해 드립니다.
+            <p className="text-[12px] sm:text-xs text-zinc-300 break-keep leading-relaxed">
+              핸드 달성 즉시 현장 딜러가 QR을 스캔하여 포인트를 즉시 적립해 드립니다.
             </p>
           </div>
-          <Badge className="bg-[#E6AF2E] text-black font-extrabold text-xs px-2.5 py-1">
-            REALTIME
+
+          <Badge className="self-start sm:self-auto bg-gradient-to-r from-[#F5D061] to-[#C28B1E] text-black font-extrabold text-[10.5px] px-2.5 py-1 tracking-wider shadow-md">
+            REALTIME PAYOUT
           </Badge>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-4 gap-3">
-          <div className="rounded-2xl border border-emerald-500/30 bg-[#12141F] p-4 space-y-2 text-center">
-            <div className="text-xs text-zinc-400 font-bold">투핸드 포카드</div>
-            <div className="font-mono text-2xl font-black text-emerald-400">+500 P</div>
-            <p className="text-[10px] text-zinc-500">포켓 또는 보드 4장 달성</p>
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5 sm:gap-3">
+          {/* Card 1: Four of a Kind */}
+          <div className="rounded-2xl border border-emerald-500/30 bg-[#0E1517]/90 p-3.5 sm:p-4 space-y-1.5 text-center shadow-lg transition-all hover:border-emerald-400/50">
+            <span className="inline-block text-[11px] font-bold text-emerald-400 px-2 py-0.5 rounded-full bg-emerald-500/10 border border-emerald-500/20">
+              투핸드 포카드
+            </span>
+            <div className="font-extrabold text-xl sm:text-2xl text-emerald-400 tracking-tight">
+              +500 P
+            </div>
+            <p className="text-[10.5px] text-zinc-400 break-keep">
+              포켓/보드 4장 완성
+            </p>
           </div>
 
-          <div className="rounded-2xl border border-purple-500/30 bg-[#12141F] p-4 space-y-2 text-center">
-            <div className="text-xs text-zinc-400 font-bold">스트레이트 플러시</div>
-            <div className="font-mono text-2xl font-black text-purple-400">+1,000 P</div>
-            <p className="text-[10px] text-zinc-500">동일 무늬 연속 5장</p>
+          {/* Card 2: Straight Flush */}
+          <div className="rounded-2xl border border-purple-500/30 bg-[#151121]/90 p-3.5 sm:p-4 space-y-1.5 text-center shadow-lg transition-all hover:border-purple-400/50">
+            <span className="inline-block text-[11px] font-bold text-purple-300 px-2 py-0.5 rounded-full bg-purple-500/10 border border-purple-500/20">
+              스트레이트 플러시
+            </span>
+            <div className="font-extrabold text-xl sm:text-2xl text-purple-300 tracking-tight">
+              +1,000 P
+            </div>
+            <p className="text-[10.5px] text-zinc-400 break-keep">
+              동일 무늬 연속 5장
+            </p>
           </div>
 
-          <div className="rounded-2xl border border-amber-500/40 bg-[#1E1B10] p-4 space-y-2 text-center">
-            <div className="text-xs text-[#F3E5AB] font-bold">로얄 스트레이트 플러시</div>
-            <div className="font-mono text-2xl font-black text-[#F5D061]">+3,000 P</div>
-            <p className="text-[10px] text-[#F3E5AB]/60">최고의 명예 족보</p>
+          {/* Card 3: Royal Flush */}
+          <div className="rounded-2xl border border-[#E6AF2E]/40 bg-[#1D170A]/95 p-3.5 sm:p-4 space-y-1.5 text-center shadow-xl shadow-yellow-500/10 transition-all hover:border-[#F5D061]">
+            <span className="inline-block text-[11px] font-bold text-[#F5D061] px-2 py-0.5 rounded-full bg-[#E6AF2E]/15 border border-[#E6AF2E]/30">
+              로얄 스트레이트 플러시
+            </span>
+            <div className="font-extrabold text-xl sm:text-2xl text-[#F5D061] tracking-tight">
+              +3,000 P
+            </div>
+            <p className="text-[10.5px] text-[#F3E5AB]/80 break-keep">
+              최고 명예의 족보
+            </p>
           </div>
 
-          <div className="rounded-2xl border border-[#E6AF2E]/30 bg-[#181A28] p-4 space-y-2 text-center">
-            <div className="text-xs text-zinc-300 font-bold">10장 보너스 리워드</div>
-            <div className="font-mono text-2xl font-black text-amber-300">+5,000 P</div>
-            <p className="text-[10px] text-zinc-500">스페셜 핸드 달성자</p>
+          {/* Card 4: Special Bonus */}
+          <div className="rounded-2xl border border-amber-500/30 bg-[#181926]/90 p-3.5 sm:p-4 space-y-1.5 text-center shadow-lg transition-all hover:border-amber-400/50">
+            <span className="inline-block text-[11px] font-bold text-amber-200 px-2 py-0.5 rounded-full bg-amber-500/10 border border-amber-500/20">
+              10장 보너스 리워드
+            </span>
+            <div className="font-extrabold text-xl sm:text-2xl text-amber-200 tracking-tight">
+              +5,000 P
+            </div>
+            <p className="text-[10.5px] text-zinc-400 break-keep">
+              스페셜 핸드 달성자
+            </p>
           </div>
         </div>
       </section>
 
       {/* 5. Tournament Grand Championship Showcase */}
       <section className="space-y-6">
-        <div className="flex flex-col sm:flex-row items-center justify-between gap-6 rounded-3xl border border-[#E6AF2E]/30 bg-gradient-to-r from-[#171A2B] via-[#10121C] to-[#0A0B10] p-6 sm:p-8">
-          <div className="space-y-3 flex-1 text-center sm:text-left">
-            <Badge className="bg-[#E6AF2E]/20 text-[#F5D061] border-[#E6AF2E]/30 text-[10px]">
-              TOURNAMENT
-            </Badge>
-            <h2 className="font-serif text-2xl sm:text-3xl font-black text-white">
-              챔피언의 영예를 향한<br />
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#F5D061] to-[#C28B1E]">
+        <div className="flex flex-col sm:flex-row items-center justify-between gap-5 sm:gap-6 rounded-3xl border border-[#E6AF2E]/30 bg-gradient-to-r from-[#171A2B] via-[#10121C] to-[#0A0B10] p-5 sm:p-7">
+          <div className="space-y-2.5 flex-1 text-center sm:text-left min-w-0">
+            <div className="flex items-center justify-center sm:justify-start">
+              <Badge className="bg-[#E6AF2E]/15 text-[#F5D061] border border-[#E6AF2E]/30 text-[10px] font-bold px-2 py-0.5 tracking-wider">
+                TOURNAMENT
+              </Badge>
+            </div>
+
+            <h2 className="text-lg sm:text-2xl font-extrabold text-white tracking-tight leading-snug break-keep">
+              챔피언의 영예를 향한<br className="hidden sm:inline" />{' '}
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#F5D061] via-[#E6AF2E] to-[#C28B1E]">
                 정기 토너먼트 챔피언십
               </span>
             </h2>
-            <p className="text-xs text-[#9CA3AF] leading-relaxed">
+
+            <p className="text-[12px] sm:text-xs text-zinc-300 leading-relaxed break-keep">
               매일 열리는 데일리 토너먼트부터 주말 빅 매치까지, 클럽 랭킹 포인트와 명예의 트로피를 획득하세요.
             </p>
-            <div className="pt-2">
+
+            <div className="pt-1.5 flex justify-center sm:justify-start">
               <Link href="/tournaments">
-                <Button className="h-11 rounded-xl bg-gradient-to-r from-[#F5D061] to-[#C28B1E] text-black font-bold text-xs shadow-lg">
+                <Button className="h-10 rounded-xl bg-gradient-to-r from-[#F5D061] to-[#C28B1E] hover:from-[#F7D878] hover:to-[#D49826] text-black font-extrabold text-xs shadow-lg transition-all">
                   전체 토너먼트 일정 확인하기 <ChevronRight className="size-4 ml-1" />
                 </Button>
               </Link>
             </div>
           </div>
 
-          <div className="relative size-60 sm:size-72 shrink-0 overflow-hidden rounded-2xl border border-[#E6AF2E]/30 shadow-2xl">
+          <div className="relative w-44 sm:w-52 aspect-[4/3] shrink-0 overflow-hidden rounded-2xl border border-[#E6AF2E]/40 shadow-xl group">
             <Image
               src="/images/trophy.jpg"
               alt="Poker Championship Trophy"
               fill
-              className="object-cover hover:scale-105 transition-transform duration-500"
+              className="object-cover group-hover:scale-105 transition-transform duration-500"
             />
           </div>
         </div>
