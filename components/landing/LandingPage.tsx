@@ -110,18 +110,18 @@ export function LandingPage({ tournaments, pinnedNotice }: LandingPageProps) {
     <div className="space-y-16 pb-24 text-white overflow-hidden selection:bg-[#E6AF2E]/40">
       
       {/* 0. Top Live Ticker Bar */}
-      <div className="relative -mx-4 sm:-mx-6 -mt-4 overflow-hidden border-b border-[#E6AF2E]/30 bg-gradient-to-r from-[#211B0C] via-[#151724] to-[#211B0C] py-2 px-3 text-xs text-[#F3E5AB] shadow-lg">
-        <div className="flex items-center gap-2 overflow-x-auto whitespace-nowrap scrollbar-none animate-marquee text-[11px] font-medium">
-          <span className="flex items-center gap-1 font-bold text-[#F5D061] px-1.5 py-0.5 rounded bg-[#E6AF2E]/20">
-            <Flame className="size-3.5" /> LIVE
+      <div className="relative -mx-4 sm:-mx-6 -mt-4 overflow-hidden border-b border-[#E6AF2E]/30 bg-gradient-to-r from-[#211B0C] via-[#151724] to-[#211B0C] pt-3 pb-2.5 px-3 sm:px-4 text-xs text-[#F3E5AB] shadow-lg">
+        <div className="flex items-center gap-2.5 overflow-x-auto whitespace-nowrap scrollbar-none animate-marquee text-[11.5px] leading-normal font-medium py-0.5">
+          <span className="inline-flex items-center gap-1 font-bold text-[#F5D061] px-2 py-0.5 rounded-full bg-[#E6AF2E]/25 border border-[#E6AF2E]/40 text-[10.5px] shrink-0">
+            <Flame className="size-3.5 text-[#F5D061]" /> LIVE
           </span>
-          <span>♠ 웰컴 이벤트: 신규 가입 즉시 5,000P 무료 지급</span>
+          <span className="inline-block pt-0.5">♠ 웰컴 이벤트: 신규 가입 즉시 5,000P 무료 지급</span>
           <span className="text-[#E6AF2E]/40">|</span>
-          <span>🏆 매일 저녁 7시 데일리 토너먼트 START</span>
+          <span className="inline-block pt-0.5">🏆 매일 저녁 7시 데일리 토너먼트 START</span>
           <span className="text-[#E6AF2E]/40">|</span>
-          <span>⚡ 투핸드 포카드 +500P · 스티플 +1,000P · 로티플 +3,000P 즉시 적립</span>
+          <span className="inline-block pt-0.5">⚡ 투핸드 포카드 +500P · 스티플 +1,000P · 로티플 +3,000P 즉시 적립</span>
           <span className="text-[#E6AF2E]/40">|</span>
-          <span>👑 원주 최고급 VIP 라운지 18:00 ~ 익일 06:00 연중무휴</span>
+          <span className="inline-block pt-0.5">👑 원주 최고급 VIP 라운지 18:00 ~ 익일 06:00 연중무휴</span>
         </div>
       </div>
 

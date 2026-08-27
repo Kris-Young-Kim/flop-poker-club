@@ -1,11 +1,10 @@
 'use client'
 
 import { useState } from 'react'
-import { Crown, QrCode, Sparkles, TrendingUp, ShieldCheck, ChevronRight, Zap } from 'lucide-react'
+import { QrCode, ChevronRight } from 'lucide-react'
 import { Button } from '@/components/ui/button'
-import { Badge } from '@/components/ui/badge'
 import { Profile } from '@/types/database.types'
-import { formatPoints, getTierMeta } from '@/lib/utils/format'
+import { formatPoints } from '@/lib/utils/format'
 import { MemberQRModal } from '@/components/qr/MemberQRModal'
 import Link from 'next/link'
 
@@ -25,11 +24,9 @@ export function GoldVIPCard({ profile, onOpenQR }: GoldVIPCardProps) {
     }
   }
 
-  const tier = profile.tier || 'VIP'
-  const points = profile.total_points ?? 24500
-  const name = profile.name || '김민준'
-  const nickname = profile.nickname || 'AceKing'
-  const tierMeta = getTierMeta(tier)
+  const points = profile.total_points ?? 0
+  const name = profile.name || '회원'
+  const nickname = profile.nickname || ''
 
   return (
     <>
@@ -53,19 +50,18 @@ export function GoldVIPCard({ profile, onOpenQR }: GoldVIPCardProps) {
               </div>
               <div>
                 <p className="font-mono text-[10px] uppercase tracking-[0.25em] text-[#F3E5AB] font-bold">
-                  FLOP POKER CLUB
+                  FL♠P POKER CLUB
                 </p>
                 <p className="text-[11px] font-medium text-[#9CA3AF]">
-                  원주 프리미엄 멤버십
+                  원주 본점 멤버십
                 </p>
               </div>
             </div>
 
             <div className="flex items-center gap-2">
-              <Badge className={`${tierMeta.badgeClass} px-2.5 py-1 text-[11px] uppercase tracking-wider font-extrabold shadow-md`}>
-                <Crown className="size-3 mr-1 inline-block" />
-                {tierMeta.label}
-              </Badge>
+              <span className="font-mono text-[10px] text-[#F5D061]/60 tracking-widest uppercase">
+                MEMBER
+              </span>
             </div>
           </div>
 
@@ -98,9 +94,9 @@ export function GoldVIPCard({ profile, onOpenQR }: GoldVIPCardProps) {
                 <span className="text-sm font-bold text-white tracking-wide">
                   {name}
                 </span>
-                <span className="text-xs text-[#9CA3AF]">
-                  (@{nickname})
-                </span>
+                {nickname && (
+                  <span className="text-xs text-[#9CA3AF]">(@{nickname})</span>
+                )}
               </div>
               <p className="font-mono text-[10px] text-[#9CA3AF] tracking-wider mt-0.5">
                 NO. FLP-2024-{(profile.qr_token || '8839').slice(0, 4).toUpperCase()}

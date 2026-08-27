@@ -19,7 +19,7 @@ import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { Profile } from '@/types/database.types'
-import { formatPoints, getTierMeta } from '@/lib/utils/format'
+import { formatPoints } from '@/lib/utils/format'
 import { searchMemberByQr } from '@/lib/actions/admin'
 
 const fallbackMemberList: Partial<Profile>[] = [
@@ -29,9 +29,8 @@ const fallbackMemberList: Partial<Profile>[] = [
     nickname: 'AceKing',
     phone: '010-8888-9999',
     role: 'user',
-    tier: 'VIP',
     qr_token: 'flp-99a8-7b2c-8841-f09c',
-    total_points: 24500,
+    total_points: 24,
   },
   {
     id: 'usr-2',
@@ -39,9 +38,8 @@ const fallbackMemberList: Partial<Profile>[] = [
     nickname: 'QueenSpade',
     phone: '010-7777-1111',
     role: 'user',
-    tier: 'ROYAL',
     qr_token: 'flp-royal-8811-2244',
-    total_points: 128400,
+    total_points: 8,
   },
   {
     id: 'usr-3',
@@ -49,9 +47,8 @@ const fallbackMemberList: Partial<Profile>[] = [
     nickname: 'MonsterPot',
     phone: '010-3333-5555',
     role: 'user',
-    tier: 'VVIP',
     qr_token: 'flp-vvip-3333-5555',
-    total_points: 76000,
+    total_points: 12,
   },
   {
     id: 'usr-4',
@@ -59,9 +56,8 @@ const fallbackMemberList: Partial<Profile>[] = [
     nickname: 'AllInKing',
     phone: '010-1234-5678',
     role: 'user',
-    tier: 'NORMAL',
     qr_token: 'flp-norm-1234-5678',
-    total_points: 15000,
+    total_points: 5,
   },
 ]
 
@@ -175,34 +171,26 @@ export default function AdminScannerPage() {
               <div className="space-y-2 pt-1">
                 <p className="text-[11px] text-[#9CA3AF]">검색 결과 ({searchResults.length}건):</p>
                 <div className="space-y-1.5">
-                  {searchResults.map((m) => {
-                    const tierMeta = getTierMeta(m.tier || 'NORMAL')
-                    return (
-                      <div
-                        key={m.id}
-                        onClick={() => handleSelectMember(m)}
-                        className="flex items-center justify-between rounded-xl border border-[#E6AF2E]/20 bg-[#181A26] p-3 hover:border-[#E6AF2E]/50 cursor-pointer transition-all"
-                      >
-                        <div className="flex items-center gap-2.5">
-                          <div className="flex size-8 items-center justify-center rounded-lg bg-[#E6AF2E]/10 text-[#E6AF2E] font-bold text-xs">
-                            ♠
-                          </div>
-                          <div>
-                            <div className="flex items-center gap-1.5">
-                              <span className="text-xs font-bold text-white">{m.name}</span>
-                              <Badge className={`${tierMeta.badgeClass} text-[9px] px-1.5 py-0`}>
-                                {m.tier}
-                              </Badge>
-                            </div>
-                            <p className="text-[10.5px] text-[#9CA3AF]">@{m.nickname} · {m.phone}</p>
-                          </div>
+                  {searchResults.map((m) => (
+                    <div
+                      key={m.id}
+                      onClick={() => handleSelectMember(m)}
+                      className="flex items-center justify-between rounded-xl border border-[#E6AF2E]/20 bg-[#181A26] p-3 hover:border-[#E6AF2E]/50 cursor-pointer transition-all"
+                    >
+                      <div className="flex items-center gap-2.5">
+                        <div className="flex size-8 items-center justify-center rounded-lg bg-[#E6AF2E]/10 text-[#E6AF2E] font-bold text-xs">
+                          ♠
                         </div>
-                        <Button size="sm" className="h-7 px-2.5 rounded-lg bg-[#E6AF2E] text-black font-bold text-[11px]">
-                          지급 선택
-                        </Button>
+                        <div>
+                          <span className="text-xs font-bold text-white">{m.name}</span>
+                          <p className="text-[10.5px] text-[#9CA3AF]">@{m.nickname} · {m.phone}</p>
+                        </div>
                       </div>
-                    )
-                  })}
+                      <Button size="sm" className="h-7 px-2.5 rounded-lg bg-[#E6AF2E] text-black font-bold text-[11px]">
+                        지급 선택
+                      </Button>
+                    </div>
+                  ))}
                 </div>
               </div>
             )}
@@ -219,44 +207,36 @@ export default function AdminScannerPage() {
             </div>
 
             <div className="space-y-2">
-              {recentScans.map((m) => {
-                const tierMeta = getTierMeta(m.tier || 'NORMAL')
-                return (
-                  <div
-                    key={m.id}
-                    onClick={() => handleSelectMember(m)}
-                    className="flex items-center justify-between rounded-2xl border border-[#E6AF2E]/15 bg-[#181A26] p-3 hover:border-[#E6AF2E]/40 cursor-pointer transition-all group"
-                  >
-                    <div className="flex items-center gap-3">
-                      <div className="flex size-10 items-center justify-center rounded-xl bg-gradient-to-br from-[#F5D061] to-[#C28B1E] text-black font-bold text-sm shadow">
-                        ♠
-                      </div>
-                      <div>
-                        <div className="flex items-center gap-2">
-                          <span className="font-bold text-sm text-white group-hover:text-[#F3E5AB]">
-                            {m.name}
-                          </span>
-                          <Badge className={`${tierMeta.badgeClass} text-[9px] px-1.5 py-0`}>
-                            {m.tier}
-                          </Badge>
-                        </div>
-                        <p className="text-[11px] text-[#9CA3AF]">
-                          @{m.nickname} · 잔액 {formatPoints(m.total_points ?? 0)}
-                        </p>
-                      </div>
+              {recentScans.map((m) => (
+                <div
+                  key={m.id}
+                  onClick={() => handleSelectMember(m)}
+                  className="flex items-center justify-between rounded-2xl border border-[#E6AF2E]/15 bg-[#181A26] p-3 hover:border-[#E6AF2E]/40 cursor-pointer transition-all group"
+                >
+                  <div className="flex items-center gap-3">
+                    <div className="flex size-10 items-center justify-center rounded-xl bg-gradient-to-br from-[#F5D061] to-[#C28B1E] text-black font-bold text-sm shadow">
+                      ♠
                     </div>
-
-                    <Button
-                      size="sm"
-                      variant="outline"
-                      className="h-8 rounded-xl border-[#E6AF2E]/30 bg-transparent text-xs text-[#F3E5AB] group-hover:bg-[#E6AF2E]/10"
-                    >
-                      <Zap className="size-3.5 mr-1 text-[#E6AF2E]" />
-                      포인트 처리
-                    </Button>
+                    <div>
+                      <span className="font-bold text-sm text-white group-hover:text-[#F3E5AB]">
+                        {m.name}
+                      </span>
+                      <p className="text-[11px] text-[#9CA3AF]">
+                        @{m.nickname} · 잔액 {m.total_points ?? 0}p
+                      </p>
+                    </div>
                   </div>
-                )
-              })}
+
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    className="h-8 rounded-xl border-[#E6AF2E]/30 bg-transparent text-xs text-[#F3E5AB] group-hover:bg-[#E6AF2E]/10"
+                  >
+                    <Zap className="size-3.5 mr-1 text-[#E6AF2E]" />
+                    포인트 처리
+                  </Button>
+                </div>
+              ))}
             </div>
           </div>
         </div>

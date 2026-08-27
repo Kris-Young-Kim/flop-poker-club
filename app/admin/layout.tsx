@@ -72,14 +72,14 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
               <div>
                 <div className="flex items-center gap-2">
                   <span className="font-serif text-lg font-black tracking-wider text-white">
-                    FLOP
+                    FL<span className="text-[#F5D061]">♠</span>P
                   </span>
                   <Badge className="bg-red-500/20 text-red-300 border-red-500/40 text-[10px] font-bold px-1.5 py-0">
-                    STAFF CONSOLE
+                    STAFF
                   </Badge>
                 </div>
                 <p className="font-mono text-[8.5px] tracking-[0.2em] text-[#9CA3AF] -mt-1">
-                  WONJU STORE OPERATION
+                  원주 본점 운영 콘솔
                 </p>
               </div>
             </Link>

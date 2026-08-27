@@ -69,10 +69,10 @@ export default function UserLayout({ children }: UserLayoutProps) {
             <div>
               <div className="flex items-center gap-1.5">
                 <span className="font-serif text-lg font-black tracking-wider text-white">
-                  FLOP
+                  FL<span className="text-[#F5D061]">♠</span>P
                 </span>
                 <span className="font-mono text-[9px] uppercase tracking-widest text-[#F5D061] font-bold px-1.5 py-0.5 rounded bg-[#E6AF2E]/10 border border-[#E6AF2E]/30">
-                  원주점
+                  원주 본점
                 </span>
               </div>
               <p className="font-mono text-[8.5px] tracking-[0.2em] text-[#9CA3AF] -mt-1">
@@ -89,7 +89,7 @@ export default function UserLayout({ children }: UserLayoutProps) {
                 className="flex items-center gap-1.5 rounded-xl border border-[#F5D061]/40 bg-gradient-to-r from-[#282110] to-[#161824] px-2.5 py-1.5 text-xs text-[#F5D061] hover:border-[#F5D061] transition-all shadow-md"
               >
                 <Crown className="size-3.5 text-[#F5D061]" />
-                <span className="font-bold max-w-[80px] truncate">{session.user.name ?? 'VIP회원'}</span>
+                <span className="font-bold max-w-[80px] truncate">{session.user.name ?? '회원'}</span>
               </Link>
             ) : (
               <Link

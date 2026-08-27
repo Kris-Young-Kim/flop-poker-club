@@ -9,25 +9,17 @@ import {
   DialogDescription,
 } from '@/components/ui/dialog'
 import { Button } from '@/components/ui/button'
-import { Badge } from '@/components/ui/badge'
 import { Input } from '@/components/ui/input'
 import {
   Zap,
-  Sparkles,
-  ShieldCheck,
   CheckCircle2,
   AlertTriangle,
-  Flame,
   Plus,
   Minus,
-  Coins,
-  ArrowRight,
-  User,
-  Crown,
   Lock
 } from 'lucide-react'
 import { Profile, PointReason } from '@/types/database.types'
-import { formatPoints, getTierMeta, getPointReasonMeta } from '@/lib/utils/format'
+import { getPointReasonMeta } from '@/lib/utils/format'
 import { processStaffPointAction } from '@/lib/actions/admin'
 
 interface PointActionDrawerProps {
@@ -47,42 +39,98 @@ interface PresetAction {
   badgeColor: string
 }
 
-const PRESET_ACTIONS: PresetAction[] = [
+interface PresetGroup {
+  label: string
+  actions: PresetAction[]
+}
+
+const PRESET_GROUPS: PresetGroup[] = [
   {
-    id: 'four-of-a-kind',
-    title: '투핸드 포카드',
-    subtitle: 'Two-hand Four of a Kind',
-    amount: 500,
-    reason: 'FOUR_OF_A_KIND',
-    gradient: 'from-emerald-600/30 to-emerald-950/50 border-emerald-500/40 text-emerald-300',
-    badgeColor: 'bg-emerald-500/20 text-emerald-300 border-emerald-500/30',
+    label: '핸드 보너스',
+    actions: [
+      {
+        id: 'four-of-a-kind',
+        title: '투핸드 포카드',
+        subtitle: 'Two-hand Four of a Kind',
+        amount: 1,
+        reason: 'FOUR_OF_A_KIND',
+        gradient: 'from-emerald-600/30 to-emerald-950/50 border-emerald-500/40 text-emerald-300',
+        badgeColor: 'bg-emerald-500/20 text-emerald-300 border-emerald-500/30',
+      },
+      {
+        id: 'straight-flush',
+        title: '스트레이트 플러시',
+        subtitle: 'Straight Flush',
+        amount: 2,
+        reason: 'STRAIGHT_FLUSH',
+        gradient: 'from-purple-600/30 to-purple-950/50 border-purple-500/40 text-purple-300',
+        badgeColor: 'bg-purple-500/20 text-purple-300 border-purple-500/30',
+      },
+      {
+        id: 'royal-flush',
+        title: '로열 스트레이트 플러시',
+        subtitle: 'Royal Flush',
+        amount: 3,
+        reason: 'ROYAL_FLUSH',
+        gradient: 'from-amber-500/30 to-amber-950/50 border-amber-500/40 text-[#F5D061]',
+        badgeColor: 'bg-amber-500/20 text-amber-300 border-amber-500/30',
+      },
+    ],
   },
   {
-    id: 'straight-flush',
-    title: '스트레이트 플러시',
-    subtitle: 'Straight Flush',
-    amount: 1000,
-    reason: 'STRAIGHT_FLUSH',
-    gradient: 'from-purple-600/30 to-purple-950/50 border-purple-500/40 text-purple-300',
-    badgeColor: 'bg-purple-500/20 text-purple-300 border-purple-500/30',
+    label: '이벤트 / 구매',
+    actions: [
+      {
+        id: 'new-member',
+        title: '신규회원 가입',
+        subtitle: 'New Member Registration',
+        amount: 1,
+        reason: 'EVENT_BONUS',
+        gradient: 'from-sky-600/30 to-sky-950/50 border-sky-500/40 text-sky-300',
+        badgeColor: 'bg-sky-500/20 text-sky-300 border-sky-500/30',
+      },
+      {
+        id: 'cash-buyin-10',
+        title: '현금 바인권 10매 구매',
+        subtitle: 'Cash Buy-in × 10',
+        amount: 3,
+        reason: 'EVENT_BONUS',
+        gradient: 'from-blue-600/30 to-blue-950/50 border-blue-500/40 text-blue-300',
+        badgeColor: 'bg-blue-500/20 text-blue-300 border-blue-500/30',
+      },
+    ],
   },
   {
-    id: 'royal-flush',
-    title: '로열 스트레이트 플러시',
-    subtitle: 'Royal Flush',
-    amount: 3000,
-    reason: 'ROYAL_FLUSH',
-    gradient: 'from-amber-500/30 to-amber-950/50 border-amber-500/40 text-[#F5D061]',
-    badgeColor: 'bg-amber-500/20 text-amber-300 border-amber-500/30',
-  },
-  {
-    id: 'ten-ticket-bonus',
-    title: '10장 현금 구매 보너스',
-    subtitle: 'Event Ticket Promo',
-    amount: 5000,
-    reason: 'EVENT_BONUS',
-    gradient: 'from-blue-600/30 to-blue-950/50 border-blue-500/40 text-blue-300',
-    badgeColor: 'bg-blue-500/20 text-blue-300 border-blue-500/30',
+    label: '토너먼트 우승',
+    actions: [
+      {
+        id: 'tourney-small',
+        title: '1등 (6프라이즈 이하)',
+        subtitle: '7 prizes未満 Tournament',
+        amount: 1,
+        reason: 'TOURNAMENT_WIN',
+        gradient: 'from-amber-600/30 to-amber-950/50 border-amber-500/40 text-amber-300',
+        badgeColor: 'bg-amber-500/20 text-amber-300 border-amber-500/30',
+      },
+      {
+        id: 'tourney-mid',
+        title: '1등 (7~10프라이즈)',
+        subtitle: '7–10 prizes Tournament',
+        amount: 2,
+        reason: 'TOURNAMENT_WIN',
+        gradient: 'from-amber-600/30 to-amber-950/50 border-amber-500/40 text-amber-300',
+        badgeColor: 'bg-amber-500/20 text-amber-300 border-amber-500/30',
+      },
+      {
+        id: 'tourney-large',
+        title: '1등 (10+ 프라이즈)',
+        subtitle: '10+ prizes Tournament',
+        amount: 3,
+        reason: 'TOURNAMENT_WIN',
+        gradient: 'from-amber-500/30 to-amber-950/50 border-amber-400/50 text-[#F5D061]',
+        badgeColor: 'bg-amber-500/20 text-amber-300 border-amber-500/30',
+      },
+    ],
   },
 ]
 
@@ -111,8 +159,6 @@ export function PointActionDrawer({
   if (!member) return null
 
   const currentPoints = member.total_points ?? 0
-  const tier = member.tier || 'NORMAL'
-  const tierMeta = getTierMeta(tier)
 
   // Handle Preset Click
   const handleSelectPreset = (action: PresetAction) => {
@@ -128,7 +174,7 @@ export function PointActionDrawer({
 
     const actualAmount = manualType === 'EARN' ? num : -num
     if (manualType === 'DEDUCT' && currentPoints < num) {
-      alert(`잔액이 부족합니다. (현재 잔액: ${formatPoints(currentPoints)})`)
+      alert(`잔액이 부족합니다. (현재 잔액: ${currentPoints}p)`)
       return
     }
 
@@ -206,9 +252,6 @@ export function PointActionDrawer({
                     <span className="font-bold text-base text-white">
                       {member.name || member.nickname}
                     </span>
-                    <Badge className={`${tierMeta.badgeClass} text-[10px] px-2 py-0.2`}>
-                      {tier}
-                    </Badge>
                   </div>
                   <p className="text-xs text-[#9CA3AF]">
                     @{member.nickname} · {member.phone || '010-XXXX-XXXX'}
@@ -222,7 +265,7 @@ export function PointActionDrawer({
                   현재 잔액
                 </span>
                 <p className="font-serif text-lg font-black text-[#F5D061] leading-none mt-0.5">
-                  {formatPoints(currentPoints)}
+                  {currentPoints}p
                 </p>
               </div>
             </div>
@@ -244,37 +287,41 @@ export function PointActionDrawer({
                 포인트 처리 완료!
               </h3>
               <p className="text-sm text-emerald-400 font-mono font-bold">
-                {formatPoints(successResult.amount, true)} ({getPointReasonMeta(successResult.reason).shortLabel})
+                +{successResult.amount}p ({getPointReasonMeta(successResult.reason).shortLabel})
               </p>
               <div className="rounded-xl bg-[#181A26] p-3 text-xs text-[#9CA3AF] max-w-xs mx-auto">
-                새 잔액: <strong className="text-[#F5D061] font-mono">{formatPoints(successResult.newBalance)}</strong>
+                새 잔액: <strong className="text-[#F5D061] font-mono">{successResult.newBalance}p</strong>
               </div>
             </div>
           ) : (
             <div className="space-y-4 my-2">
-              {/* Preset Action Buttons Grid */}
-              <div className="grid grid-cols-2 gap-2.5">
-                {PRESET_ACTIONS.map((action) => (
-                  <button
-                    key={action.id}
-                    onClick={() => handleSelectPreset(action)}
-                    className={`relative flex flex-col justify-between rounded-2xl border p-3.5 text-left transition-all hover:scale-[1.02] active:scale-[0.98] bg-gradient-to-br ${action.gradient}`}
-                  >
-                    <div>
-                      <span className="text-xs font-bold text-white line-clamp-1">
-                        {action.title}
-                      </span>
-                      <span className="text-[10px] opacity-75 block mt-0.5">
-                        {action.subtitle}
-                      </span>
+              {/* Preset Action Buttons — Grouped */}
+              <div className="space-y-3">
+                {PRESET_GROUPS.map((group) => (
+                  <div key={group.label}>
+                    <p className="text-[10px] font-bold uppercase tracking-widest text-[#9CA3AF] mb-1.5">
+                      {group.label}
+                    </p>
+                    <div className="grid grid-cols-3 gap-2">
+                      {group.actions.map((action) => (
+                        <button
+                          key={action.id}
+                          onClick={() => handleSelectPreset(action)}
+                          className={`relative flex flex-col justify-between rounded-2xl border p-2.5 text-left transition-all hover:scale-[1.02] active:scale-[0.98] bg-gradient-to-br ${action.gradient}`}
+                        >
+                          <span className="text-[11px] font-bold text-white leading-tight line-clamp-2">
+                            {action.title}
+                          </span>
+                          <div className="mt-2 flex items-center justify-between">
+                            <span className="font-mono text-base font-black text-white">
+                              +{action.amount}p
+                            </span>
+                            <Zap className="size-3 opacity-70" />
+                          </div>
+                        </button>
+                      ))}
                     </div>
-                    <div className="mt-3 flex items-center justify-between">
-                      <span className="font-mono text-sm font-black text-white">
-                        +{new Intl.NumberFormat('ko-KR').format(action.amount)} P
-                      </span>
-                      <Zap className="size-3.5 opacity-80" />
-                    </div>
-                  </button>
+                  </div>
                 ))}
               </div>
 
@@ -342,14 +389,14 @@ export function PointActionDrawer({
 
                   {/* Quick Amount Helper Chips */}
                   <div className="flex gap-1.5 overflow-x-auto pb-1 text-xs">
-                    {['1,000', '5,000', '10,000', '50,000', '100,000'].map((chip) => (
+                    {['1', '2', '3', '5', '10'].map((chip) => (
                       <button
                         key={chip}
                         type="button"
                         onClick={() => setManualAmount(chip)}
                         className="rounded-lg border border-[#E6AF2E]/20 bg-[#181A26] px-2.5 py-1 text-[11px] text-[#F3E5AB] hover:bg-[#E6AF2E]/10 shrink-0"
                       >
-                        +{chip}
+                        +{chip}p
                       </button>
                     ))}
                   </div>
@@ -420,14 +467,14 @@ export function PointActionDrawer({
                     selectedAction.amount > 0 ? 'text-emerald-400' : 'text-rose-400'
                   }`}
                 >
-                  {formatPoints(selectedAction.amount, true)}
+                  {selectedAction.amount > 0 ? '+' : ''}{selectedAction.amount}p
                 </span>
               </div>
               <div className="h-px bg-[#E6AF2E]/15" />
               <div className="flex justify-between items-center pt-1">
                 <span className="text-[#9CA3AF]">처리 후 잔액</span>
                 <span className="font-mono text-sm font-bold text-[#F5D061]">
-                  {formatPoints(calculatedBalanceAfter)}
+                  {calculatedBalanceAfter}p
                 </span>
               </div>
             </div>

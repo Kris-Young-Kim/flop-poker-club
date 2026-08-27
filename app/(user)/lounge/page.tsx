@@ -10,8 +10,6 @@ import {
   Sparkles,
   ChevronRight,
   Flame,
-  Clock3,
-  MapPin,
   HelpCircle,
   TrendingUp,
   Zap,
@@ -25,10 +23,10 @@ import { Button } from '@/components/ui/button'
 import type { Profile, Tournament, PointTransaction, NoticeEvent } from '@/types/database.types'
 import { formatPoints, formatDateTime, getPointReasonMeta } from '@/lib/utils/format'
 import { getCurrentProfile } from '@/lib/actions/user'
-import { toast } from 'sonner'
 import { getMyTransactions } from '@/lib/actions/ledger'
 import { getTournaments } from '@/lib/actions/tournaments'
 import { getNotices } from '@/lib/actions/notices'
+import { BUSINESS_INFO } from '@/lib/constants/business'
 
 export default function VipLoungePage() {
   const { data: session, status } = useSession()
@@ -85,7 +83,7 @@ export default function VipLoungePage() {
         <div className="space-y-2 max-w-sm">
           <h2 className="font-serif text-2xl font-black text-white">VIP 라운지 로그인 필요</h2>
           <p className="text-xs text-[#9CA3AF] leading-relaxed">
-            VIP 멤버십 카드와 실시간 포인트 적립, 대회 참가 신청은 정회원 전용 서비스입니다. 3초 간편 가입 시 웰컴 5,000 P가 즉시 지급됩니다.
+            멤버십 카드와 포인트 적립, 대회 참가 신청은 정회원 전용 서비스입니다. 가입 시 신규가입 포인트 1p가 즉시 적립됩니다.
           </p>
         </div>
         <div className="w-full max-w-xs space-y-2.5">
@@ -94,7 +92,7 @@ export default function VipLoungePage() {
               size="lg"
               className="h-12 w-full rounded-2xl bg-gradient-to-r from-[#F5D061] via-[#E6AF2E] to-[#C28B1E] text-black font-black text-sm shadow-xl shadow-yellow-500/25 hover:scale-105 transition-all"
             >
-              VIP 멤버십 발급 및 로그인 <ArrowRight className="size-4 ml-1.5" />
+              멤버십 발급 및 로그인 <ArrowRight className="size-4 ml-1.5" />
             </Button>
           </Link>
           <Link href="/" className="block w-full">
@@ -134,14 +132,14 @@ export default function VipLoungePage() {
                 <div>
                   <div className="flex items-center gap-2">
                     <span className="text-xs font-bold text-[#F3E5AB]">
-                      웰컴 5,000 P 보너스 받기
+                      신규가입 보너스 +1p 받기
                     </span>
                     <Badge className="bg-[#E6AF2E]/20 text-[#F5D061] text-[9px] px-1.5 py-0">
                       필수
                     </Badge>
                   </div>
                   <p className="text-[11px] text-[#9CA3AF] mt-0.5">
-                    닉네임과 전화번호를 등록하고 VIP 카드를 활성화하세요.
+                    닉네임과 전화번호를 등록하고 멤버십 카드를 활성화하세요.
                   </p>
                 </div>
               </div>
@@ -151,9 +149,9 @@ export default function VipLoungePage() {
         </section>
       )}
 
-      {/* 1. Gold VIP Membership Card */}
+      {/* 1. Membership Card */}
       <section aria-label="멤버십 카드">
-        <GoldVIPCard profile={profile ?? { name: session.user.name ?? '회원', tier: 'NORMAL', total_points: 0 }} />
+        <GoldVIPCard profile={profile ?? { name: session.user.name ?? '회원', total_points: 0 }} />
       </section>
 
       {/* 2. Pinned Notice */}
@@ -225,15 +223,15 @@ export default function VipLoungePage() {
           <div className="grid grid-cols-3 gap-2 text-center text-xs">
             <div className="rounded-xl bg-[#13141C]/80 p-2 border border-emerald-500/20">
               <p className="text-[10px] text-[#9CA3AF]">투핸드 포카드</p>
-              <p className="text-xs sm:text-sm font-extrabold text-emerald-400 mt-0.5">+500 P</p>
+              <p className="text-sm font-extrabold text-emerald-400 mt-0.5">+1p</p>
             </div>
             <div className="rounded-xl bg-[#13141C]/80 p-2 border border-purple-500/20">
               <p className="text-[10px] text-[#9CA3AF]">스트레이트 플러시</p>
-              <p className="text-xs sm:text-sm font-extrabold text-purple-400 mt-0.5">+1,000 P</p>
+              <p className="text-sm font-extrabold text-purple-400 mt-0.5">+2p</p>
             </div>
             <div className="rounded-xl bg-[#13141C]/80 p-2 border border-amber-500/20">
               <p className="text-[10px] text-[#9CA3AF]">로열 스트레이트 플러시</p>
-              <p className="text-xs sm:text-sm font-extrabold text-[#F5D061] mt-0.5">+3,000 P</p>
+              <p className="text-sm font-extrabold text-[#F5D061] mt-0.5">+3p</p>
             </div>
           </div>
         </div>
@@ -313,12 +311,18 @@ export default function VipLoungePage() {
       )}
 
       {/* Footer */}
-      <footer className="rounded-2xl border border-[#E6AF2E]/10 bg-[#0F1017] p-4 text-center text-xs text-[#9CA3AF] space-y-1">
+      <footer className="rounded-2xl border border-[#E6AF2E]/10 bg-[#0F1017] p-4 text-center text-xs text-[#9CA3AF] space-y-1.5">
         <p className="font-mono text-[10px] uppercase tracking-widest text-[#F3E5AB]/70 font-semibold">
-          FLOP POKER CLUB · WONJU VIP LOUNGE
+          FL♠P POKER CLUB · WONJU
         </p>
         <p className="text-[11px]">
           공정한 홀덤 스포츠 문화와 프리미엄 멤버십 서비스를 제공합니다.
+        </p>
+        <p className="text-[10px] text-zinc-500">
+          {BUSINESS_INFO.companyName} · 대표 {BUSINESS_INFO.representative} · 사업자등록번호 {BUSINESS_INFO.businessNumber}
+        </p>
+        <p className="text-[9.5px] text-zinc-600">
+          {BUSINESS_INFO.address}
         </p>
       </footer>
     </div>
