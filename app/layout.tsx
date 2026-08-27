@@ -89,7 +89,7 @@ export const viewport: Viewport = {
 // 정적 상수만 사용하므로 XSS 위험 없음 (Next.js 공식 JSON-LD 패턴)
 const localBusinessJsonLd = JSON.stringify({
   '@context': 'https://schema.org',
-  '@type': 'BarOrPub',
+  '@type': 'EntertainmentBusiness',
   '@id': `${SITE_URL}#business`,
   name: BUSINESS_INFO.brandName,
   alternateName: BUSINESS_INFO.companyName,

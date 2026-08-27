@@ -19,7 +19,7 @@ export default function robots(): MetadataRoute.Robots {
       },
       // AI 학습 크롤러 차단 (검색 인덱싱에는 영향 없음)
       { userAgent: 'GPTBot', disallow: ['/'] },
-      { userAgent: 'Google-Extended', disallow: ['/'] },
+      // Google-Extended: AI Overview(SGE) 학습용 — 허용 시 Google AI 검색 노출 가능
       { userAgent: 'Bytespider', disallow: ['/'] },
       { userAgent: 'CCBot', disallow: ['/'] },
     ],

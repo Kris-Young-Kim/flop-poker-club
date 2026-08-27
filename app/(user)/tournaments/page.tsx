@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import { getTournaments, getMyRegistrations } from '@/lib/actions/tournaments'
 import { TournamentsClient } from './TournamentsClient'
+import { TournamentEventSchema } from './TournamentEventSchema'
 
 export const metadata: Metadata = {
   title: '토너먼트 대회 일정',
@@ -14,9 +15,12 @@ export default async function TournamentsPage() {
   ])
 
   return (
-    <TournamentsClient
-      initialTournaments={tournaments}
-      initialRegisteredIds={registrations.map((r) => r.tournament_id)}
-    />
+    <>
+      <TournamentEventSchema tournaments={tournaments} />
+      <TournamentsClient
+        initialTournaments={tournaments}
+        initialRegisteredIds={registrations.map((r) => r.tournament_id)}
+      />
+    </>
   )
 }
