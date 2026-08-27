@@ -1,6 +1,9 @@
 import { auth } from '@/auth'
 import { NextResponse } from 'next/server'
 
+// 검색 엔진에 노출되지 않아야 하는 회원전용 경로
+const NOINDEX_PREFIXES = ['/lounge', '/ledger', '/admin']
+
 export default auth((req) => {
   const { nextUrl, auth: session } = req
   const isLoggedIn = !!session?.user
@@ -28,7 +31,14 @@ export default auth((req) => {
   }
 
   // 4. 모든 사용자는 홈(/) 및 공개 페이지로 자유롭게 진입 가능 (강제 리다이렉트 없음)
-  return NextResponse.next()
+  const response = NextResponse.next()
+
+  // 5. 회원전용 페이지에 x-robots-tag: noindex 헤더 추가
+  if (NOINDEX_PREFIXES.some((p) => nextUrl.pathname.startsWith(p))) {
+    response.headers.set('x-robots-tag', 'noindex, nofollow')
+  }
+
+  return response
 })
 
 export const config = {
