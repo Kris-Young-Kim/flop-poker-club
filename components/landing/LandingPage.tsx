@@ -262,30 +262,46 @@ export function LandingPage({ tournaments, pinnedNotice }: LandingPageProps) {
       </section>
 
       {/* 3. 3D Floating VIP Card Showcase */}
-      <section className="relative overflow-hidden rounded-3xl border border-[#E6AF2E]/30 bg-gradient-to-b from-[#1C1F32] via-[#12131F] to-[#08090D] p-6 sm:p-8 space-y-6">
-        <div className="flex flex-col sm:flex-row items-center justify-between gap-6">
-          <div className="space-y-3 text-center sm:text-left flex-1">
-            <Badge className="bg-[#E6AF2E]/20 text-[#F5D061] border-[#E6AF2E]/40 text-[10px]">
-              MEMBERSHIP PASS
-            </Badge>
-            <h2 className="font-serif text-2xl sm:text-3xl font-black text-white">
-              단 한 장의 카드로<br />
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#F5D061] to-[#C28B1E]">
+      <section className="relative overflow-hidden rounded-3xl border border-[#E6AF2E]/30 bg-gradient-to-b from-[#1C1F32] via-[#12131F] to-[#08090D] p-5 sm:p-7 space-y-6">
+        <div className="flex flex-col sm:flex-row items-center justify-between gap-5 sm:gap-6">
+          <div className="space-y-2.5 text-center sm:text-left flex-1 min-w-0">
+            <div className="flex items-center justify-center sm:justify-start">
+              <Badge className="bg-[#E6AF2E]/15 text-[#F5D061] border border-[#E6AF2E]/30 text-[10px] font-bold px-2 py-0.5 tracking-wider">
+                MEMBERSHIP PASS
+              </Badge>
+            </div>
+            
+            <h2 className="text-lg sm:text-2xl font-extrabold text-white tracking-tight leading-snug break-keep">
+              단 한 장의 멤버십으로<br className="hidden sm:inline" />{' '}
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#F5D061] via-[#E6AF2E] to-[#C28B1E]">
                 원주 최고의 VIP 특권
               </span>을 누리세요
             </h2>
-            <p className="text-xs text-[#9CA3AF] leading-relaxed">
-              모바일 화면에 각인되는 고유 QR 코드로 간편 출입, 포인트 실시간 적립, 토너먼트 시드권 우선 배정 혜택을 제공합니다.
+
+            <p className="text-[12px] sm:text-xs text-zinc-300 leading-relaxed break-keep">
+              고유 QR 코드로 간편 출입 인증부터 투핸드 보너스 즉시 적립, 정기 토너먼트 우선 접수까지 스마트하게 지원됩니다.
             </p>
+
+            <div className="flex flex-wrap items-center justify-center sm:justify-start gap-1.5 pt-1 text-[10.5px]">
+              <span className="rounded-md bg-white/5 border border-white/10 px-2 py-0.5 text-zinc-300">
+                ⚡ QR 원터치 출입
+              </span>
+              <span className="rounded-md bg-white/5 border border-white/10 px-2 py-0.5 text-zinc-300">
+                💎 실시간 핸드 적립
+              </span>
+              <span className="rounded-md bg-white/5 border border-white/10 px-2 py-0.5 text-zinc-300">
+                🏆 대회 우선 배정
+              </span>
+            </div>
           </div>
 
-          {/* 3D Card Visual */}
-          <div className="relative size-64 sm:size-72 shrink-0 overflow-hidden rounded-2xl border border-[#E6AF2E]/40 shadow-2xl shadow-yellow-500/20 group">
+          {/* Compact Luxury Card Visual */}
+          <div className="relative w-48 sm:w-56 aspect-[16/10] shrink-0 overflow-hidden rounded-2xl border border-[#E6AF2E]/40 shadow-xl shadow-yellow-500/15 group">
             <Image
               src="/images/vip-card-3d.jpg"
               alt="FLOP VIP 3D Gold Card"
               fill
-              className="object-cover group-hover:scale-110 transition-transform duration-700"
+              className="object-cover group-hover:scale-105 transition-transform duration-500"
             />
             <div className="shimmer-light" />
           </div>
