@@ -2,7 +2,7 @@ import type { Metadata } from 'next'
 import { BUSINESS_INFO } from '@/lib/constants/business'
 
 export const metadata: Metadata = {
-  title: '이용약관 | FLOP POKER CLUB',
+  title: '이용약관',
   description: 'FLOP POKER CLUB 멤버십 이용약관',
 }
 
