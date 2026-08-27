@@ -389,55 +389,56 @@ export function LandingPage({ tournaments, pinnedNotice }: LandingPageProps) {
           </Badge>
         </div>
 
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5 sm:gap-3">
+        {/* 2x2 Grid Layout */}
+        <div className="grid grid-cols-2 gap-3 sm:gap-4">
           {/* Card 1: Four of a Kind */}
-          <div className="rounded-2xl border border-emerald-500/30 bg-[#0E1517]/90 p-3.5 sm:p-4 space-y-1.5 text-center shadow-lg transition-all hover:border-emerald-400/50">
-            <span className="inline-block text-[11px] font-bold text-emerald-400 px-2 py-0.5 rounded-full bg-emerald-500/10 border border-emerald-500/20">
+          <div className="rounded-2xl border border-emerald-500/30 bg-[#0E1517]/90 p-4 sm:p-5 space-y-2 text-center shadow-lg transition-all hover:border-emerald-400/50">
+            <span className="inline-block text-[11px] sm:text-xs font-bold text-emerald-400 px-2.5 py-0.5 rounded-full bg-emerald-500/10 border border-emerald-500/20">
               투핸드 포카드
             </span>
-            <div className="font-extrabold text-xl sm:text-2xl text-emerald-400 tracking-tight">
+            <div className="font-extrabold text-2xl sm:text-3xl text-emerald-400 tracking-tight">
               +500 P
             </div>
-            <p className="text-[10.5px] text-zinc-400 break-keep">
+            <p className="text-[11px] text-zinc-400 break-keep">
               포켓/보드 4장 완성
             </p>
           </div>
 
           {/* Card 2: Straight Flush */}
-          <div className="rounded-2xl border border-purple-500/30 bg-[#151121]/90 p-3.5 sm:p-4 space-y-1.5 text-center shadow-lg transition-all hover:border-purple-400/50">
-            <span className="inline-block text-[11px] font-bold text-purple-300 px-2 py-0.5 rounded-full bg-purple-500/10 border border-purple-500/20">
+          <div className="rounded-2xl border border-purple-500/30 bg-[#151121]/90 p-4 sm:p-5 space-y-2 text-center shadow-lg transition-all hover:border-purple-400/50">
+            <span className="inline-block text-[11px] sm:text-xs font-bold text-purple-300 px-2.5 py-0.5 rounded-full bg-purple-500/10 border border-purple-500/20">
               스트레이트 플러시
             </span>
-            <div className="font-extrabold text-xl sm:text-2xl text-purple-300 tracking-tight">
+            <div className="font-extrabold text-2xl sm:text-3xl text-purple-300 tracking-tight">
               +1,000 P
             </div>
-            <p className="text-[10.5px] text-zinc-400 break-keep">
+            <p className="text-[11px] text-zinc-400 break-keep">
               동일 무늬 연속 5장
             </p>
           </div>
 
           {/* Card 3: Royal Flush */}
-          <div className="rounded-2xl border border-[#E6AF2E]/40 bg-[#1D170A]/95 p-3.5 sm:p-4 space-y-1.5 text-center shadow-xl shadow-yellow-500/10 transition-all hover:border-[#F5D061]">
-            <span className="inline-block text-[11px] font-bold text-[#F5D061] px-2 py-0.5 rounded-full bg-[#E6AF2E]/15 border border-[#E6AF2E]/30">
+          <div className="rounded-2xl border border-[#E6AF2E]/40 bg-[#1D170A]/95 p-4 sm:p-5 space-y-2 text-center shadow-xl shadow-yellow-500/10 transition-all hover:border-[#F5D061]">
+            <span className="inline-block text-[11px] sm:text-xs font-bold text-[#F5D061] px-2.5 py-0.5 rounded-full bg-[#E6AF2E]/15 border border-[#E6AF2E]/30">
               로얄 스트레이트 플러시
             </span>
-            <div className="font-extrabold text-xl sm:text-2xl text-[#F5D061] tracking-tight">
+            <div className="font-extrabold text-2xl sm:text-3xl text-[#F5D061] tracking-tight">
               +3,000 P
             </div>
-            <p className="text-[10.5px] text-[#F3E5AB]/80 break-keep">
+            <p className="text-[11px] text-[#F3E5AB]/85 break-keep">
               최고 명예의 족보
             </p>
           </div>
 
           {/* Card 4: Special Bonus */}
-          <div className="rounded-2xl border border-amber-500/30 bg-[#181926]/90 p-3.5 sm:p-4 space-y-1.5 text-center shadow-lg transition-all hover:border-amber-400/50">
-            <span className="inline-block text-[11px] font-bold text-amber-200 px-2 py-0.5 rounded-full bg-amber-500/10 border border-amber-500/20">
+          <div className="rounded-2xl border border-amber-500/30 bg-[#181926]/90 p-4 sm:p-5 space-y-2 text-center shadow-lg transition-all hover:border-amber-400/50">
+            <span className="inline-block text-[11px] sm:text-xs font-bold text-amber-200 px-2.5 py-0.5 rounded-full bg-amber-500/10 border border-amber-500/20">
               10장 보너스 리워드
             </span>
-            <div className="font-extrabold text-xl sm:text-2xl text-amber-200 tracking-tight">
+            <div className="font-extrabold text-2xl sm:text-3xl text-amber-200 tracking-tight">
               +5,000 P
             </div>
-            <p className="text-[10.5px] text-zinc-400 break-keep">
+            <p className="text-[11px] text-zinc-400 break-keep">
               스페셜 핸드 달성자
             </p>
           </div>
