@@ -164,7 +164,7 @@ export function LandingPage({ tournaments, pinnedNotice }: LandingPageProps) {
               <h1 className="font-serif text-3xl sm:text-5xl font-black tracking-tight text-white leading-tight">
                 FLOP POKER CLUB
               </h1>
-              <p className="font-serif text-base sm:text-xl text-[#F3E5AB] font-bold tracking-wide">
+              <p className="text-base sm:text-xl text-[#F3E5AB] font-bold tracking-wide break-keep">
                 격이 다른 품격, 가장 완벽한 홀덤 스포츠 라운지
               </p>
             </motion.div>
@@ -174,9 +174,9 @@ export function LandingPage({ tournaments, pinnedNotice }: LandingPageProps) {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ duration: 0.8, delay: 0.2 }}
-              className="max-w-md text-xs sm:text-sm text-[#9CA3AF] leading-relaxed"
+              className="max-w-md text-xs sm:text-sm text-zinc-300 leading-relaxed break-keep px-2"
             >
-              투명한 포인트 불변 원장, 원터치 QR 출입 인증, 데일리 & 빅 토너먼트까지 스마트 모바일 멤버십으로 즐기세요.
+              투명한 포인트 불변 원장, 원터치 QR 출입 인증부터 데일리 & 빅 토너먼트까지 스마트 모바일 멤버십으로 즐기세요.
             </motion.p>
 
             {/* Welcome Bonus Box */}
@@ -512,28 +512,28 @@ export function LandingPage({ tournaments, pinnedNotice }: LandingPageProps) {
 
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border-b border-white/5 pb-5">
           <div className="flex items-center gap-3.5">
-            <div className="flex size-12 items-center justify-center rounded-2xl bg-gradient-to-br from-[#F5D061] to-[#C28B1E] text-black font-black shadow-lg shadow-yellow-500/20">
+            <div className="flex size-12 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-[#F5D061] to-[#C28B1E] text-black font-black shadow-lg shadow-yellow-500/20">
               <ShieldCheck className="size-6 text-black" />
             </div>
             <div>
               <div className="flex items-center gap-2">
-                <Badge className="bg-[#E6AF2E]/20 text-[#F5D061] border-[#E6AF2E]/30 text-[9.5px] uppercase tracking-widest font-mono">
+                <Badge className="bg-[#E6AF2E]/15 text-[#F5D061] border border-[#E6AF2E]/30 text-[9.5px] uppercase tracking-widest font-mono font-bold">
                   COMPLIANCE & INTEGRITY
                 </Badge>
               </div>
-              <h3 className="font-serif text-lg sm:text-xl font-black text-white mt-0.5">
+              <h3 className="text-base sm:text-xl font-extrabold text-white tracking-tight leading-snug break-keep mt-0.5">
                 로열 페어플레이 & 100% 클린 스탠다드
               </h3>
             </div>
           </div>
-          <span className="font-mono text-[10px] text-[#9CA3AF] tracking-wider uppercase px-2.5 py-1 rounded-full border border-white/10 bg-white/5">
+          <span className="font-mono text-[10px] text-zinc-400 tracking-wider uppercase px-2.5 py-1 rounded-full border border-white/10 bg-white/5 shrink-0">
             LEGAL MIND SPORTS
           </span>
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-3.5">
           {/* Card 1 */}
-          <div className="relative overflow-hidden rounded-2xl border border-white/10 bg-gradient-to-b from-[#141624] to-[#0D0E18] p-4 space-y-2 hover:border-[#E6AF2E]/50 transition-all group">
+          <div className="relative overflow-hidden rounded-2xl border border-white/10 bg-gradient-to-b from-[#141624] to-[#0D0E18] p-4 sm:p-5 space-y-2 hover:border-[#E6AF2E]/50 transition-all group">
             <div className="flex items-center justify-between">
               <span className="font-mono text-[10px] font-extrabold tracking-widest text-[#F5D061]">
                 01 / NON-CASH ETHICS
@@ -541,22 +541,22 @@ export function LandingPage({ tournaments, pinnedNotice }: LandingPageProps) {
               <span className="size-1.5 rounded-full bg-emerald-400 animate-pulse" />
             </div>
             <div className="space-y-1">
-              <h4 className="font-bold text-sm text-white group-hover:text-[#F3E5AB] transition-colors">
+              <h4 className="font-bold text-sm text-white group-hover:text-[#F3E5AB] transition-colors break-keep">
                 100% 비환전 스포츠 원칙
               </h4>
-              <p className="text-[11px] text-[#9CA3AF] leading-relaxed">
-                칩과 포인트의 현금 환전 및 P2P 장외 거래를 엄격히 차단하며, 정통 마인드 스포츠의 순수한 품격과 법적 안전성을 보장합니다.
+              <p className="text-[11.5px] text-zinc-300 leading-relaxed break-keep">
+                칩과 포인트의 현금 환전 및 P2P 장외 거래를 엄격히 금지하며, 정통 마인드 스포츠의 순수한 품격과 법적 안전성을 완벽히 보장합니다.
               </p>
             </div>
             <div className="pt-2 border-t border-white/5">
-              <span className="font-mono text-[9px] uppercase tracking-wider text-emerald-400/90 font-bold">
+              <span className="font-mono text-[9px] uppercase tracking-wider text-emerald-400 font-bold">
                 ZERO TOLERANCE POLICY
               </span>
             </div>
           </div>
 
           {/* Card 2 */}
-          <div className="relative overflow-hidden rounded-2xl border border-white/10 bg-gradient-to-b from-[#141624] to-[#0D0E18] p-4 space-y-2 hover:border-[#E6AF2E]/50 transition-all group">
+          <div className="relative overflow-hidden rounded-2xl border border-white/10 bg-gradient-to-b from-[#141624] to-[#0D0E18] p-4 sm:p-5 space-y-2 hover:border-[#E6AF2E]/50 transition-all group">
             <div className="flex items-center justify-between">
               <span className="font-mono text-[10px] font-extrabold tracking-widest text-[#F5D061]">
                 02 / IMMUTABLE LEDGER
@@ -564,22 +564,22 @@ export function LandingPage({ tournaments, pinnedNotice }: LandingPageProps) {
               <span className="size-1.5 rounded-full bg-[#F5D061] animate-pulse" />
             </div>
             <div className="space-y-1">
-              <h4 className="font-bold text-sm text-white group-hover:text-[#F3E5AB] transition-colors">
+              <h4 className="font-bold text-sm text-white group-hover:text-[#F3E5AB] transition-colors break-keep">
                 불변 전산 원장 시스템
               </h4>
-              <p className="text-[11px] text-[#9CA3AF] leading-relaxed">
-                모든 포인트의 적립과 승인, 사용 내역이 투명한 전산 원장에 실시간 동기화되어 회원의 자산을 완벽히 보호합니다.
+              <p className="text-[11.5px] text-zinc-300 leading-relaxed break-keep">
+                모든 포인트의 적립과 승인, 사용 내역이 투명한 전산 원장에 실시간 동기화되어 회원의 포인트 자산을 안전하게 보호합니다.
               </p>
             </div>
             <div className="pt-2 border-t border-white/5">
-              <span className="font-mono text-[9px] uppercase tracking-wider text-[#F5D061]/90 font-bold">
+              <span className="font-mono text-[9px] uppercase tracking-wider text-[#F5D061] font-bold">
                 CRYPTOGRAPHIC INTEGRITY
               </span>
             </div>
           </div>
 
           {/* Card 3 */}
-          <div className="relative overflow-hidden rounded-2xl border border-white/10 bg-gradient-to-b from-[#141624] to-[#0D0E18] p-4 space-y-2 hover:border-[#E6AF2E]/50 transition-all group">
+          <div className="relative overflow-hidden rounded-2xl border border-white/10 bg-gradient-to-b from-[#141624] to-[#0D0E18] p-4 sm:p-5 space-y-2 hover:border-[#E6AF2E]/50 transition-all group">
             <div className="flex items-center justify-between">
               <span className="font-mono text-[10px] font-extrabold tracking-widest text-[#F5D061]">
                 03 / TOURNAMENT INTEGRITY
@@ -587,11 +587,11 @@ export function LandingPage({ tournaments, pinnedNotice }: LandingPageProps) {
               <span className="size-1.5 rounded-full bg-indigo-400 animate-pulse" />
             </div>
             <div className="space-y-1">
-              <h4 className="font-bold text-sm text-white group-hover:text-[#F3E5AB] transition-colors">
+              <h4 className="font-bold text-sm text-white group-hover:text-[#F3E5AB] transition-colors break-keep">
                 국제 표준 룰 & 페어플레이
               </h4>
-              <p className="text-[11px] text-[#9CA3AF] leading-relaxed">
-                국제 포커 토너먼트 협회(TDA) 공인 룰과 전문 딜러진의 엄정한 진행으로 가장 신뢰할 수 있는 경기 환경을 제공합니다.
+              <p className="text-[11.5px] text-zinc-300 leading-relaxed break-keep">
+                국제 포커 토너먼트 협회(TDA) 공인 룰과 전문 딜러진의 엄정한 진행으로 누구나 신뢰할 수 있는 공정한 경기 환경을 제공합니다.
               </p>
             </div>
             <div className="pt-2 border-t border-white/5">
@@ -606,8 +606,8 @@ export function LandingPage({ tournaments, pinnedNotice }: LandingPageProps) {
       {/* 7. FAQ Accordion Section */}
       <section className="space-y-4">
         <div className="text-center space-y-1">
-          <h2 className="font-serif text-xl font-bold text-white">자주 묻는 질문 (FAQ)</h2>
-          <p className="text-xs text-[#9CA3AF]">클럽 이용에 대해 궁금하신 점을 확인하세요.</p>
+          <h2 className="text-xl font-extrabold text-white tracking-tight">자주 묻는 질문 (FAQ)</h2>
+          <p className="text-xs text-zinc-400 break-keep">클럽 이용에 대해 궁금하신 점을 확인하세요.</p>
         </div>
 
         <div className="space-y-2.5 max-w-xl mx-auto">
@@ -618,17 +618,17 @@ export function LandingPage({ tournaments, pinnedNotice }: LandingPageProps) {
             >
               <button
                 onClick={() => setActiveFaq(activeFaq === idx ? null : idx)}
-                className="flex w-full items-center justify-between p-4 text-left text-xs sm:text-sm font-bold text-white hover:text-[#F5D061] transition-colors"
+                className="flex w-full items-center justify-between p-4 text-left text-xs sm:text-sm font-bold text-white hover:text-[#F5D061] transition-colors gap-3"
               >
-                <span>{faq.q}</span>
+                <span className="break-keep">{faq.q}</span>
                 <ChevronDown
-                  className={`size-4 text-[#F5D061] transition-transform duration-300 ${
+                  className={`size-4 text-[#F5D061] shrink-0 transition-transform duration-300 ${
                     activeFaq === idx ? 'rotate-180' : ''
                   }`}
                 />
               </button>
               {activeFaq === idx && (
-                <div className="border-t border-white/5 bg-[#0C0D15] p-4 text-xs text-[#9CA3AF] leading-relaxed">
+                <div className="border-t border-white/5 bg-[#0C0D15] p-4 text-xs text-zinc-300 leading-relaxed break-keep">
                   {faq.a}
                 </div>
               )}
@@ -638,38 +638,38 @@ export function LandingPage({ tournaments, pinnedNotice }: LandingPageProps) {
       </section>
 
       {/* 8. Location & Store Info */}
-      <section className="rounded-3xl border border-[#E6AF2E]/30 bg-gradient-to-br from-[#181A28] to-[#0E1018] p-6 sm:p-8 space-y-4">
+      <section className="rounded-3xl border border-[#E6AF2E]/30 bg-gradient-to-br from-[#181A28] to-[#0E1018] p-5 sm:p-7 space-y-4 shadow-xl">
         <div className="flex items-center gap-3">
-          <div className="flex size-10 items-center justify-center rounded-xl bg-[#E6AF2E]/10 text-[#F5D061]">
+          <div className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-[#E6AF2E]/10 text-[#F5D061]">
             <MapPin className="size-5" />
           </div>
           <div>
-            <h3 className="font-bold text-base text-white">FLOP POKER CLUB 오시는 길</h3>
-            <p className="text-xs text-[#9CA3AF]">{BUSINESS_INFO.address}</p>
+            <h3 className="font-extrabold text-base text-white tracking-tight">FLOP POKER CLUB 오시는 길</h3>
+            <p className="text-xs text-zinc-400 break-keep">{BUSINESS_INFO.address}</p>
           </div>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs pt-2">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs pt-1">
           <div className="rounded-2xl border border-white/10 bg-[#12141F] p-4 space-y-1.5">
             <div className="flex items-center gap-2 text-[#F3E5AB] font-bold">
-              <Clock3 className="size-4 text-[#E6AF2E]" />
+              <Clock3 className="size-4 text-[#E6AF2E] shrink-0" />
               <span>영업 시간 및 예약</span>
             </div>
-            <p className="text-[11.5px] text-zinc-300">
+            <p className="text-[12px] text-zinc-200 break-keep">
               {BUSINESS_INFO.operatingHours}
             </p>
-            <p className="text-[10px] text-zinc-500">{BUSINESS_INFO.contactNotice}</p>
+            <p className="text-[10.5px] text-zinc-400 break-keep">{BUSINESS_INFO.contactNotice}</p>
           </div>
 
           <div className="rounded-2xl border border-white/10 bg-[#12141F] p-4 space-y-1.5">
             <div className="flex items-center gap-2 text-[#F3E5AB] font-bold">
-              <ShieldCheck className="size-4 text-[#E6AF2E]" />
+              <ShieldCheck className="size-4 text-[#E6AF2E] shrink-0" />
               <span>편의 시설 & 주차</span>
             </div>
-            <p className="text-[11.5px] text-zinc-300">
+            <p className="text-[12px] text-zinc-200 break-keep">
               지하 무료 주차장 완비 · 무선 충전 테이블 · 프리미엄 음료 바
             </p>
-            <p className="text-[10px] text-zinc-500">흡연실 및 공기청정 시스템 가동</p>
+            <p className="text-[10.5px] text-zinc-400 break-keep">흡연실 및 공기청정 시스템 가동</p>
           </div>
         </div>
       </section>
@@ -684,10 +684,10 @@ export function LandingPage({ tournaments, pinnedNotice }: LandingPageProps) {
             {BUSINESS_INFO.brandName}
           </span>
         </div>
-        <p className="text-[11px] leading-relaxed max-w-sm mx-auto text-[#9CA3AF]">
+        <p className="text-[11.5px] leading-relaxed max-w-md mx-auto text-zinc-400 break-keep px-2">
           FLOP POKER CLUB 원주점은 건전한 마인드 스포츠 홀덤 문화를 지향하며 불법 환전 및 사행 행위를 절대 용인하지 않습니다.
         </p>
-        <div className="flex flex-wrap justify-center gap-x-4 gap-y-1 text-[11px] text-[#F3E5AB]">
+        <div className="flex flex-wrap justify-center items-center gap-x-3.5 gap-y-1 text-[11.5px] text-[#F3E5AB]">
           <Link href="/notices?tab=RULE" className="hover:underline">클럽 이용 룰북</Link>
           <span className="text-zinc-600">·</span>
           <Link href="/notices" className="hover:underline">공지사항</Link>
@@ -700,8 +700,8 @@ export function LandingPage({ tournaments, pinnedNotice }: LandingPageProps) {
         </div>
 
         {/* Business Registration Details */}
-        <div className="rounded-2xl border border-white/5 bg-[#0C0E14]/80 p-4 max-w-md mx-auto text-[10.5px] leading-relaxed text-zinc-500 space-y-1 text-left">
-          <div className="flex flex-wrap items-center gap-x-3 gap-y-0.5 text-zinc-400">
+        <div className="rounded-2xl border border-white/5 bg-[#0C0E14]/80 p-4 max-w-md mx-auto text-[10.5px] leading-relaxed text-zinc-400 space-y-1.5 text-left break-keep">
+          <div className="flex flex-wrap items-center gap-x-3 gap-y-0.5 text-zinc-300">
             <span><strong>상호:</strong> {BUSINESS_INFO.companyName}</span>
             <span><strong>대표자:</strong> {BUSINESS_INFO.representative}</span>
             <span><strong>사업자등록번호:</strong> {BUSINESS_INFO.businessNumber}</span>
@@ -709,12 +709,12 @@ export function LandingPage({ tournaments, pinnedNotice }: LandingPageProps) {
           <div>
             <span><strong>사업장 소재지:</strong> {BUSINESS_INFO.address}</span>
           </div>
-          <div className="flex flex-wrap items-center gap-x-3 gap-y-0.5 text-zinc-400">
+          <div className="flex flex-wrap items-center gap-x-3 gap-y-0.5 text-zinc-300">
             <span><strong>업태:</strong> {BUSINESS_INFO.businessType}</span>
             <span><strong>종목:</strong> {BUSINESS_INFO.businessItem}</span>
             <span><strong>주류판매신고:</strong> {BUSINESS_INFO.liquorLicenseNumber}</span>
           </div>
-          <div className="text-[9.5px] text-zinc-600 pt-0.5">
+          <div className="text-[10px] text-zinc-500 pt-0.5 border-t border-white/5">
             <span>관할 세무서: {BUSINESS_INFO.taxOffice} · 개업연월일: {BUSINESS_INFO.openingDate}</span>
           </div>
         </div>
