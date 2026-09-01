@@ -52,7 +52,7 @@ const PRESET_GROUPS: PresetGroup[] = [
         id: 'four-of-a-kind',
         title: '투핸드 포카드',
         subtitle: 'Two-hand Four of a Kind',
-        amount: 1,
+        amount: 100,
         reason: 'FOUR_OF_A_KIND',
         gradient: 'from-emerald-600/30 to-emerald-950/50 border-emerald-500/40 text-emerald-300',
         badgeColor: 'bg-emerald-500/20 text-emerald-300 border-emerald-500/30',
@@ -61,7 +61,7 @@ const PRESET_GROUPS: PresetGroup[] = [
         id: 'straight-flush',
         title: '스트레이트 플러시',
         subtitle: 'Straight Flush',
-        amount: 2,
+        amount: 200,
         reason: 'STRAIGHT_FLUSH',
         gradient: 'from-purple-600/30 to-purple-950/50 border-purple-500/40 text-purple-300',
         badgeColor: 'bg-purple-500/20 text-purple-300 border-purple-500/30',
@@ -70,7 +70,7 @@ const PRESET_GROUPS: PresetGroup[] = [
         id: 'royal-flush',
         title: '로열 스트레이트 플러시',
         subtitle: 'Royal Flush',
-        amount: 3,
+        amount: 300,
         reason: 'ROYAL_FLUSH',
         gradient: 'from-amber-500/30 to-amber-950/50 border-amber-500/40 text-[#F5D061]',
         badgeColor: 'bg-amber-500/20 text-amber-300 border-amber-500/30',
@@ -84,7 +84,7 @@ const PRESET_GROUPS: PresetGroup[] = [
         id: 'new-member',
         title: '신규회원 가입',
         subtitle: 'New Member Registration',
-        amount: 1,
+        amount: 100,
         reason: 'EVENT_BONUS',
         gradient: 'from-sky-600/30 to-sky-950/50 border-sky-500/40 text-sky-300',
         badgeColor: 'bg-sky-500/20 text-sky-300 border-sky-500/30',
@@ -93,7 +93,7 @@ const PRESET_GROUPS: PresetGroup[] = [
         id: 'cash-buyin-10',
         title: '현금 바인권 10매 구매',
         subtitle: 'Cash Buy-in × 10',
-        amount: 3,
+        amount: 300,
         reason: 'EVENT_BONUS',
         gradient: 'from-blue-600/30 to-blue-950/50 border-blue-500/40 text-blue-300',
         badgeColor: 'bg-blue-500/20 text-blue-300 border-blue-500/30',
@@ -107,7 +107,7 @@ const PRESET_GROUPS: PresetGroup[] = [
         id: 'tourney-small',
         title: '1등 (6프라이즈 이하)',
         subtitle: '7 prizes未満 Tournament',
-        amount: 1,
+        amount: 100,
         reason: 'TOURNAMENT_WIN',
         gradient: 'from-amber-600/30 to-amber-950/50 border-amber-500/40 text-amber-300',
         badgeColor: 'bg-amber-500/20 text-amber-300 border-amber-500/30',
@@ -116,7 +116,7 @@ const PRESET_GROUPS: PresetGroup[] = [
         id: 'tourney-mid',
         title: '1등 (7~10프라이즈)',
         subtitle: '7–10 prizes Tournament',
-        amount: 2,
+        amount: 200,
         reason: 'TOURNAMENT_WIN',
         gradient: 'from-amber-600/30 to-amber-950/50 border-amber-500/40 text-amber-300',
         badgeColor: 'bg-amber-500/20 text-amber-300 border-amber-500/30',
@@ -125,7 +125,7 @@ const PRESET_GROUPS: PresetGroup[] = [
         id: 'tourney-large',
         title: '1등 (10+ 프라이즈)',
         subtitle: '10+ prizes Tournament',
-        amount: 3,
+        amount: 300,
         reason: 'TOURNAMENT_WIN',
         gradient: 'from-amber-500/30 to-amber-950/50 border-amber-400/50 text-[#F5D061]',
         badgeColor: 'bg-amber-500/20 text-amber-300 border-amber-500/30',
@@ -265,7 +265,7 @@ export function PointActionDrawer({
                   현재 잔액
                 </span>
                 <p className="font-serif text-lg font-black text-[#F5D061] leading-none mt-0.5">
-                  {currentPoints}p
+                  {new Intl.NumberFormat('ko-KR').format(currentPoints)}p
                 </p>
               </div>
             </div>
@@ -287,10 +287,10 @@ export function PointActionDrawer({
                 포인트 처리 완료!
               </h3>
               <p className="text-sm text-emerald-400 font-mono font-bold">
-                +{successResult.amount}p ({getPointReasonMeta(successResult.reason).shortLabel})
+                +{new Intl.NumberFormat('ko-KR').format(successResult.amount)}p ({getPointReasonMeta(successResult.reason).shortLabel})
               </p>
               <div className="rounded-xl bg-[#181A26] p-3 text-xs text-[#9CA3AF] max-w-xs mx-auto">
-                새 잔액: <strong className="text-[#F5D061] font-mono">{successResult.newBalance}p</strong>
+                새 잔액: <strong className="text-[#F5D061] font-mono">{new Intl.NumberFormat('ko-KR').format(successResult.newBalance)}p</strong>
               </div>
             </div>
           ) : (
@@ -314,7 +314,7 @@ export function PointActionDrawer({
                           </span>
                           <div className="mt-2 flex items-center justify-between">
                             <span className="font-mono text-base font-black text-white">
-                              +{action.amount}p
+                              +{new Intl.NumberFormat('ko-KR').format(action.amount)}p
                             </span>
                             <Zap className="size-3 opacity-70" />
                           </div>
@@ -389,7 +389,7 @@ export function PointActionDrawer({
 
                   {/* Quick Amount Helper Chips */}
                   <div className="flex gap-1.5 overflow-x-auto pb-1 text-xs">
-                    {['1', '2', '3', '5', '10'].map((chip) => (
+                    {['100', '200', '300', '500', '1,000'].map((chip) => (
                       <button
                         key={chip}
                         type="button"
@@ -467,14 +467,14 @@ export function PointActionDrawer({
                     selectedAction.amount > 0 ? 'text-emerald-400' : 'text-rose-400'
                   }`}
                 >
-                  {selectedAction.amount > 0 ? '+' : ''}{selectedAction.amount}p
+                  {selectedAction.amount > 0 ? '+' : ''}{new Intl.NumberFormat('ko-KR').format(selectedAction.amount)}p
                 </span>
               </div>
               <div className="h-px bg-[#E6AF2E]/15" />
               <div className="flex justify-between items-center pt-1">
                 <span className="text-[#9CA3AF]">처리 후 잔액</span>
                 <span className="font-mono text-sm font-bold text-[#F5D061]">
-                  {calculatedBalanceAfter}p
+                  {new Intl.NumberFormat('ko-KR').format(calculatedBalanceAfter)}p
                 </span>
               </div>
             </div>

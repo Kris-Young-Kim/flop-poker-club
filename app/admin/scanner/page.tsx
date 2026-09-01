@@ -30,7 +30,7 @@ const fallbackMemberList: Partial<Profile>[] = [
     phone: '010-8888-9999',
     role: 'user',
     qr_token: 'flp-99a8-7b2c-8841-f09c',
-    total_points: 24,
+    total_points: 2400,
   },
   {
     id: 'usr-2',
@@ -39,7 +39,7 @@ const fallbackMemberList: Partial<Profile>[] = [
     phone: '010-7777-1111',
     role: 'user',
     qr_token: 'flp-royal-8811-2244',
-    total_points: 8,
+    total_points: 800,
   },
   {
     id: 'usr-3',
@@ -48,7 +48,7 @@ const fallbackMemberList: Partial<Profile>[] = [
     phone: '010-3333-5555',
     role: 'user',
     qr_token: 'flp-vvip-3333-5555',
-    total_points: 12,
+    total_points: 1200,
   },
   {
     id: 'usr-4',
@@ -57,7 +57,7 @@ const fallbackMemberList: Partial<Profile>[] = [
     phone: '010-1234-5678',
     role: 'user',
     qr_token: 'flp-norm-1234-5678',
-    total_points: 5,
+    total_points: 500,
   },
 ]
 
@@ -222,7 +222,7 @@ export default function AdminScannerPage() {
                         {m.name}
                       </span>
                       <p className="text-[11px] text-[#9CA3AF]">
-                        @{m.nickname} · 잔액 {m.total_points ?? 0}p
+                        @{m.nickname} · 잔액 {new Intl.NumberFormat('ko-KR').format(m.total_points ?? 0)}p
                       </p>
                     </div>
                   </div>

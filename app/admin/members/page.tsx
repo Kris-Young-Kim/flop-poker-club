@@ -20,7 +20,7 @@ const fallbackMembers: Profile[] = [
     role: 'user',
     tier: 'NORMAL',
     qr_token: 'flp-99a8-7b2c-8841-f09c',
-    total_points: 24,
+    total_points: 2400,
     created_at: '2024-01-10T10:00:00Z',
     updated_at: '2024-01-20T10:00:00Z',
   },
@@ -33,7 +33,7 @@ const fallbackMembers: Profile[] = [
     role: 'user',
     tier: 'NORMAL',
     qr_token: 'flp-royal-8811-2244',
-    total_points: 8,
+    total_points: 800,
     created_at: '2023-11-05T14:30:00Z',
     updated_at: '2024-01-22T18:00:00Z',
   },
@@ -46,7 +46,7 @@ const fallbackMembers: Profile[] = [
     role: 'user',
     tier: 'NORMAL',
     qr_token: 'flp-vvip-3333-5555',
-    total_points: 12,
+    total_points: 1200,
     created_at: '2023-12-01T09:15:00Z',
     updated_at: '2024-01-23T11:45:00Z',
   },
@@ -59,7 +59,7 @@ const fallbackMembers: Profile[] = [
     role: 'user',
     tier: 'NORMAL',
     qr_token: 'flp-norm-1234-5678',
-    total_points: 5,
+    total_points: 500,
     created_at: '2024-01-18T16:00:00Z',
     updated_at: '2024-01-18T16:00:00Z',
   },
@@ -72,7 +72,7 @@ const fallbackMembers: Profile[] = [
     role: 'user',
     tier: 'NORMAL',
     qr_token: 'flp-norm-4444-2222',
-    total_points: 3,
+    total_points: 300,
     created_at: '2024-01-24T20:00:00Z',
     updated_at: '2024-01-24T20:00:00Z',
   },
@@ -196,7 +196,7 @@ export default function AdminMembersPage() {
                 <div className="text-right">
                   <p className="text-[10px] text-[#9CA3AF]">포인트</p>
                   <p className="font-mono text-base font-black text-[#F5D061]">
-                    {member.total_points}p
+                    {new Intl.NumberFormat('ko-KR').format(member.total_points)}p
                   </p>
                 </div>
                 <Button

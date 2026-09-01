@@ -83,7 +83,7 @@ export default function VipLoungePage() {
         <div className="space-y-2 max-w-sm">
           <h2 className="font-serif text-2xl font-black text-white">VIP 라운지 로그인 필요</h2>
           <p className="text-xs text-[#9CA3AF] leading-relaxed">
-            멤버십 카드와 포인트 적립, 대회 참가 신청은 정회원 전용 서비스입니다. 가입 시 신규가입 포인트 1p가 즉시 적립됩니다.
+            멤버십 카드와 포인트 적립, 대회 참가 신청은 정회원 전용 서비스입니다. 신규 가입 시 웰컴 보너스 5,000 P가 즉시 적립됩니다.
           </p>
         </div>
         <div className="w-full max-w-xs space-y-2.5">
@@ -132,7 +132,7 @@ export default function VipLoungePage() {
                 <div>
                   <div className="flex items-center gap-2">
                     <span className="text-xs font-bold text-[#F3E5AB]">
-                      신규가입 보너스 +1p 받기
+                      신규가입 웰컴 보너스 5,000 P 받기
                     </span>
                     <Badge className="bg-[#E6AF2E]/20 text-[#F5D061] text-[9px] px-1.5 py-0">
                       필수
@@ -223,15 +223,15 @@ export default function VipLoungePage() {
           <div className="grid grid-cols-3 gap-2 text-center text-xs">
             <div className="rounded-xl bg-[#13141C]/80 p-2 border border-emerald-500/20">
               <p className="text-[10px] text-[#9CA3AF]">투핸드 포카드</p>
-              <p className="text-sm font-extrabold text-emerald-400 mt-0.5">+1p</p>
+              <p className="text-sm font-extrabold text-emerald-400 mt-0.5">+100p</p>
             </div>
             <div className="rounded-xl bg-[#13141C]/80 p-2 border border-purple-500/20">
               <p className="text-[10px] text-[#9CA3AF]">스트레이트 플러시</p>
-              <p className="text-sm font-extrabold text-purple-400 mt-0.5">+2p</p>
+              <p className="text-sm font-extrabold text-purple-400 mt-0.5">+200p</p>
             </div>
             <div className="rounded-xl bg-[#13141C]/80 p-2 border border-amber-500/20">
               <p className="text-[10px] text-[#9CA3AF]">로열 스트레이트 플러시</p>
-              <p className="text-sm font-extrabold text-[#F5D061] mt-0.5">+3p</p>
+              <p className="text-sm font-extrabold text-[#F5D061] mt-0.5">+300p</p>
             </div>
           </div>
         </div>

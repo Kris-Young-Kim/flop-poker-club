@@ -1,0 +1,129 @@
+{
+  "url": "https://flop-poker-club.vercel.app",
+  "audit_date": "2026-08-27",
+  "tool_version": "claude-seo v2.2.5",
+  "business_type": "local_service",
+  "industry": "entertainment_poker_club",
+  "language": "ko",
+  "country": "KR",
+  "city": "원주시",
+  "seo_health_score": 51,
+  "scores": {
+    "technical_seo": 42,
+    "content_quality": 55,
+    "on_page_seo": 48,
+    "schema": 58,
+    "performance_cwv": 78,
+    "ai_search_readiness": 25,
+    "images": 70
+  },
+  "critical_issues": [
+    {
+      "id": "C1",
+      "title": "Client-side rendering on /tournaments and /notices",
+      "severity": "CRITICAL",
+      "impact": "Pages indexed with near-zero content",
+      "fix": "Convert to Server Components using async/await"
+    },
+    {
+      "id": "C2",
+      "title": "Duplicate page titles on /tournaments and /notices",
+      "severity": "CRITICAL",
+      "impact": "Both inherit root metadata title",
+      "fix": "Export page-specific metadata from each page file"
+    },
+    {
+      "id": "C3",
+      "title": "Terms page title double-brands FLOP POKER CLUB",
+      "severity": "CRITICAL",
+      "impact": "Title template applied to already-branded title",
+      "fix": "Change terms title to just '이용약관'"
+    }
+  ],
+  "high_issues": [
+    {
+      "id": "H1",
+      "title": "No phone number on site or in schema",
+      "severity": "HIGH",
+      "impact": "Incomplete NAP — critical for local SEO"
+    },
+    {
+      "id": "H2",
+      "title": "Duplicate H1 on homepage",
+      "severity": "HIGH",
+      "impact": "Two H1 tags: 'FLOP POKER CLUB' and 'WONJU NO.1 HIGH ROLLER POKER CLUB'"
+    },
+    {
+      "id": "H3",
+      "title": "No Event schema on /tournaments",
+      "severity": "HIGH",
+      "impact": "Tournaments not eligible for SERP event rich snippets"
+    },
+    {
+      "id": "H4",
+      "title": "AI crawler blocking reduces GEO visibility",
+      "severity": "HIGH",
+      "impact": "GPTBot, Google-Extended, Bytespider, CCBot all blocked"
+    }
+  ],
+  "medium_issues": [
+    "BarOrPub schema type questionable for poker club",
+    "/landing allowed in robots.txt but absent from sitemap",
+    "No llms.txt file",
+    "No BreadcrumbList schema",
+    "No hreflang tags (ko/ko-KR)",
+    "No Naver Place / Kakao Maps citations",
+    "FAQ section — FAQPage schema deprecated May 2026"
+  ],
+  "low_issues": [
+    "No Google Business Profile signals",
+    "No individual notice permalink pages",
+    "Image alt text unknown (CSR prevents audit)"
+  ],
+  "technical_checks": {
+    "https": true,
+    "robots_txt_valid": true,
+    "sitemap_xml_valid": true,
+    "canonical_set": true,
+    "ttfb_ms": 206,
+    "html_size_bytes": 68805,
+    "noindex_auth_pages": true,
+    "noindex_member_pages": true,
+    "duplicate_titles": true,
+    "duplicate_h1": true,
+    "csr_public_pages": true,
+    "phone_number_present": false,
+    "event_schema": false,
+    "breadcrumb_schema": false,
+    "llms_txt": false
+  },
+  "sitemap": {
+    "url_count": 5,
+    "urls": [
+      {"url": "/", "priority": 1.0, "changefreq": "daily"},
+      {"url": "/tournaments", "priority": 0.9, "changefreq": "daily"},
+      {"url": "/notices", "priority": 0.7, "changefreq": "weekly"},
+      {"url": "/privacy", "priority": 0.3, "changefreq": "yearly"},
+      {"url": "/terms", "priority": 0.3, "changefreq": "yearly"}
+    ]
+  },
+  "local_seo": {
+    "score": 44,
+    "address_present": true,
+    "phone_present": false,
+    "hours_present": true,
+    "google_business_profile": "unknown",
+    "naver_place": "unknown",
+    "kakao_maps": "unknown",
+    "review_signals": false,
+    "nap_complete": false
+  },
+  "geo_readiness": {
+    "score": 25,
+    "llms_txt": false,
+    "gptbot_allowed": false,
+    "google_extended_allowed": false,
+    "structured_facts": true,
+    "citability": true
+  }
+}
