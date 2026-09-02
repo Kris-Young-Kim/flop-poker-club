@@ -24,7 +24,7 @@ export const BUSINESS_INFO = {
   /** 관할 세무서 */
   taxOffice: '원주세무서',
   /** 영업시간 */
-  operatingHours: '매일 18:00 ~ 익일 06:00 (연중무휴)',
+  operatingHours: '매일 19:00 ~ 06:00 (연중무휴)',
   /** 대표 문의 안내 */
   contactNotice: '단체 및 VIP 테이블 사전 예약 가능',
 } as const

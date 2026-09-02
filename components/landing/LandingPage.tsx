@@ -122,7 +122,7 @@ export function LandingPage({ tournaments, pinnedNotice }: LandingPageProps) {
             <span className="text-[#E6AF2E]/40">|</span>
             <span className="inline-block pt-0.5">⚡ 투핸드 포카드 +500P · 스티플 +1,000P · 로티플 +3,000P 즉시 적립</span>
             <span className="text-[#E6AF2E]/40">|</span>
-            <span className="inline-block pt-0.5">👑 원주 최고급 VIP 라운지 18:00 ~ 익일 06:00 연중무휴</span>
+            <span className="inline-block pt-0.5">👑 원주 최고급 VIP 라운지 19:00 ~ 06:00 연중무휴</span>
           </div>
 
           {/* 무한 루프를 위한 복제 트랙 */}
@@ -136,7 +136,7 @@ export function LandingPage({ tournaments, pinnedNotice }: LandingPageProps) {
             <span className="text-[#E6AF2E]/40">|</span>
             <span className="inline-block pt-0.5">⚡ 투핸드 포카드 +500P · 스티플 +1,000P · 로티플 +3,000P 즉시 적립</span>
             <span className="text-[#E6AF2E]/40">|</span>
-            <span className="inline-block pt-0.5">👑 원주 최고급 VIP 라운지 18:00 ~ 익일 06:00 연중무휴</span>
+            <span className="inline-block pt-0.5">👑 원주 최고급 VIP 라운지 19:00 ~ 06:00 연중무휴</span>
           </div>
         </div>
       </div>
