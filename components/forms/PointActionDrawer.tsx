@@ -339,17 +339,17 @@ export function PointActionDrawer({
 
               {/* Manual Input Container */}
               {isManualMode && (
-                <div className="space-y-3 rounded-2xl border border-[#E6AF2E]/25 bg-[#0F1017] p-4 animate-in fade-in duration-200">
+                <div className="space-y-3.5 rounded-2xl border border-[#E6AF2E]/25 bg-[#0F1017] p-4 animate-in fade-in duration-200">
                   {/* Type Toggle: 지급(+) / 차감(-) */}
                   <div className="grid grid-cols-2 gap-2">
                     <Button
                       type="button"
                       variant={manualType === 'EARN' ? 'default' : 'outline'}
                       onClick={() => setManualType('EARN')}
-                      className={`h-9 rounded-xl text-xs font-bold ${
+                      className={`h-9 rounded-xl text-xs font-bold transition-all ${
                         manualType === 'EARN'
-                          ? 'bg-emerald-500 text-black hover:bg-emerald-400'
-                          : 'border-border text-[#9CA3AF]'
+                          ? 'bg-emerald-500 text-black shadow-md shadow-emerald-500/20 hover:bg-emerald-400'
+                          : 'border-[#E6AF2E]/20 text-[#9CA3AF] hover:text-white bg-[#14151E]'
                       }`}
                     >
                       <Plus className="size-3.5 mr-1" /> 포인트 지급 (+)
@@ -358,10 +358,10 @@ export function PointActionDrawer({
                       type="button"
                       variant={manualType === 'DEDUCT' ? 'default' : 'outline'}
                       onClick={() => setManualType('DEDUCT')}
-                      className={`h-9 rounded-xl text-xs font-bold ${
+                      className={`h-9 rounded-xl text-xs font-bold transition-all ${
                         manualType === 'DEDUCT'
-                          ? 'bg-rose-500 text-white hover:bg-rose-400'
-                          : 'border-border text-[#9CA3AF]'
+                          ? 'bg-rose-500 text-white shadow-md shadow-rose-500/20 hover:bg-rose-400'
+                          : 'border-[#E6AF2E]/20 text-[#9CA3AF] hover:text-white bg-[#14151E]'
                       }`}
                     >
                       <Minus className="size-3.5 mr-1" /> 포인트 차감 (-)
@@ -370,9 +370,20 @@ export function PointActionDrawer({
 
                   {/* Amount Input */}
                   <div className="space-y-1.5">
-                    <label className="text-[11px] text-[#9CA3AF] font-medium">
-                      포인트 금액
-                    </label>
+                    <div className="flex items-center justify-between text-[11px]">
+                      <label className="text-[#9CA3AF] font-medium">
+                        {manualType === 'EARN' ? '지급할 포인트 금액' : '차감할 포인트 금액'}
+                      </label>
+                      {manualAmount && (
+                        <button
+                          type="button"
+                          onClick={() => setManualAmount('')}
+                          className="text-[10.5px] text-[#E6AF2E] hover:underline"
+                        >
+                          금액 초기화
+                        </button>
+                      )}
+                    </div>
                     <div className="relative">
                       <Input
                         value={manualAmount}
@@ -381,24 +392,70 @@ export function PointActionDrawer({
                           setManualAmount(val ? new Intl.NumberFormat('ko-KR').format(parseInt(val, 10)) : '')
                         }}
                         placeholder="0"
-                        className="h-11 rounded-xl border-[#E6AF2E]/30 bg-[#13141C] text-right pr-8 font-mono text-base font-bold text-white focus-visible:border-[#E6AF2E]"
+                        className={`h-11 rounded-xl border text-right pr-8 font-mono text-base font-bold text-white bg-[#13141C] focus-visible:ring-0 ${
+                          manualType === 'EARN'
+                            ? 'border-emerald-500/40 focus-visible:border-emerald-400'
+                            : 'border-rose-500/40 focus-visible:border-rose-400'
+                        }`}
                       />
-                      <span className="absolute right-3 top-3 text-xs font-bold text-[#F5D061]">P</span>
+                      <span className={`absolute right-3 top-3 text-xs font-bold ${
+                        manualType === 'EARN' ? 'text-emerald-400' : 'text-rose-400'
+                      }`}>
+                        P
+                      </span>
                     </div>
+
+                    {/* Live Balance Change Preview */}
+                    {(() => {
+                      const num = parseInt(manualAmount.replace(/[^0-9]/g, ''), 10) || 0
+                      if (num === 0) return null
+                      const calculated = manualType === 'EARN' ? currentPoints + num : currentPoints - num
+                      return (
+                        <div className="flex items-center justify-between text-[11px] font-mono px-1 pt-0.5">
+                          <span className="text-[#9CA3AF]">처리 후 예상 잔액:</span>
+                          <span className={`font-bold ${
+                            calculated < 0 ? 'text-rose-400' : 'text-[#F5D061]'
+                          }`}>
+                            {new Intl.NumberFormat('ko-KR').format(calculated)}p
+                            {calculated < 0 && ' (잔액 부족!)'}
+                          </span>
+                        </div>
+                      )
+                    })()}
                   </div>
 
-                  {/* Quick Amount Helper Chips */}
-                  <div className="flex gap-1.5 overflow-x-auto pb-1 text-xs">
-                    {['100', '200', '300', '500', '1,000'].map((chip) => (
-                      <button
-                        key={chip}
-                        type="button"
-                        onClick={() => setManualAmount(chip)}
-                        className="rounded-lg border border-[#E6AF2E]/20 bg-[#181A26] px-2.5 py-1 text-[11px] text-[#F3E5AB] hover:bg-[#E6AF2E]/10 shrink-0"
-                      >
-                        +{chip}p
-                      </button>
-                    ))}
+                  {/* Cumulative Quick Amount Helper Chips (누적 추가 버튼) */}
+                  <div className="space-y-1">
+                    <p className="text-[10px] text-[#9CA3AF]">
+                      {manualType === 'EARN' ? '클릭 시 금액 누적 추가 (+):' : '클릭 시 금액 누적 차감 (-):'}
+                    </p>
+                    <div className="flex gap-1.5 overflow-x-auto pb-1 text-xs">
+                      {[100, 500, 1000, 5000, 10000].map((addVal) => (
+                        <button
+                          key={addVal}
+                          type="button"
+                          onClick={() => {
+                            const cur = parseInt(manualAmount.replace(/[^0-9]/g, ''), 10) || 0
+                            const next = cur + addVal
+                            setManualAmount(new Intl.NumberFormat('ko-KR').format(next))
+                          }}
+                          className="rounded-lg border border-[#E6AF2E]/25 bg-[#181A26] px-2.5 py-1 text-[11px] font-mono font-medium text-[#F3E5AB] hover:bg-[#E6AF2E]/15 hover:border-[#E6AF2E]/50 shrink-0 transition-all active:scale-95"
+                        >
+                          {manualType === 'EARN' ? '+' : '-'}{new Intl.NumberFormat('ko-KR').format(addVal)}p
+                        </button>
+                      ))}
+                      {manualType === 'DEDUCT' && currentPoints > 0 && (
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setManualAmount(new Intl.NumberFormat('ko-KR').format(currentPoints))
+                          }}
+                          className="rounded-lg border border-rose-500/40 bg-rose-950/30 px-2.5 py-1 text-[11px] font-mono font-bold text-rose-300 hover:bg-rose-500/20 shrink-0 transition-all active:scale-95"
+                        >
+                          전액 ({new Intl.NumberFormat('ko-KR').format(currentPoints)}p)
+                        </button>
+                      )}
+                    </div>
                   </div>
 
                   {/* Description / Reason */}
@@ -409,7 +466,11 @@ export function PointActionDrawer({
                     <Input
                       value={manualDescription}
                       onChange={(e) => setManualDescription(e.target.value)}
-                      placeholder="예: 토너먼트 우승 상금, 음료 결제 등"
+                      placeholder={
+                        manualType === 'EARN'
+                          ? '예: 신규 이벤트 보너스, 토너먼트 상금 등'
+                          : '예: 매장 바인권 사용, 음료/스낵 결제 등'
+                      }
                       className="h-9 rounded-xl border-[#E6AF2E]/25 bg-[#13141C] text-xs text-white placeholder:text-[#9CA3AF]"
                     />
                   </div>
@@ -418,9 +479,15 @@ export function PointActionDrawer({
                   <Button
                     onClick={handleManualSubmit}
                     disabled={!manualAmount || manualAmount === '0'}
-                    className="w-full h-11 rounded-xl bg-gradient-to-r from-[#F5D061] via-[#E6AF2E] to-[#C28B1E] text-black font-bold text-xs shadow-md"
+                    className={`w-full h-11 rounded-xl text-black font-bold text-xs shadow-md transition-all ${
+                      manualType === 'EARN'
+                        ? 'bg-gradient-to-r from-emerald-400 via-emerald-500 to-emerald-600 hover:opacity-90'
+                        : 'bg-gradient-to-r from-rose-400 via-rose-500 to-rose-600 text-white hover:opacity-90'
+                    }`}
                   >
-                    수동 금액 처리 확인
+                    {manualType === 'EARN'
+                      ? `+${manualAmount || '0'}P 지급 처리 확인`
+                      : `-${manualAmount || '0'}P 차감 처리 확인`}
                   </Button>
                 </div>
               )}
