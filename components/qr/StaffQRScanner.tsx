@@ -181,31 +181,6 @@ export function StaffQRScanner({
           </Button>
         </div>
       </div>
-
-      {/* Quick Test / Manual Scan Simulator Buttons */}
-      <div className="space-y-2 pt-1 border-t border-[#E6AF2E]/15">
-        <p className="text-[11px] text-[#9CA3AF] flex items-center gap-1 font-semibold">
-          <Zap className="size-3 text-[#E6AF2E]" />
-          빠른 회원 테스트 스캔 (원클릭 시뮬레이션):
-        </p>
-
-        <div className="grid grid-cols-2 gap-2">
-          <Button
-            size="sm"
-            onClick={() => handleTriggerScan('flp-99a8-7b2c-8841-f09c')}
-            className="h-9 rounded-xl border border-[#E6AF2E]/30 bg-[#14151E] text-xs font-bold text-[#F3E5AB] hover:bg-[#E6AF2E]/15"
-          >
-            김민준 (VIP · 24,500P)
-          </Button>
-          <Button
-            size="sm"
-            onClick={() => handleTriggerScan('flp-royal-8811-2244')}
-            className="h-9 rounded-xl border border-yellow-500/40 bg-[#1A1810] text-xs font-bold text-yellow-300 hover:bg-yellow-500/20"
-          >
-            이서윤 (ROYAL · 128,400P)
-          </Button>
-        </div>
-      </div>
     </div>
   )
 }

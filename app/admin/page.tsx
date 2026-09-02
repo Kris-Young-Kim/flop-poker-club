@@ -203,7 +203,7 @@ export default function AdminDashboardPage() {
                       <span className="font-bold text-white">{meta.label}</span>
                       <span className="text-[11px] text-[#9CA3AF]">({tx.description})</span>
                     </div>
-                    <p className="text-[10.5px] text-[#9CA3AF] mt-0.5">
+                    <p className="text-[10.5px] text-[#9CA3AF] mt-0.5" suppressHydrationWarning>
                       {formatDateTime(tx.created_at, 'full')} · 처리자: {tx.processed_by}
                     </p>
                   </div>

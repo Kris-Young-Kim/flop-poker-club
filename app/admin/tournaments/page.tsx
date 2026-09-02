@@ -30,51 +30,12 @@ import {
   distributeAdminTournamentPrizes,
 } from '@/lib/actions/admin'
 
-const fallbackAdminTournaments: Tournament[] = [
-  {
-    id: 'tour-101',
-    title: 'Friday Night High Roller 50K',
-    description: '매주 금요일 밤 펼쳐지는 원주 최고 상금의 메인 토너먼트.',
-    start_time: '2024-03-15T20:00:00.000Z',
-    entry_point_cost: 50000,
-    total_prize_points: 2500000,
-    max_players: 30,
-    current_players: 18,
-    status: 'REGISTRATION',
-    created_at: '2024-03-01T10:00:00.000Z',
-  },
-  {
-    id: 'tour-103',
-    title: 'Daily Evening Warm-up (LIVE)',
-    description: '현재 테이블 진행 중인 데일리 워밍업 토너먼트입니다.',
-    start_time: '2024-03-14T18:00:00.000Z',
-    entry_point_cost: 10000,
-    total_prize_points: 500000,
-    max_players: 20,
-    current_players: 20,
-    status: 'LIVE',
-    created_at: '2024-03-03T10:00:00.000Z',
-  },
-  {
-    id: 'tour-104',
-    title: 'FLOP Monthly Master Series',
-    description: '월간 챔피언십! 클럽 랭커 및 트로피 보유자 초청전.',
-    start_time: '2024-03-30T17:00:00.000Z',
-    entry_point_cost: 100000,
-    total_prize_points: 6000000,
-    max_players: 40,
-    current_players: 4,
-    status: 'UPCOMING',
-    created_at: '2024-03-04T10:00:00.000Z',
-  },
-]
-
 export default function AdminTournamentsPage() {
-  const [tournaments, setTournaments] = useState<Tournament[]>(fallbackAdminTournaments)
+  const [tournaments, setTournaments] = useState<Tournament[]>([])
   const [createModalOpen, setCreateModalOpen] = useState(false)
   const [rankModalOpen, setRankModalOpen] = useState(false)
   const [selectedTourney, setSelectedTourney] = useState<Tournament | null>(null)
-  const [isLoading, setIsLoading] = useState(false)
+  const [isLoading, setIsLoading] = useState(true)
 
   // Create Form State
   const [title, setTitle] = useState('')
@@ -85,22 +46,21 @@ export default function AdminTournamentsPage() {
   const [maxPlayers, setMaxPlayers] = useState('30')
 
   // Rank Results State (Top 3)
-  const [rank1User, setRank1User] = useState('김민준 (AceKing)')
-  const [rank1Prize, setRank1Prize] = useState('1,250,000')
-  const [rank2User, setRank2User] = useState('이서윤 (QueenSpade)')
-  const [rank2Prize, setRank2Prize] = useState('750,000')
-  const [rank3User, setRank3User] = useState('박준혁 (MonsterPot)')
-  const [rank3Prize, setRank3Prize] = useState('500,000')
+  const [rank1User, setRank1User] = useState('')
+  const [rank1Prize, setRank1Prize] = useState('')
+  const [rank2User, setRank2User] = useState('')
+  const [rank2Prize, setRank2Prize] = useState('')
+  const [rank3User, setRank3User] = useState('')
+  const [rank3Prize, setRank3Prize] = useState('')
 
   const fetchTournaments = async () => {
     setIsLoading(true)
     try {
       const data = await getTournaments()
-      if (data && data.length > 0) {
-        setTournaments(data)
-      }
+      setTournaments(data || [])
     } catch (e) {
       console.error(e)
+      setTournaments([])
     } finally {
       setIsLoading(false)
     }
@@ -200,11 +160,22 @@ export default function AdminTournamentsPage() {
 
       {/* Tournament List */}
       <div className="space-y-4">
-        {tournaments.map((tourney) => {
-          const statusMeta = getTourneyStatusMeta(tourney.status)
-          return (
-            <Card
-              key={tourney.id}
+        {tournaments.length === 0 ? (
+          <div className="rounded-3xl border border-dashed border-[#E6AF2E]/20 bg-[#13141C]/50 p-12 text-center space-y-3">
+            <Trophy className="mx-auto size-12 text-[#9CA3AF]/40" />
+            <p className="text-sm font-semibold text-white">
+              등록된 토너먼트 일정이 없습니다.
+            </p>
+            <p className="text-xs text-[#9CA3AF]">
+              우측 상단의 [새 토너먼트 생성] 버튼을 눌러 첫 대회를 등록하세요.
+            </p>
+          </div>
+        ) : (
+          tournaments.map((tourney) => {
+            const statusMeta = getTourneyStatusMeta(tourney.status)
+            return (
+              <Card
+                key={tourney.id}
               className="rounded-3xl border border-[#E6AF2E]/25 bg-gradient-to-br from-[#181A26] to-[#12131A] p-5 shadow-xl"
             >
               <CardContent className="p-0 flex flex-col lg:flex-row lg:items-center justify-between gap-5">
@@ -214,7 +185,7 @@ export default function AdminTournamentsPage() {
                     <Badge className={`${statusMeta.bgClass} ${statusMeta.colorClass} border text-xs font-bold px-2.5 py-0.5`}>
                       {statusMeta.label}
                     </Badge>
-                    <span className="text-xs text-[#9CA3AF] flex items-center gap-1">
+                    <span className="text-xs text-[#9CA3AF] flex items-center gap-1" suppressHydrationWarning>
                       <Calendar className="size-3.5 text-[#E6AF2E]" />
                       시작: {formatDateTime(tourney.start_time, 'full')}
                     </span>
@@ -297,7 +268,8 @@ export default function AdminTournamentsPage() {
               </CardContent>
             </Card>
           )
-        })}
+        })
+      )}
       </div>
 
       {/* Create Tournament Dialog */}

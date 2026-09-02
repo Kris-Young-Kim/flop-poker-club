@@ -10,78 +10,10 @@ import { Profile } from '@/types/database.types'
 import { formatDateTime } from '@/lib/utils/format'
 import { getAdminMembers } from '@/lib/actions/admin'
 
-const fallbackMembers: Profile[] = [
-  {
-    id: 'usr-1',
-    email: 'minjun.kim@gmail.com',
-    name: '김민준',
-    nickname: 'AceKing',
-    phone: '010-8888-9999',
-    role: 'user',
-    tier: 'NORMAL',
-    qr_token: 'flp-99a8-7b2c-8841-f09c',
-    total_points: 2400,
-    created_at: '2024-01-10T10:00:00Z',
-    updated_at: '2024-01-20T10:00:00Z',
-  },
-  {
-    id: 'usr-2',
-    email: 'seoyun.lee@gmail.com',
-    name: '이서윤',
-    nickname: 'QueenSpade',
-    phone: '010-7777-1111',
-    role: 'user',
-    tier: 'NORMAL',
-    qr_token: 'flp-royal-8811-2244',
-    total_points: 800,
-    created_at: '2023-11-05T14:30:00Z',
-    updated_at: '2024-01-22T18:00:00Z',
-  },
-  {
-    id: 'usr-3',
-    email: 'junhyuk.park@gmail.com',
-    name: '박준혁',
-    nickname: 'MonsterPot',
-    phone: '010-3333-5555',
-    role: 'user',
-    tier: 'NORMAL',
-    qr_token: 'flp-vvip-3333-5555',
-    total_points: 1200,
-    created_at: '2023-12-01T09:15:00Z',
-    updated_at: '2024-01-23T11:45:00Z',
-  },
-  {
-    id: 'usr-4',
-    email: 'taeyang.choi@gmail.com',
-    name: '최태양',
-    nickname: 'AllInKing',
-    phone: '010-1234-5678',
-    role: 'user',
-    tier: 'NORMAL',
-    qr_token: 'flp-norm-1234-5678',
-    total_points: 500,
-    created_at: '2024-01-18T16:00:00Z',
-    updated_at: '2024-01-18T16:00:00Z',
-  },
-  {
-    id: 'usr-5',
-    email: 'jiwoo.jung@gmail.com',
-    name: '정지우',
-    nickname: 'RiverRat',
-    phone: '010-4444-2222',
-    role: 'user',
-    tier: 'NORMAL',
-    qr_token: 'flp-norm-4444-2222',
-    total_points: 300,
-    created_at: '2024-01-24T20:00:00Z',
-    updated_at: '2024-01-24T20:00:00Z',
-  },
-]
-
 export default function AdminMembersPage() {
-  const [members, setMembers] = useState<Profile[]>(fallbackMembers)
+  const [members, setMembers] = useState<Profile[]>([])
   const [searchQuery, setSearchQuery] = useState('')
-  const [isLoading, setIsLoading] = useState(false)
+  const [isLoading, setIsLoading] = useState(true)
 
   const [selectedMember, setSelectedMember] = useState<Profile | null>(null)
   const [pointDrawerOpen, setPointDrawerOpen] = useState(false)
@@ -90,11 +22,10 @@ export default function AdminMembersPage() {
     setIsLoading(true)
     try {
       const data = await getAdminMembers({ search: searchQuery })
-      if (data && data.length > 0) {
-        setMembers(data)
-      }
+      setMembers(data || [])
     } catch (e) {
       console.error(e)
+      setMembers([])
     } finally {
       setIsLoading(false)
     }

@@ -29,41 +29,11 @@ import {
   deleteAdminNotice,
 } from '@/lib/actions/admin'
 
-const fallbackAdminNotices: NoticeEvent[] = [
-  {
-    id: 'not-101',
-    category: 'NOTICE',
-    title: '♠ FLOP POKER CLUB 원주점 회원가입 및 멤버십 혜택 총정리',
-    content: 'FLOP POKER CLUB 원주점에 오신 회원 여러분을 환영합니다. 투핸드 포카드(+500P), 스티플(+1,000P), 로티플(+3,000P) 원터치 포인트 즉시 지급 혜택이 적용 중입니다.',
-    is_pinned: true,
-    author_id: 'admin-1',
-    created_at: '2024-03-01T12:00:00.000Z',
-  },
-  {
-    id: 'not-102',
-    category: 'EVENT',
-    title: '🔥 신규 멤버십 오픈 기념 웰컴 5,000 P 지급 이벤트',
-    content: 'FLOP 클럽 앱 온보딩을 완료하신 모든 신규 회원님께 즉시 사용 가능한 웰컴 5,000 포인트를 증정합니다.',
-    is_pinned: false,
-    author_id: 'admin-1',
-    created_at: '2024-02-28T10:00:00.000Z',
-  },
-  {
-    id: 'not-103',
-    category: 'RULE',
-    title: '📜 FLOP POKER CLUB 공식 경기 룰 & 에티켓 가이드',
-    content: 'TDA 국제 토너먼트 공식 룰을 엄격히 준수합니다. 원 플레이어 투 핸드 및 스트링 베팅 금지 규정을 숙지해 주세요.',
-    is_pinned: true,
-    author_id: 'admin-1',
-    created_at: '2024-02-25T15:00:00.000Z',
-  },
-]
-
 export default function AdminNoticesPage() {
-  const [notices, setNotices] = useState<NoticeEvent[]>(fallbackAdminNotices)
+  const [notices, setNotices] = useState<NoticeEvent[]>([])
   const [createModalOpen, setCreateModalOpen] = useState(false)
   const [categoryFilter, setCategoryFilter] = useState<string>('ALL')
-  const [isLoading, setIsLoading] = useState(false)
+  const [isLoading, setIsLoading] = useState(true)
   const [pendingPinId, setPendingPinId] = useState<string | null>(null)
   const [pendingDeleteId, setPendingDeleteId] = useState<string | null>(null)
 
@@ -78,14 +48,10 @@ export default function AdminNoticesPage() {
     setIsLoading(true)
     try {
       const data = await getNotices()
-      if (data && data.length > 0) {
-        setNotices(data)
-      } else {
-        setNotices(fallbackAdminNotices)
-      }
+      setNotices(data || [])
     } catch (e) {
       console.error('Failed to fetch notices:', e)
-      setNotices(fallbackAdminNotices)
+      setNotices([])
     } finally {
       setIsLoading(false)
     }
@@ -299,7 +265,7 @@ export default function AdminNoticesPage() {
                       <Pin className="size-3 fill-black" /> 필독 고정
                     </Badge>
                   )}
-                  <span className="text-[11px] text-[#9CA3AF] flex items-center gap-1">
+                  <span className="text-[11px] text-[#9CA3AF] flex items-center gap-1" suppressHydrationWarning>
                     <Calendar className="size-3 text-[#E6AF2E]" />
                     {formatDateTime(notice.created_at, 'date')}
                   </span>

@@ -66,7 +66,7 @@ export function NoticeCard({ notice }: NoticeCardProps) {
                 {meta.label}
               </Badge>
             </div>
-            <span className="text-[11px] text-[#9CA3AF] flex items-center gap-1">
+            <span className="text-[11px] text-[#9CA3AF] flex items-center gap-1" suppressHydrationWarning>
               <Calendar className="size-3 text-[#E6AF2E]" />
               {formatDateTime(notice.created_at, 'date')}
             </span>
@@ -101,7 +101,7 @@ export function NoticeCard({ notice }: NoticeCardProps) {
               <Badge className={`${meta.badgeClass} text-[11px] font-bold border`}>
                 {meta.label}
               </Badge>
-              <span className="text-xs text-[#9CA3AF] ml-auto">
+              <span className="text-xs text-[#9CA3AF] ml-auto" suppressHydrationWarning>
                 {formatDateTime(notice.created_at, 'full')}
               </span>
             </div>

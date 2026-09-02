@@ -22,66 +22,28 @@ import { Profile } from '@/types/database.types'
 import { formatPoints } from '@/lib/utils/format'
 import { searchMemberByQr } from '@/lib/actions/admin'
 
-const fallbackMemberList: Partial<Profile>[] = [
-  {
-    id: 'usr-1',
-    name: '김민준',
-    nickname: 'AceKing',
-    phone: '010-8888-9999',
-    role: 'user',
-    qr_token: 'flp-99a8-7b2c-8841-f09c',
-    total_points: 2400,
-  },
-  {
-    id: 'usr-2',
-    name: '이서윤',
-    nickname: 'QueenSpade',
-    phone: '010-7777-1111',
-    role: 'user',
-    qr_token: 'flp-royal-8811-2244',
-    total_points: 800,
-  },
-  {
-    id: 'usr-3',
-    name: '박준혁',
-    nickname: 'MonsterPot',
-    phone: '010-3333-5555',
-    role: 'user',
-    qr_token: 'flp-vvip-3333-5555',
-    total_points: 1200,
-  },
-  {
-    id: 'usr-4',
-    name: '최태양',
-    nickname: 'AllInKing',
-    phone: '010-1234-5678',
-    role: 'user',
-    qr_token: 'flp-norm-1234-5678',
-    total_points: 500,
-  },
-]
-
 export default function AdminScannerPage() {
   const [selectedMember, setSelectedMember] = useState<Partial<Profile> | null>(null)
   const [drawerOpen, setDrawerOpen] = useState(false)
   const [searchQuery, setSearchQuery] = useState('')
   const [isSearching, setIsSearching] = useState(false)
-  const [recentScans, setRecentScans] = useState<Partial<Profile>[]>([fallbackMemberList[0]])
+  const [recentScans, setRecentScans] = useState<Partial<Profile>[]>([])
   const [searchResults, setSearchResults] = useState<Partial<Profile>[]>([])
 
   // Called when QR token detected
   const handleScanSuccess = async (qrToken: string) => {
     try {
       const found = await searchMemberByQr(qrToken)
-      const member = found || fallbackMemberList.find((m) => m.qr_token === qrToken) || fallbackMemberList[0]
-      setSelectedMember(member)
-      setDrawerOpen(true)
-      setRecentScans((prev) => [member, ...prev.filter((p) => p.id !== member.id)].slice(0, 5))
+      if (found) {
+        setSelectedMember(found)
+        setDrawerOpen(true)
+        setRecentScans((prev) => [found, ...prev.filter((p) => p.id !== found.id)].slice(0, 5))
+      } else {
+        alert('일치하는 회원 정보를 찾을 수 없습니다.')
+      }
     } catch (e) {
       console.error('Scan error:', e)
-      const fallback = fallbackMemberList[0]
-      setSelectedMember(fallback)
-      setDrawerOpen(true)
+      alert('스캔 처리 중 오류가 발생했습니다.')
     }
   }
 
@@ -96,21 +58,10 @@ export default function AdminScannerPage() {
       setIsSearching(true)
       try {
         const found = await searchMemberByQr(searchQuery)
-        if (found) {
-          setSearchResults([found])
-        } else {
-          // Local fallback filter
-          const q = searchQuery.toLowerCase()
-          const matched = fallbackMemberList.filter(
-            (m) =>
-              (m.name || '').toLowerCase().includes(q) ||
-              (m.nickname || '').toLowerCase().includes(q) ||
-              (m.phone || '').includes(q)
-          )
-          setSearchResults(matched)
-        }
+        setSearchResults(found ? [found] : [])
       } catch (e) {
         console.error(e)
+        setSearchResults([])
       } finally {
         setIsSearching(false)
       }

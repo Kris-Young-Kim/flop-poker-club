@@ -29,28 +29,64 @@ export function formatPhone(phone: string): string {
 }
 
 /**
- * 날짜와 시간을 한국어 친화적으로 포맷팅합니다.
+ * 날짜와 시간을 한국어 친화적으로 포맷팅합니다 (서버/클라이언트 Hydration 일치를 위해 KST 기준 고정).
  */
 export function formatDateTime(dateStr: string, format: 'full' | 'short' | 'time' | 'date' = 'short'): string {
   const date = new Date(dateStr)
   if (isNaN(date.getTime())) return dateStr
 
-  const year = date.getFullYear()
-  const month = String(date.getMonth() + 1).padStart(2, '0')
-  const day = String(date.getDate()).padStart(2, '0')
-  const hours = String(date.getHours()).padStart(2, '0')
-  const minutes = String(date.getMinutes()).padStart(2, '0')
+  try {
+    const formatter = new Intl.DateTimeFormat('ko-KR', {
+      timeZone: 'Asia/Seoul',
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit',
+      hour: '2-digit',
+      minute: '2-digit',
+      hour12: false,
+    })
 
-  switch (format) {
-    case 'full':
-      return `${year}. ${month}. ${day} ${hours}:${minutes}`
-    case 'date':
-      return `${year}. ${month}. ${day}`
-    case 'time':
-      return `${hours}:${minutes}`
-    case 'short':
-    default:
-      return `${month}.${day} ${hours}:${minutes}`
+    const parts = formatter.formatToParts(date)
+    const partMap: Record<string, string> = {}
+    for (const p of parts) {
+      partMap[p.type] = p.value
+    }
+
+    const year = partMap.year || String(date.getFullYear())
+    const month = partMap.month || String(date.getMonth() + 1).padStart(2, '0')
+    const day = partMap.day || String(date.getDate()).padStart(2, '0')
+    const hours = partMap.hour || String(date.getHours()).padStart(2, '0')
+    const minutes = partMap.minute || String(date.getMinutes()).padStart(2, '0')
+
+    switch (format) {
+      case 'full':
+        return `${year}. ${month}. ${day} ${hours}:${minutes}`
+      case 'date':
+        return `${year}. ${month}. ${day}`
+      case 'time':
+        return `${hours}:${minutes}`
+      case 'short':
+      default:
+        return `${month}.${day} ${hours}:${minutes}`
+    }
+  } catch {
+    const year = date.getFullYear()
+    const month = String(date.getMonth() + 1).padStart(2, '0')
+    const day = String(date.getDate()).padStart(2, '0')
+    const hours = String(date.getHours()).padStart(2, '0')
+    const minutes = String(date.getMinutes()).padStart(2, '0')
+
+    switch (format) {
+      case 'full':
+        return `${year}. ${month}. ${day} ${hours}:${minutes}`
+      case 'date':
+        return `${year}. ${month}. ${day}`
+      case 'time':
+        return `${hours}:${minutes}`
+      case 'short':
+      default:
+        return `${month}.${day} ${hours}:${minutes}`
+    }
   }
 }
 
