@@ -43,8 +43,13 @@ interface LandingPageProps {
 
 export function LandingPage({ tournaments, pinnedNotice }: LandingPageProps) {
   const { data: session } = useSession()
+  const [mounted, setMounted] = useState(false)
   const [selectedTier, setSelectedTier] = useState<'NORMAL' | 'VIP' | 'VVIP' | 'ROYAL'>('VIP')
   const [activeFaq, setActiveFaq] = useState<number | null>(null)
+
+  useEffect(() => {
+    setMounted(true)
+  }, [])
 
   const featuredTourneys = tournaments.slice(0, 3)
 
@@ -223,7 +228,7 @@ export function LandingPage({ tournaments, pinnedNotice }: LandingPageProps) {
               transition={{ duration: 0.8, delay: 0.4 }}
               className="w-full max-w-sm flex flex-col sm:flex-row gap-2.5 pt-1"
             >
-              {session?.user ? (
+              {mounted && session?.user ? (
                 <Link href="/lounge" className="flex-1">
                   <Button
                     size="lg"
@@ -743,7 +748,7 @@ export function LandingPage({ tournaments, pinnedNotice }: LandingPageProps) {
       {/* 10. Floating Bottom Conversion Action Bar */}
       <div className="fixed bottom-20 left-4 right-4 z-40 mx-auto max-w-md">
         <div className="rounded-2xl border border-[#F5D061]/50 bg-gradient-to-r from-[#212435]/95 via-[#181A26]/95 to-[#10121C]/95 p-3 shadow-2xl shadow-black/80 backdrop-blur-xl flex items-center justify-between gap-3">
-          {session?.user ? (
+          {mounted && session?.user ? (
             <>
               <div className="space-y-0.5 pl-1.5">
                 <div className="flex items-center gap-1.5">

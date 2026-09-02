@@ -1,6 +1,6 @@
 'use client'
 
-import { ReactNode } from 'react'
+import { ReactNode, useState, useEffect } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { useSession, signOut } from 'next-auth/react'
@@ -24,6 +24,11 @@ interface UserLayoutProps {
 export default function UserLayout({ children }: UserLayoutProps) {
   const pathname = usePathname()
   const { data: session } = useSession()
+  const [mounted, setMounted] = useState(false)
+
+  useEffect(() => {
+    setMounted(true)
+  }, [])
 
   const navItems = [
     {
@@ -58,7 +63,7 @@ export default function UserLayout({ children }: UserLayoutProps) {
     },
   ]
 
-  const isAdmin = session?.user?.role === 'staff' || session?.user?.role === 'super_admin'
+  const isAdmin = mounted && (session?.user?.role === 'staff' || session?.user?.role === 'super_admin')
 
   return (
     <div className="flex min-h-screen flex-col bg-transparent text-white selection:bg-[#E6AF2E]/30">
@@ -98,7 +103,7 @@ export default function UserLayout({ children }: UserLayoutProps) {
               </Link>
             )}
 
-            {session?.user ? (
+            {mounted && session?.user ? (
               <>
                 <Link
                   href="/lounge"
