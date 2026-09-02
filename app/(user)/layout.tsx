@@ -3,7 +3,7 @@
 import { ReactNode } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { useSession } from 'next-auth/react'
+import { useSession, signOut } from 'next-auth/react'
 import {
   Home,
   Crown,
@@ -13,6 +13,8 @@ import {
   Bell,
   User,
   Sparkles,
+  LogOut,
+  ShieldCheck,
 } from 'lucide-react'
 
 interface UserLayoutProps {
@@ -56,6 +58,8 @@ export default function UserLayout({ children }: UserLayoutProps) {
     },
   ]
 
+  const isAdmin = session?.user?.role === 'staff' || session?.user?.role === 'super_admin'
+
   return (
     <div className="flex min-h-screen flex-col bg-transparent text-white selection:bg-[#E6AF2E]/30">
       {/* Top Mobile & Desktop Navigation Header */}
@@ -82,15 +86,37 @@ export default function UserLayout({ children }: UserLayoutProps) {
           </Link>
 
           {/* Right Header Icons */}
-          <div className="flex items-center gap-2">
-            {session?.user ? (
+          <div className="flex items-center gap-1.5 sm:gap-2">
+            {isAdmin && (
               <Link
-                href="/lounge"
-                className="flex items-center gap-1.5 rounded-xl border border-[#F5D061]/40 bg-gradient-to-r from-[#282110] to-[#161824] px-2.5 py-1.5 text-xs text-[#F5D061] hover:border-[#F5D061] transition-all shadow-md"
+                href="/admin"
+                className="flex items-center gap-1 rounded-xl border border-red-500/50 bg-red-950/40 px-2 py-1.5 text-xs font-bold text-red-300 hover:bg-red-900/50 transition-all shadow-md"
+                title="관리자 콘솔"
               >
-                <Crown className="size-3.5 text-[#F5D061]" />
-                <span className="font-bold max-w-[80px] truncate">{session.user.name ?? '회원'}</span>
+                <ShieldCheck className="size-3.5 text-red-400" />
+                <span className="text-[11px] font-semibold hidden xs:inline">관리자</span>
               </Link>
+            )}
+
+            {session?.user ? (
+              <>
+                <Link
+                  href="/lounge"
+                  className="flex items-center gap-1.5 rounded-xl border border-[#F5D061]/40 bg-gradient-to-r from-[#282110] to-[#161824] px-2.5 py-1.5 text-xs text-[#F5D061] hover:border-[#F5D061] transition-all shadow-md"
+                >
+                  <Crown className="size-3.5 text-[#F5D061]" />
+                  <span className="font-bold max-w-[70px] truncate">{session.user.name ?? '회원'}</span>
+                </Link>
+                <button
+                  type="button"
+                  onClick={() => signOut({ callbackUrl: '/' })}
+                  className="flex size-9 items-center justify-center rounded-xl border border-white/10 bg-[#141624] text-[#9CA3AF] hover:text-rose-400 hover:border-rose-500/30 transition-all"
+                  aria-label="로그아웃"
+                  title="로그아웃"
+                >
+                  <LogOut className="size-3.5" />
+                </button>
+              </>
             ) : (
               <Link
                 href="/login"

@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
-import { useSession } from 'next-auth/react'
+import { useSession, signOut } from 'next-auth/react'
 import {
   Trophy,
   Megaphone,
@@ -15,6 +15,8 @@ import {
   Zap,
   Lock,
   ArrowRight,
+  LogOut,
+  ShieldCheck,
 } from 'lucide-react'
 import { GoldVIPCard } from '@/components/cards/GoldVIPCard'
 import { TournamentCard } from '@/components/cards/TournamentCard'
@@ -309,6 +311,31 @@ export default function VipLoungePage() {
           </div>
         </section>
       )}
+
+      {/* 7. Account Actions & Settings */}
+      <section aria-label="계정 관리" className="space-y-2 pt-2">
+        {(profile?.role === 'staff' || profile?.role === 'super_admin' || session?.user?.role === 'staff' || session?.user?.role === 'super_admin') && (
+          <Link href="/admin" className="block w-full">
+            <Button
+              variant="outline"
+              className="h-12 w-full rounded-2xl border-red-500/40 bg-red-950/20 text-xs font-bold text-red-300 hover:bg-red-900/40 hover:border-red-500/70 transition-all shadow-md flex items-center justify-center gap-2"
+            >
+              <ShieldCheck className="size-4 text-red-400" />
+              <span>관리자 운영 콘솔 이동 (/admin)</span>
+            </Button>
+          </Link>
+        )}
+
+        <Button
+          type="button"
+          onClick={() => signOut({ callbackUrl: '/' })}
+          variant="outline"
+          className="h-11 w-full rounded-2xl border-white/10 bg-[#12131D] text-xs font-semibold text-[#9CA3AF] hover:text-rose-400 hover:border-rose-500/30 hover:bg-rose-950/10 transition-all flex items-center justify-center gap-2"
+        >
+          <LogOut className="size-4" />
+          <span>로그아웃</span>
+        </Button>
+      </section>
 
       {/* Footer */}
       <footer className="rounded-2xl border border-[#E6AF2E]/10 bg-[#0F1017] p-4 text-center text-xs text-[#9CA3AF] space-y-1.5">
