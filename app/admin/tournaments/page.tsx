@@ -160,7 +160,12 @@ export default function AdminTournamentsPage() {
 
       {/* Tournament List */}
       <div className="space-y-4">
-        {tournaments.length === 0 ? (
+        {isLoading ? (
+          <div className="rounded-3xl border border-[#E6AF2E]/20 bg-[#13141C]/50 p-12 text-center">
+            <RefreshCw className="mx-auto size-10 text-[#9CA3AF]/50 animate-spin" />
+            <p className="mt-3 text-sm text-[#9CA3AF]">토너먼트 목록을 불러오는 중...</p>
+          </div>
+        ) : tournaments.length === 0 ? (
           <div className="rounded-3xl border border-dashed border-[#E6AF2E]/20 bg-[#13141C]/50 p-12 text-center space-y-3">
             <Trophy className="mx-auto size-12 text-[#9CA3AF]/40" />
             <p className="text-sm font-semibold text-white">

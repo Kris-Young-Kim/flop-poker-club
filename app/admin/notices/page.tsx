@@ -236,7 +236,12 @@ export default function AdminNoticesPage() {
 
       {/* Notice List */}
       <div className="space-y-3">
-        {filteredNotices.length === 0 ? (
+        {isLoading ? (
+          <div className="rounded-2xl border border-[#E6AF2E]/20 bg-[#12131C] p-10 text-center">
+            <RefreshCw className="mx-auto size-8 text-[#9CA3AF]/50 animate-spin" />
+            <p className="mt-3 text-sm text-[#9CA3AF]">공지사항을 불러오는 중...</p>
+          </div>
+        ) : filteredNotices.length === 0 ? (
           <div className="rounded-2xl border border-dashed border-[#E6AF2E]/20 bg-[#12131C] p-8 text-center space-y-3">
             <p className="text-sm font-semibold text-white">선택된 카테고리에 게시글이 없습니다.</p>
             <p className="text-xs text-[#9CA3AF]">새로운 공지사항이나 이벤트를 등록해보세요.</p>
