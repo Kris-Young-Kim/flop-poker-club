@@ -138,7 +138,7 @@ export default function OgImage() {
             letterSpacing: '0.05em',
           }}
         >
-          강원특별자치도 원주시 서원대로 172, 3층 · 매일 19:00 ~ 06:00
+          강원특별자치도 원주시 서원대로 172, 3층 · 매일 19:00 ~ 익일 06:00
         </div>
       </div>
     ),

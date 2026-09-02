@@ -654,25 +654,39 @@ export async function createAdminNotice(data: {
 
 export async function updateAdminNotice(data: {
   id: string
-  category: NoticeCategory
-  title: string
-  content: string
+  category?: NoticeCategory
+  title?: string
+  content?: string
   imageUrl?: string
   isPinned?: boolean
 }): Promise<{ success: boolean; error?: string }> {
   try {
     const caller = await requireStaffSession()
 
-    await db
-      .update(noticesEvents)
-      .set({
-        category: data.category,
-        title: data.title,
-        content: data.content,
+    const isUuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(data.id)
+
+    if (!isUuid) {
+      // Mock / fallback 데이터인 경우 실제 DB에 새 레코드로 생성
+      await db.insert(noticesEvents).values({
+        category: data.category || 'NOTICE',
+        title: data.title || '공지사항',
+        content: data.content || '',
         imageUrl: data.imageUrl,
         isPinned: data.isPinned ?? false,
+        authorId: caller.id,
       })
-      .where(eq(noticesEvents.id, data.id))
+    } else {
+      await db
+        .update(noticesEvents)
+        .set({
+          ...(data.category ? { category: data.category } : {}),
+          ...(data.title ? { title: data.title } : {}),
+          ...(data.content ? { content: data.content } : {}),
+          imageUrl: data.imageUrl,
+          isPinned: data.isPinned ?? false,
+        })
+        .where(eq(noticesEvents.id, data.id))
+    }
 
     await db.insert(adminAuditLogs).values({
       adminId: caller.id,
@@ -682,6 +696,7 @@ export async function updateAdminNotice(data: {
 
     revalidatePath('/admin/notices')
     revalidatePath('/notices')
+    revalidatePath('/')
     return { success: true }
   } catch (error: unknown) {
     const msg = error instanceof Error ? error.message : String(error)
@@ -693,7 +708,10 @@ export async function deleteAdminNotice(id: string): Promise<{ success: boolean;
   try {
     const caller = await requireStaffSession()
 
-    await db.delete(noticesEvents).where(eq(noticesEvents.id, id))
+    const isUuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(id)
+    if (isUuid) {
+      await db.delete(noticesEvents).where(eq(noticesEvents.id, id))
+    }
 
     await db.insert(adminAuditLogs).values({
       adminId: caller.id,
@@ -703,6 +721,7 @@ export async function deleteAdminNotice(id: string): Promise<{ success: boolean;
 
     revalidatePath('/admin/notices')
     revalidatePath('/notices')
+    revalidatePath('/')
     return { success: true }
   } catch (error: unknown) {
     const msg = error instanceof Error ? error.message : String(error)

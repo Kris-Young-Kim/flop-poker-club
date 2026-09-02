@@ -12,7 +12,8 @@ import {
   Calendar,
   Image as ImageIcon,
   CheckCircle2,
-  RefreshCw
+  RefreshCw,
+  Loader2,
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -63,6 +64,8 @@ export default function AdminNoticesPage() {
   const [createModalOpen, setCreateModalOpen] = useState(false)
   const [categoryFilter, setCategoryFilter] = useState<string>('ALL')
   const [isLoading, setIsLoading] = useState(false)
+  const [pendingPinId, setPendingPinId] = useState<string | null>(null)
+  const [pendingDeleteId, setPendingDeleteId] = useState<string | null>(null)
 
   // Form State
   const [category, setCategory] = useState<NoticeCategory>('NOTICE')
@@ -77,9 +80,12 @@ export default function AdminNoticesPage() {
       const data = await getNotices()
       if (data && data.length > 0) {
         setNotices(data)
+      } else {
+        setNotices(fallbackAdminNotices)
       }
     } catch (e) {
-      console.error(e)
+      console.error('Failed to fetch notices:', e)
+      setNotices(fallbackAdminNotices)
     } finally {
       setIsLoading(false)
     }
@@ -121,6 +127,7 @@ export default function AdminNoticesPage() {
 
   const handleDeleteNotice = async (id: string) => {
     if (!confirm('해당 공지글을 삭제하시겠습니까?')) return
+    setPendingDeleteId(id)
     try {
       const res = await deleteAdminNotice(id)
       if (!res.success) {
@@ -131,10 +138,20 @@ export default function AdminNoticesPage() {
     } catch (err: unknown) {
       const msg = err instanceof Error ? err.message : String(err)
       alert(msg || '오류가 발생했습니다.')
+    } finally {
+      setPendingDeleteId(null)
     }
   }
 
   const handleTogglePin = async (notice: NoticeEvent) => {
+    setPendingPinId(notice.id)
+    const nextPinned = !notice.is_pinned
+
+    // 1) 즉시 UI 낙관적 반영
+    setNotices((prev) =>
+      prev.map((n) => (n.id === notice.id ? { ...n, is_pinned: nextPinned } : n))
+    )
+
     try {
       const res = await updateAdminNotice({
         id: notice.id,
@@ -142,18 +159,28 @@ export default function AdminNoticesPage() {
         title: notice.title,
         content: notice.content,
         imageUrl: notice.image_url || undefined,
-        isPinned: !notice.is_pinned,
+        isPinned: nextPinned,
       })
+
       if (!res.success) {
+        // 실패 시 롤백
+        setNotices((prev) =>
+          prev.map((n) => (n.id === notice.id ? { ...n, is_pinned: !nextPinned } : n))
+        )
         alert(res.error || '핀 상태 변경에 실패했습니다.')
         return
       }
-      setNotices((prev) =>
-        prev.map((n) => (n.id === notice.id ? { ...n, is_pinned: !n.is_pinned } : n))
-      )
+
+      // 2) 최신 DB 동기화
+      await fetchNotices()
     } catch (err: unknown) {
+      setNotices((prev) =>
+        prev.map((n) => (n.id === notice.id ? { ...n, is_pinned: !nextPinned } : n))
+      )
       const msg = err instanceof Error ? err.message : String(err)
       alert(msg || '오류가 발생했습니다.')
+    } finally {
+      setPendingPinId(null)
     }
   }
 
@@ -178,88 +205,151 @@ export default function AdminNoticesPage() {
           </p>
         </div>
 
-        <Button
-          onClick={() => setCreateModalOpen(true)}
-          className="h-11 px-5 rounded-2xl bg-gradient-to-r from-[#F5D061] via-[#E6AF2E] to-[#C28B1E] text-black font-bold text-xs shadow-lg shadow-yellow-500/25"
-        >
-          <Plus className="size-4 mr-1.5" />
-          새 공지/이벤트 작성
-        </Button>
+        <div className="flex items-center gap-2">
+          <Button
+            type="button"
+            variant="outline"
+            size="sm"
+            onClick={fetchNotices}
+            disabled={isLoading}
+            className="h-11 px-3.5 rounded-2xl border-[#E6AF2E]/30 bg-[#161824] text-xs font-semibold text-[#F3E5AB] hover:border-[#E6AF2E]"
+            title="새로고침"
+          >
+            <RefreshCw className={`size-4 ${isLoading ? 'animate-spin' : ''}`} />
+          </Button>
+
+          <Button
+            onClick={() => setCreateModalOpen(true)}
+            className="h-11 px-5 rounded-2xl bg-gradient-to-r from-[#F5D061] via-[#E6AF2E] to-[#C28B1E] text-black font-bold text-xs shadow-lg shadow-yellow-500/25 cursor-pointer hover:scale-[1.02] transition-transform"
+          >
+            <Plus className="size-4 mr-1.5" />
+            새 공지/이벤트 작성
+          </Button>
+        </div>
       </div>
 
       {/* Category Filter Chips */}
-      <div className="flex items-center gap-2 overflow-x-auto pb-1">
-        {['ALL', 'NOTICE', 'EVENT', 'RULE'].map((cat) => (
-          <Button
-            key={cat}
-            size="sm"
-            variant={categoryFilter === cat ? 'default' : 'outline'}
-            onClick={() => setCategoryFilter(cat)}
-            className={`h-9 rounded-xl text-xs font-semibold ${
-              categoryFilter === cat
-                ? 'bg-[#E6AF2E] text-black font-bold'
-                : 'border-[#E6AF2E]/20 bg-[#181A26] text-[#9CA3AF]'
-            }`}
-          >
-            {cat === 'ALL' ? '전체 보기' : cat === 'NOTICE' ? '공지사항' : cat === 'EVENT' ? '이벤트' : '룰북'}
-          </Button>
-        ))}
+      <div className="flex items-center gap-2 overflow-x-auto pb-1 no-scrollbar">
+        {[
+          { key: 'ALL', label: '전체 보기' },
+          { key: 'NOTICE', label: '공지사항' },
+          { key: 'EVENT', label: '이벤트' },
+          { key: 'RULE', label: '룰북' },
+        ].map((cat) => {
+          const count =
+            cat.key === 'ALL'
+              ? notices.length
+              : notices.filter((n) => n.category === cat.key).length
+          const isSelected = categoryFilter === cat.key
+
+          return (
+            <button
+              key={cat.key}
+              type="button"
+              onClick={() => setCategoryFilter(cat.key)}
+              className={`flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer ${
+                isSelected
+                  ? 'bg-gradient-to-r from-[#F5D061] to-[#E6AF2E] text-black shadow-md shadow-yellow-500/20 ring-1 ring-[#F5D061]'
+                  : 'border border-[#E6AF2E]/20 bg-[#181A26] text-[#9CA3AF] hover:text-[#F3E5AB] hover:bg-[#202334]'
+              }`}
+            >
+              <span>{cat.label}</span>
+              <span
+                className={`text-[10px] px-1.5 py-0.2 rounded-full font-mono ${
+                  isSelected
+                    ? 'bg-black/20 text-black font-extrabold'
+                    : 'bg-[#12131A] text-[#9CA3AF]'
+                }`}
+              >
+                {count}
+              </span>
+            </button>
+          )
+        })}
       </div>
 
       {/* Notice List */}
       <div className="space-y-3">
-        {filteredNotices.map((notice) => (
-          <Card
-            key={notice.id}
-            className="rounded-2xl border border-[#E6AF2E]/20 bg-gradient-to-br from-[#181A26] to-[#12131A] p-4 sm:p-5 shadow-lg flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4"
-          >
-            <div className="space-y-1.5 flex-1">
-              <div className="flex items-center gap-2 flex-wrap">
-                <Badge className="bg-[#13141C] border border-[#E6AF2E]/30 text-[#F5D061] text-[10px]">
-                  {notice.category}
-                </Badge>
-                {notice.is_pinned && (
-                  <Badge className="bg-[#E6AF2E] text-black font-bold text-[10px] flex items-center gap-1">
-                    <Pin className="size-3 fill-black" /> 필독 고정
+        {filteredNotices.length === 0 ? (
+          <div className="rounded-2xl border border-dashed border-[#E6AF2E]/20 bg-[#12131C] p-8 text-center space-y-3">
+            <p className="text-sm font-semibold text-white">선택된 카테고리에 게시글이 없습니다.</p>
+            <p className="text-xs text-[#9CA3AF]">새로운 공지사항이나 이벤트를 등록해보세요.</p>
+            <Button
+              size="sm"
+              onClick={() => setCategoryFilter('ALL')}
+              variant="outline"
+              className="mt-1 text-xs border-[#E6AF2E]/30 text-[#F5D061] rounded-xl hover:bg-[#E6AF2E]/10"
+            >
+              전체 보기로 돌아가기
+            </Button>
+          </div>
+        ) : (
+          filteredNotices.map((notice) => (
+            <Card
+              key={notice.id}
+              className="rounded-2xl border border-[#E6AF2E]/20 bg-gradient-to-br from-[#181A26] to-[#12131A] p-4 sm:p-5 shadow-lg flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 transition-all"
+            >
+              <div className="space-y-1.5 flex-1 min-w-0">
+                <div className="flex items-center gap-2 flex-wrap">
+                  <Badge className="bg-[#13141C] border border-[#E6AF2E]/30 text-[#F5D061] text-[10px]">
+                    {notice.category === 'NOTICE' ? '공지사항' : notice.category === 'EVENT' ? '이벤트' : '룰북'}
                   </Badge>
-                )}
-                <span className="text-[11px] text-[#9CA3AF] flex items-center gap-1">
-                  <Calendar className="size-3 text-[#E6AF2E]" />
-                  {formatDateTime(notice.created_at, 'date')}
-                </span>
+                  {notice.is_pinned && (
+                    <Badge className="bg-[#E6AF2E] text-black font-bold text-[10px] flex items-center gap-1 shadow-sm shadow-yellow-500/20">
+                      <Pin className="size-3 fill-black" /> 필독 고정
+                    </Badge>
+                  )}
+                  <span className="text-[11px] text-[#9CA3AF] flex items-center gap-1">
+                    <Calendar className="size-3 text-[#E6AF2E]" />
+                    {formatDateTime(notice.created_at, 'date')}
+                  </span>
+                </div>
+
+                <h3 className="font-bold text-base text-white truncate">{notice.title}</h3>
+                <p className="text-xs text-[#9CA3AF] line-clamp-2 leading-relaxed">{notice.content}</p>
               </div>
 
-              <h3 className="font-bold text-base text-white">{notice.title}</h3>
-              <p className="text-xs text-[#9CA3AF] line-clamp-2 leading-relaxed">{notice.content}</p>
-            </div>
+              {/* Action Buttons */}
+              <div className="flex items-center gap-2 shrink-0 border-t sm:border-t-0 pt-2 sm:pt-0 border-[#E6AF2E]/15 w-full sm:w-auto justify-end">
+                <Button
+                  size="sm"
+                  type="button"
+                  variant="outline"
+                  disabled={pendingPinId === notice.id}
+                  onClick={() => handleTogglePin(notice)}
+                  className={`h-8 px-3 rounded-xl text-xs font-bold transition-all cursor-pointer ${
+                    notice.is_pinned
+                      ? 'border-[#E6AF2E] text-[#F5D061] bg-[#E6AF2E]/15 hover:bg-[#E6AF2E]/25'
+                      : 'border-white/15 bg-[#141624] text-[#9CA3AF] hover:text-[#F3E5AB] hover:border-[#E6AF2E]/40'
+                  }`}
+                >
+                  {pendingPinId === notice.id ? (
+                    <Loader2 className="size-3.5 mr-1 animate-spin" />
+                  ) : (
+                    <Pin className={`size-3.5 mr-1 ${notice.is_pinned ? 'fill-[#F5D061]' : ''}`} />
+                  )}
+                  {notice.is_pinned ? '고정 해제' : '상단 고정'}
+                </Button>
 
-            {/* Action Buttons */}
-            <div className="flex items-center gap-2 shrink-0 border-t sm:border-t-0 pt-2 sm:pt-0 border-[#E6AF2E]/15 w-full sm:w-auto justify-end">
-              <Button
-                size="sm"
-                variant="outline"
-                onClick={() => handleTogglePin(notice)}
-                className={`h-8 px-2.5 rounded-xl text-xs ${
-                  notice.is_pinned
-                    ? 'border-[#E6AF2E] text-[#F5D061] bg-[#E6AF2E]/10'
-                    : 'border-border text-[#9CA3AF]'
-                }`}
-              >
-                <Pin className="size-3.5 mr-1" />
-                {notice.is_pinned ? '고정 해제' : '상단 고정'}
-              </Button>
-
-              <Button
-                size="sm"
-                variant="ghost"
-                onClick={() => handleDeleteNotice(notice.id)}
-                className="h-8 px-2.5 rounded-xl text-xs text-rose-400 hover:bg-rose-500/10"
-              >
-                <Trash2 className="size-3.5" />
-              </Button>
-            </div>
-          </Card>
-        ))}
+                <Button
+                  size="sm"
+                  type="button"
+                  variant="ghost"
+                  disabled={pendingDeleteId === notice.id}
+                  onClick={() => handleDeleteNotice(notice.id)}
+                  className="h-8 px-2.5 rounded-xl text-xs text-rose-400 hover:bg-rose-500/10 cursor-pointer"
+                  title="삭제"
+                >
+                  {pendingDeleteId === notice.id ? (
+                    <Loader2 className="size-3.5 animate-spin" />
+                  ) : (
+                    <Trash2 className="size-3.5" />
+                  )}
+                </Button>
+              </div>
+            </Card>
+          ))
+        )}
       </div>
 
       {/* Create Notice Dialog */}
