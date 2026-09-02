@@ -1,6 +1,5 @@
-'use client'
-
-import { useState, useEffect, useMemo } from 'react'
+import { useState, useEffect } from 'react'
+import { QRCodeSVG } from 'qrcode.react'
 import {
   Dialog,
   DialogContent,
@@ -27,117 +26,6 @@ interface MemberQRModalProps {
   isOpen: boolean
   onClose: () => void
   profile: Partial<Profile>
-}
-
-// Standalone high-contrast vector QR Matrix Generator
-function StandaloneQRCode({ value, size = 190 }: { value: string; size?: number }) {
-  const matrix = useMemo(() => {
-    // Generate deterministic 21x21 QR Version 1 Matrix with standard finder patterns
-    const N = 21
-    const grid: number[][] = Array.from({ length: N }, () => Array(N).fill(0))
-
-    // Helper to draw standard 7x7 Finder Pattern with 1px separator
-    const drawFinderPattern = (r0: number, c0: number) => {
-      for (let r = 0; r < 7; r++) {
-        for (let c = 0; c < 7; c++) {
-          if (r === 0 || r === 6 || c === 0 || c === 6 || (r >= 2 && r <= 4 && c >= 2 && c <= 4)) {
-            grid[r0 + r][c0 + c] = 1
-          } else {
-            grid[r0 + r][c0 + c] = 0
-          }
-        }
-      }
-    }
-
-    // Top-Left, Top-Right, Bottom-Left Finder Patterns
-    drawFinderPattern(0, 0)
-    drawFinderPattern(0, N - 7)
-    drawFinderPattern(N - 7, 0)
-
-    // Timing patterns
-    for (let i = 8; i < N - 8; i++) {
-      grid[6][i] = i % 2 === 0 ? 1 : 0
-      grid[i][6] = i % 2 === 0 ? 1 : 0
-    }
-
-    // Alignment pattern center at (N-7, N-7)
-    grid[14][14] = 1
-
-    // Pseudo-random deterministic data filling based on value hash
-    let hash = 0
-    for (let i = 0; i < value.length; i++) {
-      hash = (hash << 5) - hash + value.charCodeAt(i)
-      hash |= 0
-    }
-
-    for (let r = 0; r < N; r++) {
-      for (let c = 0; c < N; c++) {
-        // Skip finder pattern zones
-        const isFinderTopLeft = r <= 7 && c <= 7
-        const isFinderTopRight = r <= 7 && c >= N - 8
-        const isFinderBottomLeft = r >= N - 8 && c <= 7
-        const isTiming = (r === 6 && (c > 7 && c < N - 7)) || (c === 6 && (r > 7 && r < N - 7))
-        const isCenterLogo = r >= 8 && r <= 12 && c >= 8 && c <= 12
-
-        if (!isFinderTopLeft && !isFinderTopRight && !isFinderBottomLeft && !isTiming && !isCenterLogo) {
-          const bit = Math.abs(Math.sin((hash + r * 31 + c * 17)) * 10000) % 1 > 0.45 ? 1 : 0
-          grid[r][c] = bit
-        }
-      }
-    }
-
-    return grid
-  }, [value])
-
-  const N = matrix.length
-  const cellSize = size / (N + 2)
-
-  return (
-    <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`} className="rounded-lg shadow-sm">
-      <rect width={size} height={size} fill="#FFFFFF" rx="8" />
-      <g transform={`translate(${cellSize}, ${cellSize})`}>
-        {matrix.map((row, r) =>
-          row.map((cell, c) => {
-            if (cell === 1) {
-              return (
-                <rect
-                  key={`${r}-${c}`}
-                  x={c * cellSize}
-                  y={r * cellSize}
-                  width={cellSize + 0.3}
-                  height={cellSize + 0.3}
-                  fill="#0B0B0F"
-                />
-              )
-            }
-            return null
-          })
-        )}
-        {/* Center Spade Emblem */}
-        <rect
-          x={8 * cellSize - 1}
-          y={8 * cellSize - 1}
-          width={5 * cellSize + 2}
-          height={5 * cellSize + 2}
-          fill="#FFFFFF"
-          stroke="#E6AF2E"
-          strokeWidth="1.5"
-          rx="4"
-        />
-        <text
-          x={10.5 * cellSize}
-          y={11.2 * cellSize}
-          textAnchor="middle"
-          fontSize={cellSize * 3.2}
-          fill="#C28B1E"
-          fontFamily="serif"
-          fontWeight="bold"
-        >
-          ♠
-        </text>
-      </g>
-    </svg>
-  )
 }
 
 export function MemberQRModal({ isOpen, onClose, profile }: MemberQRModalProps) {
@@ -206,8 +94,14 @@ export function MemberQRModal({ isOpen, onClose, profile }: MemberQRModalProps) 
             FLOP POKER CLUB
           </div>
 
-          <div className="mt-1 flex items-center justify-center bg-white p-2 rounded-xl border-2 border-dashed border-gray-300">
-            <StandaloneQRCode value={token} size={190} />
+          <div className="mt-1 flex items-center justify-center bg-white p-3 rounded-xl border-2 border-dashed border-gray-300">
+            <QRCodeSVG
+              value={token}
+              size={190}
+              level="M"
+              bgColor="#FFFFFF"
+              fgColor="#000000"
+            />
           </div>
 
           <div className="mt-3 flex items-center justify-between w-full px-2 text-xs text-gray-600 font-mono">
