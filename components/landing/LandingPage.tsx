@@ -33,6 +33,7 @@ import {
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { TournamentCard } from '@/components/cards/TournamentCard'
+import { TournamentPrizeBoard } from '@/components/cards/TournamentPrizeBoard'
 import { BUSINESS_INFO } from '@/lib/constants/business'
 import type { Tournament, NoticeEvent } from '@/types/database.types'
 
@@ -121,11 +122,11 @@ export function LandingPage({ tournaments, pinnedNotice }: LandingPageProps) {
             <span className="inline-flex items-center gap-1 font-bold text-[#F5D061] px-2 py-0.5 rounded-full bg-[#E6AF2E]/25 border border-[#E6AF2E]/40 text-[10.5px] shrink-0">
               <Flame className="size-3.5 text-[#F5D061]" /> LIVE
             </span>
-            <span className="inline-block pt-0.5">♠ 웰컴 이벤트: 신규 가입 즉시 5,000P 무료 지급</span>
+            <span className="inline-block pt-0.5">♠ 웰컴 이벤트: 신규 가입 즉시 500P 무료 지급</span>
             <span className="text-[#E6AF2E]/40">|</span>
             <span className="inline-block pt-0.5">🏆 매일 저녁 7시 데일리 토너먼트 START</span>
             <span className="text-[#E6AF2E]/40">|</span>
-            <span className="inline-block pt-0.5">⚡ 투핸드 포카드 +500P · 스티플 +1,000P · 로티플 +3,000P 즉시 적립</span>
+            <span className="inline-block pt-0.5">⚡ 포카드 +100P · 스티플 +200P · 로티플 +300P 즉시 적립</span>
             <span className="text-[#E6AF2E]/40">|</span>
             <span className="inline-block pt-0.5">👑 원주 최고급 VIP 라운지 19:00 ~ 익일 06:00 연중무휴</span>
           </div>
@@ -135,11 +136,11 @@ export function LandingPage({ tournaments, pinnedNotice }: LandingPageProps) {
             <span className="inline-flex items-center gap-1 font-bold text-[#F5D061] px-2 py-0.5 rounded-full bg-[#E6AF2E]/25 border border-[#E6AF2E]/40 text-[10.5px] shrink-0">
               <Flame className="size-3.5 text-[#F5D061]" /> LIVE
             </span>
-            <span className="inline-block pt-0.5">♠ 웰컴 이벤트: 신규 가입 즉시 5,000P 무료 지급</span>
+            <span className="inline-block pt-0.5">♠ 웰컴 이벤트: 신규 가입 즉시 500P 무료 지급</span>
             <span className="text-[#E6AF2E]/40">|</span>
             <span className="inline-block pt-0.5">🏆 매일 저녁 7시 데일리 토너먼트 START</span>
             <span className="text-[#E6AF2E]/40">|</span>
-            <span className="inline-block pt-0.5">⚡ 투핸드 포카드 +500P · 스티플 +1,000P · 로티플 +3,000P 즉시 적립</span>
+            <span className="inline-block pt-0.5">⚡ 포카드 +100P · 스티플 +200P · 로티플 +300P 즉시 적립</span>
             <span className="text-[#E6AF2E]/40">|</span>
             <span className="inline-block pt-0.5">👑 원주 최고급 VIP 라운지 19:00 ~ 익일 06:00 연중무휴</span>
           </div>
@@ -213,7 +214,7 @@ export function LandingPage({ tournaments, pinnedNotice }: LandingPageProps) {
                 </div>
                 <div>
                   <div className="text-xs font-bold text-white">신규 회원 가입 프로모션</div>
-                  <div className="text-sm font-extrabold text-[#F5D061]">웰컴 5,000 P 즉시 지급</div>
+                  <div className="text-sm font-extrabold text-[#F5D061]">웰컴 500 P 즉시 지급</div>
                 </div>
               </div>
               <Badge className="bg-[#E6AF2E] text-black font-extrabold text-[10px] px-2 py-0.5 shadow">
@@ -418,7 +419,7 @@ export function LandingPage({ tournaments, pinnedNotice }: LandingPageProps) {
               투핸드 포카드
             </span>
             <div className="font-extrabold text-2xl sm:text-3xl text-emerald-400 tracking-tight">
-              +500 P
+              +100 P
             </div>
             <p className="text-[11px] text-zinc-400 break-keep">
               포켓/보드 4장 완성
@@ -431,7 +432,7 @@ export function LandingPage({ tournaments, pinnedNotice }: LandingPageProps) {
               스트레이트 플러시
             </span>
             <div className="font-extrabold text-2xl sm:text-3xl text-purple-300 tracking-tight">
-              +1,000 P
+              +200 P
             </div>
             <p className="text-[11px] text-zinc-400 break-keep">
               동일 무늬 연속 5장
@@ -444,23 +445,23 @@ export function LandingPage({ tournaments, pinnedNotice }: LandingPageProps) {
               로얄 스트레이트 플러시
             </span>
             <div className="font-extrabold text-2xl sm:text-3xl text-[#F5D061] tracking-tight">
-              +3,000 P
+              +300 P
             </div>
             <p className="text-[11px] text-[#F3E5AB]/85 break-keep">
               최고 명예의 족보
             </p>
           </div>
 
-          {/* Card 4: Special Bonus */}
+          {/* Card 4: Tournament 1st Place */}
           <div className="rounded-2xl border border-amber-500/30 bg-[#181926]/90 p-4 sm:p-5 space-y-2 text-center shadow-lg transition-all hover:border-amber-400/50">
             <span className="inline-block text-[11px] sm:text-xs font-bold text-amber-200 px-2.5 py-0.5 rounded-full bg-amber-500/10 border border-amber-500/20">
-              10장 보너스 리워드
+              대회 1등 우승 보너스
             </span>
             <div className="font-extrabold text-2xl sm:text-3xl text-amber-200 tracking-tight">
-              +5,000 P
+              +300 P
             </div>
             <p className="text-[11px] text-zinc-400 break-keep">
-              스페셜 핸드 달성자
+              (원바인 시 +100P 추가)
             </p>
           </div>
         </div>
@@ -505,6 +506,9 @@ export function LandingPage({ tournaments, pinnedNotice }: LandingPageProps) {
             />
           </div>
         </div>
+
+        {/* Official Tournament Prize Board */}
+        <TournamentPrizeBoard />
 
         {/* Tournament Cards List */}
         {featuredTourneys.length > 0 && (

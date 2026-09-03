@@ -118,7 +118,7 @@ export default function OnboardingPage() {
             <div className="flex items-center gap-1.5">
               <span className="text-xs font-bold text-[#F3E5AB]">신규 가입 보너스</span>
               <Badge className="bg-emerald-500/20 text-emerald-300 border-emerald-500/30 text-[9px] px-1.5 py-0">
-                +5,000 P
+                +500 P
               </Badge>
             </div>
             <p className="text-[10.5px] text-[#9CA3AF]">
@@ -258,7 +258,7 @@ export default function OnboardingPage() {
               '등록 처리 중...'
             ) : (
               <span className="flex items-center justify-center gap-1.5">
-                멤버십 시작하기 (+5,000 P 받기) <ArrowRight className="size-4" />
+                멤버십 시작하기 (+500 P 받기) <ArrowRight className="size-4" />
               </span>
             )}
           </Button>

@@ -49,20 +49,20 @@ export async function saveProfile(data: {
           phone: data.phone,
           termsAgreedAt: now,
           termsVersion: data.termsVersion ?? 'v1.0',
-          // 최초 온보딩이면 5000P 설정, 재시도면 기존 잔액 유지
-          ...(isFirstOnboarding ? { totalPoints: 5000 } : {}),
+          // 최초 온보딩이면 500P 설정, 재시도면 기존 잔액 유지
+          ...(isFirstOnboarding ? { totalPoints: 500 } : {}),
           updatedAt: now,
         })
         .where(eq(profiles.id, userId))
 
-      // 웰컴 보너스 원장 기록은 최초 1회만
+      // 웰컴 보너스 원장 기록은 최초 1회만 (신규가입 500P)
       if (isFirstOnboarding) {
         await tx.insert(pointTransactions).values({
           userId,
-          amount: 5000,
-          balanceAfter: 5000,
+          amount: 500,
+          balanceAfter: 500,
           reason: 'EVENT_BONUS',
-          description: '신규 멤버십 웰컴 보너스',
+          description: '신규 회원 가입 축하 보너스',
           processedBy: userId,
         })
       }

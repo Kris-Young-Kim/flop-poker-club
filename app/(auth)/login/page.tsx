@@ -97,9 +97,9 @@ export default function LoginPage() {
               멤버십 기본 혜택
             </div>
             <ul className="space-y-1.5 text-[11px] text-[#9CA3AF]">
-              <li className="flex items-center gap-2">
-                <CheckCircle2 className="size-3 text-emerald-400 shrink-0" />
-                <span>신규 가입 즉시 <strong>5,000 P</strong> 웰컴 보너스</span>
+              <li className="flex items-center gap-2 text-xs text-[#9CA3AF]">
+                <Sparkles className="size-3.5 text-[#F5D061] shrink-0" />
+                <span>신규 가입 즉시 <strong>500 P</strong> 웰컴 보너스</span>
               </li>
               <li className="flex items-center gap-2">
                 <CheckCircle2 className="size-3 text-emerald-400 shrink-0" />

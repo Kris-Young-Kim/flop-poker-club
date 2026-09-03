@@ -21,7 +21,7 @@ export const metadata: Metadata = {
     template: '%s | FLOP POKER CLUB',
   },
   description:
-    '강원 원주 최고급 홀덤 포커 클럽. 투명한 포인트 원장, QR 출입 인증, 데일리 & 빅 토너먼트. 신규 가입 즉시 5,000P 웰컴 보너스.',
+    '강원 원주 최고급 홀덤 포커 클럽. 투명한 포인트 원장, QR 출입 인증, 데일리 & 빅 토너먼트. 신규 가입 즉시 500P 웰컴 보너스.',
   keywords: ['원주 포커클럽', '원주 홀덤', '홀덤 포커', 'FLOP', '포커 토너먼트', 'VIP 멤버십', '원주 카드게임'],
   authors: [{ name: '플랍(FLOP)', url: SITE_URL }],
   creator: '플랍(FLOP)',
@@ -37,12 +37,12 @@ export const metadata: Metadata = {
     siteName: 'FLOP POKER CLUB',
     title: 'FLOP POKER CLUB | 원주 No.1 홀덤 포커 VIP 멤버십',
     description:
-      '강원 원주 최고급 홀덤 포커 클럽. 투명한 포인트 원장, QR 출입 인증, 데일리 & 빅 토너먼트. 신규 가입 즉시 5,000P 웰컴 보너스.',
+      '강원 원주 최고급 홀덤 포커 클럽. 투명한 포인트 원장, QR 출입 인증, 데일리 & 빅 토너먼트. 신규 가입 즉시 500P 웰컴 보너스.',
   },
   twitter: {
     card: 'summary_large_image',
     title: 'FLOP POKER CLUB | 원주 홀덤 포커 VIP 멤버십',
-    description: '강원 원주 최고급 홀덤 포커 클럽. 신규 가입 즉시 5,000P 웰컴 보너스.',
+    description: '강원 원주 최고급 홀덤 포커 클럽. 신규 가입 즉시 500P 웰컴 보너스.',
   },
   robots: {
     index: true,

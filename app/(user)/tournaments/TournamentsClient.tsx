@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import { Trophy, Sparkles, Clock3 } from 'lucide-react'
 import { TournamentCard } from '@/components/cards/TournamentCard'
+import { TournamentPrizeBoard } from '@/components/cards/TournamentPrizeBoard'
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs'
 import { Button } from '@/components/ui/button'
 import { Tournament } from '@/types/database.types'
@@ -52,14 +53,14 @@ export function TournamentsClient({ initialTournaments, initialRegisteredIds }: 
     .reduce((acc, cur) => acc + cur.total_prize_points, 0)
 
   return (
-    <div className="space-y-5">
+    <div className="space-y-4 sm:space-y-5">
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
           <div className="flex items-center gap-2">
             <Trophy className="size-5 text-[#E6AF2E]" />
             <h1 className="font-serif text-xl font-bold tracking-tight text-white">
-              토너먼트 대회
+              토너먼트 대회 & 시상 안내
             </h1>
           </div>
           <p className="text-xs text-[#9CA3AF] mt-0.5">
@@ -68,27 +69,8 @@ export function TournamentsClient({ initialTournaments, initialRegisteredIds }: 
         </div>
       </div>
 
-      {/* Prize Pool Banner */}
-      <div className="rounded-3xl border border-[#E6AF2E]/30 bg-gradient-to-br from-[#231808] via-[#161622] to-[#0E0F16] p-5 shadow-2xl shadow-yellow-500/5 flex items-center justify-between gap-4">
-        <div>
-          <div className="flex items-center gap-1.5 text-[10px] uppercase font-bold tracking-wider text-[#F5D061]">
-            <Sparkles className="size-3.5 text-[#F5D061]" />
-            진행 예정 보장 상금풀
-          </div>
-          <div className="mt-1 flex items-baseline gap-2">
-            <span className="font-serif text-2xl sm:text-3xl font-black text-white drop-shadow-[0_2px_10px_rgba(245,208,97,0.3)]">
-              {new Intl.NumberFormat('ko-KR').format(totalPrizeSum)}
-            </span>
-            <span className="font-serif text-lg font-bold text-[#F5D061]">P</span>
-          </div>
-          <p className="text-[11px] text-[#9CA3AF] mt-1">
-            원주점 테이블 참가 접수는 선착순으로 마감됩니다.
-          </p>
-        </div>
-        <div className="flex size-14 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-[#F5D061] to-[#C28B1E] text-black shadow-lg shadow-yellow-500/25 font-serif text-2xl font-black">
-          ♠
-        </div>
-      </div>
+      {/* Official Prize Board */}
+      <TournamentPrizeBoard />
 
       {/* Tabs */}
       <Tabs value={activeTab} onValueChange={(v) => setActiveTab(v as 'ALL' | 'MY_REG' | 'LIVE')} className="w-full">

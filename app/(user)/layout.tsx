@@ -33,21 +33,9 @@ export default function UserLayout({ children }: UserLayoutProps) {
   const navItems = [
     {
       href: '/',
-      label: '클럽홈',
-      icon: Home,
-      isActive: pathname === '/' || pathname === '',
-    },
-    {
-      href: '/lounge',
-      label: 'VIP라운지',
+      label: '홈 (포인트/QR)',
       icon: Crown,
-      isActive: pathname.startsWith('/lounge'),
-    },
-    {
-      href: '/ledger',
-      label: '포인트원장',
-      icon: ReceiptText,
-      isActive: pathname.startsWith('/ledger'),
+      isActive: pathname === '/' || pathname === '' || pathname === '/lounge',
     },
     {
       href: '/tournaments',
@@ -56,8 +44,14 @@ export default function UserLayout({ children }: UserLayoutProps) {
       isActive: pathname.startsWith('/tournaments'),
     },
     {
+      href: '/ledger',
+      label: '포인트원장',
+      icon: ReceiptText,
+      isActive: pathname.startsWith('/ledger'),
+    },
+    {
       href: '/notices',
-      label: '공지/소식',
+      label: '공지사항',
       icon: Megaphone,
       isActive: pathname.startsWith('/notices'),
     },

@@ -18,6 +18,7 @@ import type {
   Tournament,
   TournamentParticipant,
   NoticeEvent,
+  UserRole,
   UserTier,
   PointReason,
   TourneyStatus,
@@ -408,6 +409,52 @@ export async function updateMemberTier(params: {
   } catch (error: unknown) {
     const msg = error instanceof Error ? error.message : String(error)
     return { success: false, error: msg || '등급 변경에 실패했습니다.' }
+  }
+}
+
+export async function updateMemberRole(params: {
+  targetUserId: string
+  newRole: UserRole
+}): Promise<{ success: boolean; error?: string }> {
+  try {
+    const caller = await requireStaffSession()
+    const { targetUserId, newRole } = params
+
+    // 최고관리자 또는 관리자 본인의 권한은 안전하게 보존
+    if (caller.id === targetUserId && newRole === 'user' && caller.role === 'super_admin') {
+      return { success: false, error: '최고관리자 본인의 권한은 해제할 수 없습니다.' }
+    }
+
+    await db.transaction(async (tx) => {
+      const [prev] = await tx
+        .select({ role: profiles.role, nickname: profiles.nickname })
+        .from(profiles)
+        .where(eq(profiles.id, targetUserId))
+
+      if (!prev) throw new Error('회원을 찾을 수 없습니다.')
+
+      await tx
+        .update(profiles)
+        .set({ role: newRole, updatedAt: new Date() })
+        .where(eq(profiles.id, targetUserId))
+
+      await tx.insert(adminAuditLogs).values({
+        adminId: caller.id,
+        targetUserId,
+        action: 'ROLE_CHANGE',
+        payload: {
+          previousRole: prev.role,
+          newRole,
+        },
+      })
+    })
+
+    revalidatePath('/admin/members')
+    revalidatePath('/admin')
+    return { success: true }
+  } catch (error: unknown) {
+    const msg = error instanceof Error ? error.message : String(error)
+    return { success: false, error: msg || '관리자 권한 변경에 실패했습니다.' }
   }
 }
 

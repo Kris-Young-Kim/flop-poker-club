@@ -110,7 +110,7 @@ export default function OgImage() {
 
         {/* 혜택 태그 3개 */}
         <div style={{ display: 'flex', gap: 16 }}>
-          {['신규 5,000P 웰컴 보너스', '데일리 토너먼트', 'QR 출입 인증'].map((tag) => (
+          {['신규 500P 웰컴 보너스', '데일리 토너먼트', 'QR 출입 인증'].map((tag) => (
             <div
               key={tag}
               style={{
